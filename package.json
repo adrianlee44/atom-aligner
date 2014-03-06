@@ -1,0 +1,15 @@
+{
+  "name": "vertical-align",
+  "main": "./lib/vertical-align",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Vertically align lines of code",
+  "activationEvents": ["vertical-align:align"],
+  "repository": "https://github.com/adrianlee44/atom-vertical-align",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+  }
+}
