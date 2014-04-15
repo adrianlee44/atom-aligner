@@ -4,16 +4,17 @@ helper         = require './helper'
 align = (editor) ->
   if !editor.hasMultipleCursors()
     # Get cursor row and text
-    row  = editor.getCursorBufferPosition().row
-    text = editor.lineForBufferRow row
+    origRow = editor.getCursorBufferPosition().row
+    text    = editor.lineForBufferRow origRow
 
     # Get alignment character
     character = helper.getAlignCharacter text
 
     if character
-      indentRange = helper.getSameIndentationRange editor, row, character
+      indentRange = helper.getSameIndentationRange editor, origRow, character
       config      = operatorConfig[character]
       regex       = helper.getOffsetRegex character
+      textBlock   = ""
 
       for row in [indentRange.start..indentRange.end]
         lineText = editor.lineForBufferRow row
@@ -40,7 +41,14 @@ align = (editor) ->
         newText += lineText.substr(
           currentOffset + spaceBefore + operator.length + spaceAfter
         )
-        editor.setTextInBufferRange([[row, 0], [row, lineText.length]], newText)
+        textBlock += "#{newText}\n"
+
+      # Replace the whole block
+      editor.setTextInBufferRange([[indentRange.start, 0], [indentRange.end + 1, 0]], textBlock)
+
+      # Update the cursor to the end of the original line
+      editor.setCursorBufferPosition [origRow, editor.lineForBufferRow(origRow).length]
+
 
 module.exports =
   align:    align
