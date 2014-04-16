@@ -2,32 +2,46 @@ operatorConfig = require './operator-config'
 
 ###
 @function
-@name escapeRegExp
+@name parseTokenizedLine
 @description
-To convert string into literal string
-https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Regular_Expressions
-@param {String} string String to parse
-@returns {String} Updated string
+Parsing line with operator
+@param {Object} tokenizedLine Tokenized line object from editor display buffer
+@param {String} character Character to align
+@returns {Object} Information about the tokenized line including text before character,
+                  text after character, character prefix, offset and if the line is
+                  valid
 ###
-escapeRegExp = (string = "") ->
-  string.replace /([.*+?^=!:${}()|\[\]\/\\\-])/g, "\\$1"
+parseTokenizedLine = (tokenizedLine, character) ->
+  before         = ""
+  after          = ""
+  prefix         = null
+  afterCharacter = false
+  config         = operatorConfig[character]
 
-###
-@function
-@name getOffsetRegex
-@description
-Create Regular Expression for the character
-@param {String} char Align character
-@returns {RegExp} RegExp with character
-###
-getOffsetRegex = (char) ->
-  config   = operatorConfig[char]
-  prefixes = "#{config.prefixes.join('')}" if config.prefixes?.length > 0
-  prefixes = "[#{escapeRegExp prefixes}]?"
-  regex    = "(\\s*[^#{char}\\s]+)(\\s*)(#{prefixes}#{char})(\\s*).*"
-  #          indent  variable   whitespace   operator   whitespace   remaining
+  for token in tokenizedLine.tokens
+    if token.value is character
+      afterCharacter = true
+      continue
 
-  return new RegExp(regex)
+    if afterCharacter
+      after += token.value
+    else
+      before += token.value
+
+  # When not whitespace, check prefix
+  if (lastChar = before.substr(-1)) isnt " " and lastChar in config.prefixes
+    prefix = lastChar
+    before = before.slice(0, -1)
+
+  offset = before.trimRight().length
+
+  return {
+    before: before.trimRight()
+    after:  after.trimLeft()
+    prefix: prefix
+    offset: offset
+    valid:  afterCharacter
+  }
 
 ###
 @function
@@ -38,55 +52,67 @@ getOffsetRegex = (char) ->
 @returns {Object} An object with the start and end line
 ###
 getSameIndentationRange = (editor, row, character) ->
-  start  = row - 1
-  end    = row + 1
-  line   = editor.lineForBufferRow row
-  regex  = getOffsetRegex character
-  indent = editor.indentLevelForLine line
-  total  = editor.getLineCount()
+  start     = row - 1
+  end       = row + 1
+  tokenized = editor.displayBuffer.lineForRow row
+  parsed    = parseTokenizedLine tokenized, character
+  indent    = editor.indentLevelForLine tokenized.text
+  total     = editor.getLineCount()
+  hasPrefix = parsed.prefix?
 
-  output = {start: row, end: row, offset: line.match(regex)[1].length}
+  output = {start: row, end: row, offset: parsed.offset}
 
   while start > -1 or end < total + 1
     if start > -1
-      startLine = editor.lineForBufferRow start
-      if startLine? and
-          editor.indentLevelForLine(startLine) is indent and
-          (match = startLine.match(regex))?
+      startLine = editor.displayBuffer.lineForRow start
 
-        output.offset = match[1].length if match[1].length > output.offset
-        output.start  = start
-        start -= 1
+      if startLine? and editor.indentLevelForLine(startLine.text) is indent and
+          (parsed = parseTokenizedLine startLine, character) and parsed.valid
+
+        output.offset  = parsed.offset if parsed.offset > output.offset
+        output.start   = start
+        hasPrefix      = true if not hasPrefix and parsed.prefix?
+        start         -= 1
 
       else
         start = -1
 
     if end < total + 1
-      endLine = editor.lineForBufferRow end
-      if endLine? and
-          editor.indentLevelForLine(endLine) is indent and
-          (match = endLine.match(regex))?
+      endLine = editor.displayBuffer.lineForRow end
 
-        output.offset = match[1].length if match[1].length > output.offset
-        output.end    = end
+      if endLine? and editor.indentLevelForLine(endLine.text) is indent and
+          (parsed = parseTokenizedLine endLine, character) and parsed.valid
+
+        output.offset  = parsed.offset if parsed.offset > output.offset
+        output.end     = end
+        hasPrefix      = true if not hasPrefix and parsed.prefix?
         end           += 1
 
       else
         end = total + 1
 
+  output.offset += 1 if hasPrefix
+
   return output
 
 ###
 @function
-@name getAlignCharacter
+@name getTokenizedAlignCharacter
 @description
 Get the character to align based on text
-@param {String} text Text to search
+@param {Array} tokens Line tokens
 @returns {String} Alignment character
 ###
-getAlignCharacter = (text) ->
-  for character, config of operatorConfig
-    regex = getOffsetRegex character
-    return character if text.match(regex)
+getTokenizedAlignCharacter = (tokens) ->
+  for token, i in tokens
+    config = operatorConfig[token.value]
+    continue unless config
 
-module.exports = {getOffsetRegex, getSameIndentationRange, getAlignCharacter}
+    for scope in token.scopes when scope.match(config.scope)?
+      return token.value
+
+module.exports = {
+  getSameIndentationRange
+  parseTokenizedLine
+  getTokenizedAlignCharacter
+}

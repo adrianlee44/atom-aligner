@@ -1,30 +1,18 @@
 helper = require '../lib/helper'
 
 describe "Helper", ->
-  describe "getOffsetRegex", ->
-    it "should create regex for '='", ->
-      regex = helper.getOffsetRegex "="
-      expect(regex.toString()).toBe("/(\\s*[^=\\s]+)(\\s*)([\\+\\-&\\|<>\\!~%\\/\\*\\.]?=)(\\s*).*/")
+  editor = null
 
-    it "should create regex for ':'", ->
-      regex = helper.getOffsetRegex ":"
-      expect(regex.toString()).toBe("/(\\s*[^:\\s]+)(\\s*)([]?:)(\\s*).*/")
+  beforeEach ->
+    runs ->
+      editor = atom.project.openSync('helper-sample.coffee')
+      buffer = editor.buffer
+      editor.setGrammar(atom.syntax.selectGrammar('text.coffee'))
+
+    waitsForPromise ->
+      atom.packages.activatePackage('language-coffee-script')
 
   describe "getSameIndentationRange", ->
-    editor = null
-
-    beforeEach ->
-      runs ->
-        editor = atom.project.openSync()
-        buffer = editor.getBuffer()
-        editor.setText """
-          test = ->
-            foo = "bar"
-            hello = "world"
-            star = "war"
-        """
-        editor.setGrammar(atom.syntax.selectGrammar('text.js'))
-
     describe "should return valid range object when cursor is in the middle", ->
       output = null
       beforeEach ->
@@ -67,11 +55,74 @@ describe "Helper", ->
       it "should get the valid offset", ->
         expect(output.offset).toBe 7
 
-  describe "getAlignCharacter", ->
-    it "should get '='", ->
-      output = helper.getAlignCharacter "testing = foo"
-      expect(output).toBe "="
+  describe "getTokenizedAlignCharacter", ->
+    it "should get the = character", ->
+      line      = editor.displayBuffer.lineForRow 1
+      character = helper.getTokenizedAlignCharacter line.tokens
 
-    it "should get ':'", ->
-      output = helper.getAlignCharacter "foo: bar"
-      expect(output).toBe ":"
+      expect(character).toBe "="
+
+    it "should get the : character", ->
+      line      = editor.displayBuffer.lineForRow 7
+      character = helper.getTokenizedAlignCharacter line.tokens
+
+      expect(character).toBe ":"
+
+    it "should not find anything", ->
+      line      = editor.displayBuffer.lineForRow 4
+      character = helper.getTokenizedAlignCharacter line.tokens
+
+      expect(character).not.toBeDefined()
+
+  describe "parseTokenizedLine", ->
+
+    describe "parsing a valid line", ->
+      output = null
+      beforeEach ->
+        line = editor.displayBuffer.lineForRow 2
+        output = helper.parseTokenizedLine line, "="
+
+      it "should get the text before = with right trimmed", ->
+        expect(output.before).toBe "  hello"
+
+      it "should get the text after = with left trimmed", ->
+        expect(output.after).toBe '"world"'
+
+      it "should get the offset", ->
+        expect(output.offset).toBe 7
+
+      it "should return no prefix", ->
+        expect(output.prefix).toBe null
+
+      it "should show the line is valid", ->
+        expect(output.valid).toBeTruthy()
+
+    describe "parsing an invalid line", ->
+      output = null
+      beforeEach ->
+        line = editor.displayBuffer.lineForRow 4
+        output = helper.parseTokenizedLine line, "="
+
+      it "should show the line is invalid", ->
+        expect(output.valid).toBeFalsy()
+
+    describe "parsing a line with prefix", ->
+      output = null
+      beforeEach ->
+        line = editor.displayBuffer.lineForRow 9
+        output = helper.parseTokenizedLine line, "="
+
+      it "should show the line is invalid", ->
+        expect(output.valid).toBeTruthy()
+
+      it "should return the correct prefix", ->
+        expect(output.prefix).toBe "-"
+
+      it "should get the text before = with right trimmed", ->
+        expect(output.before).toBe "prefix"
+
+      it "should get the text after = with left trimmed", ->
+        expect(output.after).toBe '1'
+
+      it "should get the offset", ->
+        expect(output.offset).toBe 6

@@ -15,25 +15,9 @@ describe "VerticalAlign", ->
       activationPromise = atom.packages.activatePackage('language-coffee-script')
 
     runs ->
-      editor = atom.project.openSync()
-      buffer = editor.getBuffer()
-      editor.setText """
-        testing = "123"
-        test = "321"
-
-        someFn test
-
-        test =
-          foo: bar
-          helloworld: test
-          star: war
-
-        longPrefix = "test"
-        prefix += "hello"
-
-        noSpace="work"
-      """
-      editor.setGrammar(atom.syntax.selectGrammar('test.js'))
+      editor = atom.project.openSync('vertical-align-sample.coffee')
+      buffer = editor.buffer
+      editor.setGrammar(atom.syntax.selectGrammar('test.coffee'))
 
   it "should align two lines correctly", ->
     editor.setCursorBufferPosition([0, 1])
@@ -50,6 +34,11 @@ describe "VerticalAlign", ->
     align(editor)
     expect(buffer.lineForRow(1)).toBe 'test = "321"'
 
+  it "should handle prefix block correctly", ->
+    editor.setCursorBufferPosition([10, 1])
+    align(editor)
+    expect(buffer.lineForRow(10)).toBe 'longPrefix  = "test"'
+
   it "should handle prefix correctly", ->
     editor.setCursorBufferPosition([10, 1])
     align(editor)
@@ -59,3 +48,22 @@ describe "VerticalAlign", ->
     editor.setCursorBufferPosition([13, 1])
     align(editor)
     expect(buffer.lineForRow(13)).toBe 'noSpace = "work"'
+
+describe "Aligning javascript", ->
+  activationPromise = null
+  editor            = null
+  buffer            = null
+
+  beforeEach ->
+    waitsForPromise ->
+      activationPromise = atom.packages.activatePackage('language-javascript')
+
+    runs ->
+      editor = atom.project.openSync('vertical-align-sample.js')
+      buffer = editor.buffer
+      editor.setGrammar(atom.syntax.selectGrammar('test.js'))
+
+  it "should align two lines correctly", ->
+    editor.setCursorBufferPosition([0, 1])
+    align(editor)
+    expect(buffer.lineForRow(0)).toBe 'var test   = "hello";'

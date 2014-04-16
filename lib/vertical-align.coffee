@@ -4,44 +4,37 @@ helper         = require './helper'
 align = (editor) ->
   if !editor.hasMultipleCursors()
     # Get cursor row and text
-    origRow = editor.getCursorBufferPosition().row
-    text    = editor.lineForBufferRow origRow
+    origRow   = editor.getCursorBufferPosition().row
+    tokenized = editor.displayBuffer.lineForRow origRow
 
     # Get alignment character
-    character = helper.getAlignCharacter text
+    character = helper.getTokenizedAlignCharacter tokenized.tokens
 
     if character
       indentRange = helper.getSameIndentationRange editor, origRow, character
       config      = operatorConfig[character]
-      regex       = helper.getOffsetRegex character
       textBlock   = ""
 
       for row in [indentRange.start..indentRange.end]
-        lineText = editor.lineForBufferRow row
-        match    = lineText.match(regex)
-        # Character length up to the first whitespace before/after alignment character
-        currentOffset = match[1].length
-
-        # Whitespace around alignment character
-        spaceBefore = match[2].length
-        spaceAfter  = match[4].length
-
-        operator = match[3]
+        tokenizedLine = editor.displayBuffer.lineForRow row
+        parsed        = helper.parseTokenizedLine tokenizedLine, character
+        offset        = parsed.offset + (if parsed.prefix? then 1 else 0)
 
         # New whitespaces to add before/after alignment character
-        newSpace = ("" for i in [0..indentRange.offset - currentOffset]).join " "
+        newSpace = ""
+        for i in [1..indentRange.offset - offset] by 1
+          newSpace += " "
 
-        leftSpace   = if config.alignment is "left" then newSpace else ""
-        leftSpace  += " " if config.leftSpace
+        leftSpace  = if config.alignment is "left" then newSpace else ""
+        leftSpace += " " if config.leftSpace
+        leftSpace += parsed.prefix if parsed.prefix?
+
         rightSpace  = if config.alignment is "right" then newSpace else ""
         rightSpace += " " if config.rightSpace
 
-        newText  = lineText.substr(0, currentOffset)
-        newText += leftSpace + operator + rightSpace
-        newText += lineText.substr(
-          currentOffset + spaceBefore + operator.length + spaceAfter
-        )
-        textBlock += "#{newText}\n"
+        textBlock += parsed.before
+        textBlock += leftSpace + character + rightSpace
+        textBlock += "#{parsed.after}\n"
 
       # Replace the whole block
       editor.setTextInBufferRange([[indentRange.start, 0], [indentRange.end + 1, 0]], textBlock)
