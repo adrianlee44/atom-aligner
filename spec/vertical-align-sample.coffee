@@ -12,3 +12,7 @@ longPrefix = "test"
 prefix += "hello"
 
 noSpace="work"
+
+moreComplex =
+  hello: {not: "world"}
+  testing: "123"

@@ -22,7 +22,7 @@ parseTokenizedLine = (tokenizedLine, character) ->
     # When operators aren't tokenized correctly
     tokenValue = token.value.trim()
 
-    if tokenValue is character
+    if tokenValue is character and not afterCharacter
       afterCharacter = true
       continue
 

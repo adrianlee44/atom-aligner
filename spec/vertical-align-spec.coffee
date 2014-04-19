@@ -49,6 +49,11 @@ describe "VerticalAlign", ->
     align(editor)
     expect(buffer.lineForRow(13)).toBe 'noSpace = "work"'
 
+  it "should only align the first ':'", ->
+    editor.setCursorBufferPosition([16, 1])
+    align(editor)
+    expect(buffer.lineForRow(16)).toBe '  hello:   {not: "world"}'
+
 describe "Aligning javascript", ->
   activationPromise = null
   editor            = null
