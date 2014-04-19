@@ -19,7 +19,10 @@ parseTokenizedLine = (tokenizedLine, character) ->
   config         = operatorConfig[character]
 
   for token in tokenizedLine.tokens
-    if token.value is character
+    # When operators aren't tokenized correctly
+    tokenValue = token.value.trim()
+
+    if tokenValue is character
       afterCharacter = true
       continue
 
@@ -105,11 +108,12 @@ Get the character to align based on text
 ###
 getTokenizedAlignCharacter = (tokens) ->
   for token, i in tokens
-    config = operatorConfig[token.value]
+    tokenValue = token.value.trim()
+    config     = operatorConfig[tokenValue]
     continue unless config
 
     for scope in token.scopes when scope.match(config.scope)?
-      return token.value
+      return tokenValue
 
 module.exports = {
   getSameIndentationRange

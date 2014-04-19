@@ -67,3 +67,8 @@ describe "Aligning javascript", ->
     editor.setCursorBufferPosition([0, 1])
     align(editor)
     expect(buffer.lineForRow(0)).toBe 'var test   = "hello";'
+
+  it "should align ':' which isn't tokenized with scope", ->
+    editor.setCursorBufferPosition([5,1])
+    align(editor)
+    expect(buffer.lineForRow(5)).toBe '  "foo":   "bar"'
