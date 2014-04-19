@@ -50,10 +50,12 @@ random =
 ```
 
 ## Changelog
+- 2014-04-18   v0.3.1   Fixed aligning ':'
 - 2014-04-16   v0.3.0   Full rewrite to make vertical-align more robust
 - 2014-03-06   v0.2.0   Updated README
 - 2014-03-06   v0.1.0   Initial release
 
 ## TODO:
 - Allow custom configurations
-- Better prefix support
+- Support "," alignment
+- Support aligning multiple characters on a line
