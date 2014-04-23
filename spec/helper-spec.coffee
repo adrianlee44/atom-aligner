@@ -25,7 +25,7 @@ describe "Helper", ->
         expect(output.end).toBe 3
 
       it "should get the valid offset", ->
-        expect(output.offset).toBe 7
+        expect(output.offset).toEqual [7]
 
     describe "should return valid range object when cursor is on the last line", ->
       output = null
@@ -39,7 +39,7 @@ describe "Helper", ->
         expect(output.end).toBe 3
 
       it "should get the valid offset", ->
-        expect(output.offset).toBe 7
+        expect(output.offset).toEqual [7]
 
     describe "should return valid range object when cursor is on the first line", ->
       output = null
@@ -53,7 +53,7 @@ describe "Helper", ->
         expect(output.end).toBe 3
 
       it "should get the valid offset", ->
-        expect(output.offset).toBe 7
+        expect(output.offset).toEqual [7]
 
   describe "getTokenizedAlignCharacter", ->
     it "should get the = character", ->
@@ -83,13 +83,13 @@ describe "Helper", ->
         output = helper.parseTokenizedLine line, "="
 
       it "should get the text before = with right trimmed", ->
-        expect(output.before).toBe "  hello"
+        expect(output[0].before).toBe "  hello"
 
       it "should get the text after = with left trimmed", ->
-        expect(output.after).toBe '"world"'
+        expect(output[0].after).toBe '"world"'
 
       it "should get the offset", ->
-        expect(output.offset).toBe 7
+        expect(output[0].offset).toBe 7
 
       it "should return no prefix", ->
         expect(output.prefix).toBe null
@@ -109,20 +109,20 @@ describe "Helper", ->
     describe "parsing a line with prefix", ->
       output = null
       beforeEach ->
-        line = editor.displayBuffer.lineForRow 9
+        line   = editor.displayBuffer.lineForRow 9
         output = helper.parseTokenizedLine line, "="
 
-      it "should show the line is invalid", ->
+      it "should show the line is valid", ->
         expect(output.valid).toBeTruthy()
 
       it "should return the correct prefix", ->
         expect(output.prefix).toBe "-"
 
       it "should get the text before = with right trimmed", ->
-        expect(output.before).toBe "prefix"
+        expect(output[0].before).toBe "prefix"
 
       it "should get the text after = with left trimmed", ->
-        expect(output.after).toBe '1'
+        expect(output[0].after).toBe '1'
 
       it "should get the offset", ->
-        expect(output.offset).toBe 6
+        expect(output[0].offset).toBe 6

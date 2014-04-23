@@ -18,23 +18,31 @@ align = (editor) ->
       for row in [indentRange.start..indentRange.end]
         tokenizedLine = editor.displayBuffer.lineForRow row
         parsed        = helper.parseTokenizedLine tokenizedLine, character
-        offset        = parsed.offset + (if parsed.prefix? then 1 else 0)
 
-        # New whitespaces to add before/after alignment character
-        newSpace = ""
-        for i in [1..indentRange.offset - offset] by 1
-          newSpace += " "
+        for parsedItem, i in parsed
+          offset = parsedItem.offset + (if parsed.prefix? then 1 else 0)
 
-        leftSpace  = if config.alignment is "left" then newSpace else ""
-        leftSpace += " " if config.leftSpace
-        leftSpace += parsed.prefix if parsed.prefix?
+          # New whitespaces to add before/after alignment character
+          newSpace = ""
+          for j in [1..indentRange.offset[i] - offset] by 1
+            newSpace += " "
 
-        rightSpace  = if config.alignment is "right" then newSpace else ""
-        rightSpace += " " if config.rightSpace
+          leftSpace  = if config.alignment is "left" then newSpace else ""
+          leftSpace += " " if config.leftSpace
+          leftSpace += parsed.prefix if parsed.prefix?
 
-        textBlock += parsed.before
-        textBlock += leftSpace + character + rightSpace
-        textBlock += "#{parsed.after}\n"
+          rightSpace  = if config.alignment is "right" then newSpace else ""
+          rightSpace += " " if config.rightSpace
+
+          textBlock += parsedItem.before
+
+          if config.multiple and i is parsed.length - 1
+            continue
+
+          textBlock += leftSpace + character + rightSpace
+          textBlock += parsedItem.after
+
+        textBlock += "\n"
 
       # Replace the whole block
       editor.setTextInBufferRange([[indentRange.start, 0], [indentRange.end + 1, 0]], textBlock)

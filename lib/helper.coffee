@@ -12,39 +12,50 @@ Parsing line with operator
                   valid
 ###
 parseTokenizedLine = (tokenizedLine, character) ->
-  before         = ""
-  after          = ""
-  prefix         = null
   afterCharacter = false
   config         = operatorConfig[character]
+  parsed         = []
+  parsed.prefix  = null
+  section        =
+    before: ""
+    after:  ""
+
+  addToParsed = ->
+    # When not whitespace, check prefix
+    if (lastChar = section.before.substr(-1)) isnt " " and lastChar in config.prefixes
+      parsed.prefix  = lastChar
+      section.before = section.before.slice(0, -1)
+
+    section.before = section.before.trimRight()
+    section.after  = section.after.trimLeft()
+    section.offset = section.before.length
+
+    parsed.push section
+
+    # clear the original section
+    section =
+      before: ""
+      after:  ""
 
   for token in tokenizedLine.tokens
     # When operators aren't tokenized correctly
     tokenValue = token.value.trim()
 
-    if tokenValue is character and not afterCharacter
+    if tokenValue is character and (not afterCharacter or config.multiple)
+      if config.multiple
+        addToParsed()
+
       afterCharacter = true
       continue
 
-    if afterCharacter
-      after += token.value
-    else
-      before += token.value
+    variable           = if afterCharacter and not config.multiple then "after" else "before"
+    section[variable] += token.value
 
-  # When not whitespace, check prefix
-  if (lastChar = before.substr(-1)) isnt " " and lastChar in config.prefixes
-    prefix = lastChar
-    before = before.slice(0, -1)
+  # Add the last section to pared
+  addToParsed()
+  parsed.valid = afterCharacter
 
-  offset = before.trimRight().length
-
-  return {
-    before: before.trimRight()
-    after:  after.trimLeft()
-    prefix: prefix
-    offset: offset
-    valid:  afterCharacter
-  }
+  return parsed
 
 ###
 @function
@@ -63,7 +74,16 @@ getSameIndentationRange = (editor, row, character) ->
   total     = editor.getLineCount()
   hasPrefix = parsed.prefix?
 
-  output = {start: row, end: row, offset: parsed.offset}
+  output = {start: row, end: row, offset: []}
+
+  checkOffset = (parsedObjs) ->
+    for parsedItem, i in parsedObjs
+      output.offset[i] ?= parsedItem.offset
+
+      if parsedItem.offset > output.offset[i]
+        output.offset[i] = parsedItem.offset
+
+  checkOffset parsed
 
   while start > -1 or end < total + 1
     if start > -1
@@ -72,10 +92,10 @@ getSameIndentationRange = (editor, row, character) ->
       if startLine? and editor.indentLevelForLine(startLine.text) is indent and
           (parsed = parseTokenizedLine startLine, character) and parsed.valid
 
-        output.offset  = parsed.offset if parsed.offset > output.offset
-        output.start   = start
-        hasPrefix      = true if not hasPrefix and parsed.prefix?
-        start         -= 1
+        checkOffset parsed
+        output.start  = start
+        hasPrefix     = true if not hasPrefix and parsed.prefix?
+        start        -= 1
 
       else
         start = -1
@@ -86,15 +106,16 @@ getSameIndentationRange = (editor, row, character) ->
       if endLine? and editor.indentLevelForLine(endLine.text) is indent and
           (parsed = parseTokenizedLine endLine, character) and parsed.valid
 
-        output.offset  = parsed.offset if parsed.offset > output.offset
-        output.end     = end
-        hasPrefix      = true if not hasPrefix and parsed.prefix?
-        end           += 1
+        checkOffset parsed
+        output.end  = end
+        hasPrefix   = true if not hasPrefix and parsed.prefix?
+        end        += 1
 
       else
         end = total + 1
 
-  output.offset += 1 if hasPrefix
+  if hasPrefix
+    output.offset = output.offset.map (item) -> item + 1
 
   return output
 
