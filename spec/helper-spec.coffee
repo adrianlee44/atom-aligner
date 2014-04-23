@@ -68,6 +68,12 @@ describe "Helper", ->
 
       expect(character).toBe ":"
 
+    it "should get the , character", ->
+      line      = editor.displayBuffer.lineForRow 13
+      character = helper.getTokenizedAlignCharacter line.tokens
+
+      expect(character).toBe ","
+
     it "should not find anything", ->
       line      = editor.displayBuffer.lineForRow 4
       character = helper.getTokenizedAlignCharacter line.tokens
@@ -126,3 +132,25 @@ describe "Helper", ->
 
       it "should get the offset", ->
         expect(output[0].offset).toBe 6
+
+    describe "parsing a line with multiple characters", ->
+      output = null
+      beforeEach ->
+        line   = editor.displayBuffer.lineForRow 13
+        output = helper.parseTokenizedLine line, ","
+
+      it "should show the line is valid", ->
+        expect(output.valid).toBeTruthy()
+
+      it "should parsed out 3 items", ->
+        expect(output.length).toBe 3
+
+      it "should not have any prefix", ->
+        expect(output.prefix).toBe null
+
+      it "should have content in before for all items", ->
+        content = true
+        output.forEach (item) ->
+          content = false if item.before.length is 0
+
+        expect(content).toBeTruthy()

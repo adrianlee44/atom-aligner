@@ -16,3 +16,8 @@ noSpace="work"
 moreComplex =
   hello: {not: "world"}
   testing: "123"
+
+multipleOnSameLine = [
+  ["hello", 2112, 12939]
+  ["abc", 19293, 102304]
+]

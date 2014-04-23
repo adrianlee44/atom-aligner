@@ -13,4 +13,12 @@ module.exports = {
     prefixes:   []
     scope:      "operator|assignment|source"
   }
+  ",": {
+    alignment:  "right"
+    leftSpace:  false
+    rightSpace: true
+    prefixes:   []
+    scope:      "delimiter"
+    multiple:   true
+  }
 }

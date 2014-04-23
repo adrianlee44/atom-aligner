@@ -9,3 +9,8 @@ object =
 
 prefix -= 1
 noprefix = 2
+
+multipleOnSameLine = [
+  ["hello", 2112, 12939]
+  ["abc", 19293, 102304]
+]

@@ -54,6 +54,11 @@ describe "VerticalAlign", ->
     align(editor)
     expect(buffer.lineForRow(16)).toBe '  hello:   {not: "world"}'
 
+  it "should align multiple items correctly", ->
+    editor.setCursorBufferPosition([20, 1])
+    align(editor)
+    expect(buffer.lineForRow(21)).toBe '  ["abc",   19293, 102304]'
+
 describe "Aligning javascript", ->
   activationPromise = null
   editor            = null
@@ -77,3 +82,8 @@ describe "Aligning javascript", ->
     editor.setCursorBufferPosition([5,1])
     align(editor)
     expect(buffer.lineForRow(5)).toBe '  "foo":   "bar"'
+
+  it "should align ',' correctly", ->
+    editor.setCursorBufferPosition [9, 1]
+    align(editor)
+    expect(buffer.lineForRow(10)).toBe '  ["3",     2, 4]'
