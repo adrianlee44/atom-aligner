@@ -1,4 +1,4 @@
-# vertical-align package
+# vertical-align package [![Build Status](https://travis-ci.org/adrianlee44/atom-vertical-align.svg?branch=master)](https://travis-ci.org/adrianlee44/atom-vertical-align)
 
 `ctrl-cmd-/` to align operators.
 
