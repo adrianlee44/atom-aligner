@@ -27,20 +27,28 @@ align = (editor) ->
           for j in [1..indentRange.offset[i] - offset] by 1
             newSpace += " "
 
-          leftSpace  = if config.alignment is "left" then newSpace else ""
+          if config.multiple
+            type      = if isNaN(+parsedItem.before) then "string" else "number"
+            alignment = config.multiple[type].alignment
+
+          else
+            alignment = config.alignment
+
+          leftSpace  = if alignment is "left" then newSpace else ""
           leftSpace += " " if config.leftSpace
           leftSpace += parsed.prefix if parsed.prefix?
 
-          rightSpace  = if config.alignment is "right" then newSpace else ""
+          rightSpace  = if alignment is "right" then newSpace else ""
           rightSpace += " " if config.rightSpace
 
-          textBlock += parsedItem.before
+          if config.multiple
+            textBlock += leftSpace + parsedItem.before
+            textBlock += rightSpace + character unless i is parsed.length - 1
 
-          if config.multiple and i is parsed.length - 1
-            continue
-
-          textBlock += leftSpace + character + rightSpace
-          textBlock += parsedItem.after
+          else
+            textBlock += parsedItem.before
+            textBlock += leftSpace + character + rightSpace
+            textBlock += parsedItem.after
 
         textBlock += "\n"
 

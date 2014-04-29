@@ -14,11 +14,15 @@ module.exports = {
     scope:      "operator|assignment|source"
   }
   ",": {
-    alignment:  "right"
-    leftSpace:  false
-    rightSpace: true
+    leftSpace:  true
+    rightSpace: false
     prefixes:   []
     scope:      "delimiter"
-    multiple:   true
+    multiple:   {
+      "number":
+        alignment: "left"
+      "string":
+        alignment: "right"
+    }
   }
 }

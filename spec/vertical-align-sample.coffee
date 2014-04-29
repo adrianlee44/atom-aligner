@@ -18,6 +18,6 @@ moreComplex =
   testing: "123"
 
 multipleOnSameLine = [
-  ["hello", 2112, 12939]
-  ["abc", 19293, 102304]
+  ["hello", 2112, 12939, "testing"]
+  ["abc", 19293, 102304, "more"]
 ]
