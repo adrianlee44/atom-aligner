@@ -4,7 +4,7 @@ module.exports = {
     leftSpace:  true
     rightSpace: true
     prefixes:   ["+", "-", "&", "|", "<", ">", "!", "~", "%", "/", "*", "."]
-    scope:      "operator|assignment"
+    scope:      "operator|assignment|source"
   }
   ":": {
     alignment:  "right"
