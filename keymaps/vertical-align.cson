@@ -7,5 +7,7 @@
 
 # For more detailed documentation see
 # https://atom.io/docs/latest/advanced/keymaps
-'.editor':
+'.platform-darwin .editor':
   'ctrl-cmd-/': 'vertical-align:align'
+'.platform-win32 .editor, .platform-linux .editor':
+  'ctrl-alt-/': 'vertical-align:align'
