@@ -1,6 +1,9 @@
 # vertical-align package [![Build Status](https://travis-ci.org/adrianlee44/atom-vertical-align.svg?branch=master)](https://travis-ci.org/adrianlee44/atom-vertical-align)
 
-`ctrl-cmd-/` to align operators.
+Align elements and operators in Atom
+
+- Mac: `ctrl-cmd-/`
+- Linux/Windows: `ctrl-alt-/`
 
 ![vertical-align](https://raw.github.com/adrianlee44/atom-vertical-align/master/demo.gif)
 
@@ -66,6 +69,7 @@ To:
 ```
 
 ## Changelog
+- 2014-07-09   v0.5.0   Added keybinding for Linux and Windows
 - 2014-04-29   v0.4.0   Added inline array alignment support
 - 2014-04-18   v0.3.1   Fixed aligning ':'
 - 2014-04-16   v0.3.0   Full rewrite to make vertical-align more robust
