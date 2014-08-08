@@ -87,3 +87,22 @@ describe "Aligning javascript", ->
     editor.setCursorBufferPosition [9, 1]
     align(editor)
     expect(buffer.lineForRow(10)).toBe '   ["3"    , 2, 4]'
+
+describe "Aligning ruby", ->
+  activationPromise = null
+  editor            = null
+  buffer            = null
+
+  beforeEach ->
+    waitsForPromise ->
+      activationPromise = atom.packages.activatePackage('language-ruby')
+
+    runs ->
+      editor = atom.project.openSync('vertical-align-sample.ruby')
+      buffer = editor.buffer
+      editor.setGrammar(atom.syntax.selectGrammar('test.ruby'))
+
+  it "should align key-value operator correctly", ->
+    editor.setCursorBufferPosition([1, 1])
+    align(editor)
+    expect(buffer.lineForRow(3)).toBe '  :jyutping        => jyutping,'

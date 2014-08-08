@@ -25,4 +25,10 @@ module.exports = {
         alignment: "right"
     }
   }
+  "=>": {
+    alignment:  "left"
+    leftSpace:  true
+    rightSpace: true
+    scope:      "key-value"
+  }
 }
