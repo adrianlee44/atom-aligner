@@ -4,14 +4,14 @@ module.exports = {
     leftSpace:  true
     rightSpace: true
     prefixes:   ["+", "-", "&", "|", "<", ">", "!", "~", "%", "/", "*", "."]
-    scope:      "operator|assignment|source"
+    scope:      "operator|assignment"
   }
   ":": {
     alignment:  "right"
     leftSpace:  false
     rightSpace: true
     prefixes:   []
-    scope:      "operator|assignment|source"
+    scope:      "operator|assignment"
   }
   ",": {
     leftSpace:  true
