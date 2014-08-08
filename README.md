@@ -7,6 +7,11 @@ Align elements and operators in Atom
 
 ![vertical-align](https://raw.github.com/adrianlee44/atom-vertical-align/master/demo.gif)
 
+##### Tested Supported Languages
+- Javascript
+- Coffeescript
+- Ruby
+
 ## Examples
 ### Assignment
 From:
@@ -69,6 +74,7 @@ To:
 ```
 
 ## Changelog
+- 2014-08-08   v0.5.1   Added support for => operator
 - 2014-07-09   v0.5.0   Added keybinding for Linux and Windows
 - 2014-04-29   v0.4.0   Added inline array alignment support
 - 2014-04-18   v0.3.1   Fixed aligning ':'
