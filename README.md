@@ -74,6 +74,7 @@ To:
 ```
 
 ## Changelog
+- 2014-08-18   v0.5.2   Removed deprecated Atom function
 - 2014-08-08   v0.5.1   Added support for => operator
 - 2014-07-09   v0.5.0   Added keybinding for Linux and Windows
 - 2014-04-29   v0.4.0   Added inline array alignment support
@@ -84,3 +85,4 @@ To:
 
 ## TODO:
 - Allow custom configurations
+- Add multi-cursors support
