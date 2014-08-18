@@ -63,5 +63,5 @@ module.exports =
   align:    align
   activate: ->
     atom.workspaceView.command 'vertical-align:align', '.editor', ->
-      editor = atom.workspaceView.getActivePaneItem()
+      editor = atom.workspace.getActivePaneItem()
       align(editor)
