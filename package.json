@@ -10,7 +10,7 @@
   "repository": "https://github.com/adrianlee44/atom-vertical-align",
   "license": "MIT",
   "engines": {
-    "atom": ">0.50.0"
+    "atom": ">=0.125.0"
   },
   "dependencies": {}
 }
