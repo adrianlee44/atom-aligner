@@ -66,11 +66,14 @@ parseTokenizedLine = (tokenizedLine, character) ->
 @returns {Object} An object with the start and end line
 ###
 getSameIndentationRange = (editor, row, character) ->
-  start     = row - 1
-  end       = row + 1
-  tokenized = editor.displayBuffer.lineForRow row
+  start = row - 1
+  end   = row + 1
+
+  grammar   = editor.getGrammar()
+  tokenized = grammar.tokenizeLine editor.lineTextForBufferRow row
+
   parsed    = parseTokenizedLine tokenized, character
-  indent    = editor.indentLevelForLine tokenized.text
+  indent    = editor.indentationForBufferRow row
   total     = editor.getLineCount()
   hasPrefix = parsed.prefix?
 
@@ -87,9 +90,9 @@ getSameIndentationRange = (editor, row, character) ->
 
   while start > -1 or end < total + 1
     if start > -1
-      startLine = editor.displayBuffer.lineForRow start
+      startLine = grammar.tokenizeLine editor.lineTextForBufferRow start
 
-      if startLine? and editor.indentLevelForLine(startLine.text) is indent and
+      if startLine? and editor.indentationForBufferRow(start) is indent and
           (parsed = parseTokenizedLine startLine, character) and parsed.valid
 
         checkOffset parsed
@@ -101,9 +104,9 @@ getSameIndentationRange = (editor, row, character) ->
         start = -1
 
     if end < total + 1
-      endLine = editor.displayBuffer.lineForRow end
+      endLine = grammar.tokenizeLine editor.lineTextForBufferRow end
 
-      if endLine? and editor.indentLevelForLine(endLine.text) is indent and
+      if endLine? and editor.indentationForBufferRow(end) is indent and
           (parsed = parseTokenizedLine endLine, character) and parsed.valid
 
         checkOffset parsed

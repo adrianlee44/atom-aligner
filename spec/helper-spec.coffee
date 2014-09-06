@@ -4,8 +4,11 @@ describe "Helper", ->
   editor = null
 
   beforeEach ->
+    waitsForPromise ->
+      atom.project.open('helper-sample.coffee').then (o) ->
+        editor = o
+
     runs ->
-      editor = atom.project.openSync('helper-sample.coffee')
       buffer = editor.buffer
       editor.setGrammar(atom.syntax.selectGrammar('text.coffee'))
 
@@ -56,36 +59,43 @@ describe "Helper", ->
         expect(output.offset).toEqual [7]
 
   describe "getTokenizedAlignCharacter", ->
+    grammar = null
+    beforeEach ->
+      grammar = editor.getGrammar()
+
     it "should get the = character", ->
-      line      = editor.displayBuffer.lineForRow 1
+      line      = grammar.tokenizeLine editor.lineTextForBufferRow 1
       character = helper.getTokenizedAlignCharacter line.tokens
 
       expect(character).toBe "="
 
     it "should get the : character", ->
-      line      = editor.displayBuffer.lineForRow 7
+      line      = grammar.tokenizeLine editor.lineTextForBufferRow 7
       character = helper.getTokenizedAlignCharacter line.tokens
 
       expect(character).toBe ":"
 
     it "should get the , character", ->
-      line      = editor.displayBuffer.lineForRow 13
+      line      = grammar.tokenizeLine editor.lineTextForBufferRow 13
       character = helper.getTokenizedAlignCharacter line.tokens
 
       expect(character).toBe ","
 
     it "should not find anything", ->
-      line      = editor.displayBuffer.lineForRow 4
+      line      = grammar.tokenizeLine editor.lineTextForBufferRow 4
       character = helper.getTokenizedAlignCharacter line.tokens
 
       expect(character).not.toBeDefined()
 
   describe "parseTokenizedLine", ->
+    grammar = null
+    beforeEach ->
+      grammar = editor.getGrammar()
 
     describe "parsing a valid line", ->
       output = null
       beforeEach ->
-        line = editor.displayBuffer.lineForRow 2
+        line = grammar.tokenizeLine editor.lineTextForBufferRow 2
         output = helper.parseTokenizedLine line, "="
 
       it "should get the text before = with right trimmed", ->
@@ -106,8 +116,9 @@ describe "Helper", ->
     describe "parsing an invalid line", ->
       output = null
       beforeEach ->
-        line = editor.displayBuffer.lineForRow 4
-        output = helper.parseTokenizedLine line, "="
+        grammar = editor.getGrammar()
+        line    = grammar.tokenizeLine editor.lineTextForBufferRow 4
+        output  = helper.parseTokenizedLine line, "="
 
       it "should show the line is invalid", ->
         expect(output.valid).toBeFalsy()
@@ -115,8 +126,9 @@ describe "Helper", ->
     describe "parsing a line with prefix", ->
       output = null
       beforeEach ->
-        line   = editor.displayBuffer.lineForRow 9
-        output = helper.parseTokenizedLine line, "="
+        grammar = editor.getGrammar()
+        line    = grammar.tokenizeLine editor.lineTextForBufferRow 9
+        output  = helper.parseTokenizedLine line, "="
 
       it "should show the line is valid", ->
         expect(output.valid).toBeTruthy()
@@ -136,8 +148,9 @@ describe "Helper", ->
     describe "parsing a line with multiple characters", ->
       output = null
       beforeEach ->
-        line   = editor.displayBuffer.lineForRow 13
-        output = helper.parseTokenizedLine line, ","
+        grammar = editor.getGrammar()
+        line    = grammar.tokenizeLine editor.lineTextForBufferRow 13
+        output  = helper.parseTokenizedLine line, ","
 
       it "should show the line is valid", ->
         expect(output.valid).toBeTruthy()

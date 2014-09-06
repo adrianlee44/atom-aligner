@@ -14,8 +14,11 @@ describe "VerticalAlign", ->
     waitsForPromise ->
       activationPromise = atom.packages.activatePackage('language-coffee-script')
 
+    waitsForPromise ->
+      atom.project.open('vertical-align-sample.coffee').then (o) ->
+        editor = o
+
     runs ->
-      editor = atom.project.openSync('vertical-align-sample.coffee')
       buffer = editor.buffer
       editor.setGrammar(atom.syntax.selectGrammar('test.coffee'))
 
@@ -68,8 +71,11 @@ describe "Aligning javascript", ->
     waitsForPromise ->
       activationPromise = atom.packages.activatePackage('language-javascript')
 
+    waitsForPromise ->
+      atom.project.open('vertical-align-sample.js').then (o) ->
+        editor = o
+
     runs ->
-      editor = atom.project.openSync('vertical-align-sample.js')
       buffer = editor.buffer
       editor.setGrammar(atom.syntax.selectGrammar('test.js'))
 
@@ -97,8 +103,11 @@ describe "Aligning ruby", ->
     waitsForPromise ->
       activationPromise = atom.packages.activatePackage('language-ruby')
 
+    waitsForPromise ->
+      atom.project.open('vertical-align-sample.ruby').then (o) ->
+        editor = o
+
     runs ->
-      editor = atom.project.openSync('vertical-align-sample.ruby')
       buffer = editor.buffer
       editor.setGrammar(atom.syntax.selectGrammar('test.ruby'))
 
