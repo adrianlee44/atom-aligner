@@ -18,8 +18,6 @@ align = (editor) ->
       config      = operatorConfig[character]
       textBlock = ""
 
-      return if indentRange.start is indentRange.end
-
       for row in [indentRange.start..indentRange.end]
         tokenizedLine = grammar.tokenizeLine editor.lineTextForBufferRow row
         parsed        = helper.parseTokenizedLine tokenizedLine, character
