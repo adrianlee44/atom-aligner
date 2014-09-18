@@ -18,6 +18,8 @@ align = (editor) ->
       config      = operatorConfig[character]
       textBlock = ""
 
+      return if indentRange.start is indentRange.end
+
       for row in [indentRange.start..indentRange.end]
         tokenizedLine = grammar.tokenizeLine editor.lineTextForBufferRow row
         parsed        = helper.parseTokenizedLine tokenizedLine, character
@@ -45,7 +47,7 @@ align = (editor) ->
           rightSpace += " " if config.rightSpace
 
           if config.multiple
-            textBlock += leftSpace + parsedItem.before
+            textBlock += (if i is 0 then "" else leftSpace) + parsedItem.before
             textBlock += rightSpace + character unless i is parsed.length - 1
 
           else
