@@ -88,7 +88,7 @@ getSameIndentationRange = (editor, row, character) ->
 
   checkOffset parsed
 
-  while start > -1 or end < total + 1
+  while start > -1 or end < total
     if start > -1
       startLine = grammar.tokenizeLine editor.lineTextForBufferRow start
 
