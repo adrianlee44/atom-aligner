@@ -60,7 +60,7 @@ describe "VerticalAlign", ->
   it "should align multiple items correctly", ->
     editor.setCursorBufferPosition([20, 1])
     align(editor)
-    expect(buffer.lineForRow(21)).toBe '   ["abc"  , 19293, 102304, "more"]'
+    expect(buffer.lineForRow(21)).toBe '  ["abc"  , 19293, 102304, "more"]'
 
 describe "Aligning javascript", ->
   activationPromise = null
@@ -92,7 +92,7 @@ describe "Aligning javascript", ->
   it "should align ',' correctly", ->
     editor.setCursorBufferPosition [9, 1]
     align(editor)
-    expect(buffer.lineForRow(10)).toBe '   ["3"    , 2, 4]'
+    expect(buffer.lineForRow(10)).toBe '  ["3"    , 2, 4]'
 
 describe "Aligning ruby", ->
   activationPromise = null
