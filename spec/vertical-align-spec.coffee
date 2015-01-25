@@ -1,4 +1,4 @@
-{align} = require '../lib/vertical-align'
+{align} = require '../lib/main'
 
 # Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
 #

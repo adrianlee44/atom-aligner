@@ -1,34 +1,15 @@
-module.exports = {
-  "=": {
-    alignment:  "left"
-    leftSpace:  true
-    rightSpace: true
-    prefixes:   ["+", "-", "&", "|", "<", ">", "!", "~", "%", "/", "*", "."]
-    scope:      "operator|assignment"
-  }
-  ":": {
-    alignment:  "right"
-    leftSpace:  false
-    rightSpace: true
-    prefixes:   []
-    scope:      "operator|assignment"
-  }
-  ",": {
-    leftSpace:  true
-    rightSpace: false
-    prefixes:   []
-    scope:      "delimiter"
-    multiple:   {
-      "number":
-        alignment: "left"
-      "string":
-        alignment: "right"
-    }
-  }
-  "=>": {
-    alignment:  "left"
-    leftSpace:  true
-    rightSpace: true
-    scope:      "key-value"
-  }
-}
+configs = require '../config'
+
+class OperationConfig
+  constructor: ->
+    for key, config of configs
+      if config.prefixes?
+        for prefix in config.prefixes
+          keyWithPrefix = prefix + key
+
+          configs[keyWithPrefix] = config
+
+  getConfig: (character) ->
+    return configs[character]
+
+module.exports = new OperationConfig()

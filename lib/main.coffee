@@ -15,8 +15,8 @@ align = (editor) ->
 
     if character
       indentRange = helper.getSameIndentationRange editor, origRow, character
-      config      = operatorConfig[character]
-      textBlock = ""
+      config      = operatorConfig.getConfig character
+      textBlock   = ""
 
       for row in [indentRange.start..indentRange.end]
         tokenizedLine = grammar.tokenizeLine editor.lineTextForBufferRow row
@@ -65,6 +65,5 @@ align = (editor) ->
 module.exports =
   align:    align
   activate: ->
-    atom.workspaceView.command 'vertical-align:align', '.editor', ->
-      editor = atom.workspace.getActivePaneItem()
-      align(editor)
+    atom.commands.add 'atom-text-editor', 'vertical-align:align', ->
+      align atom.workspace.getActiveTextEditor()

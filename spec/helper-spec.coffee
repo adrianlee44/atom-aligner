@@ -10,7 +10,7 @@ describe "Helper", ->
 
     runs ->
       buffer = editor.buffer
-      editor.setGrammar(atom.syntax.selectGrammar('text.coffee'))
+      editor.setGrammar(atom.grammars.selectGrammar('text.coffee'))
 
     waitsForPromise ->
       atom.packages.activatePackage('language-coffee-script')
@@ -128,7 +128,7 @@ describe "Helper", ->
       beforeEach ->
         grammar = editor.getGrammar()
         line    = grammar.tokenizeLine editor.lineTextForBufferRow 9
-        output  = helper.parseTokenizedLine line, "="
+        output  = helper.parseTokenizedLine line, "-="
 
       it "should show the line is valid", ->
         expect(output.valid).toBeTruthy()

@@ -13,7 +13,7 @@ Parsing line with operator
 ###
 parseTokenizedLine = (tokenizedLine, character) ->
   afterCharacter = false
-  config         = operatorConfig[character]
+  config         = operatorConfig.getConfig character
   parsed         = []
   parsed.prefix  = null
   section        =
@@ -133,7 +133,7 @@ Get the character to align based on text
 getTokenizedAlignCharacter = (tokens) ->
   for token, i in tokens
     tokenValue = token.value.trim()
-    config     = operatorConfig[tokenValue]
+    config     = operatorConfig.getConfig tokenValue
     continue unless config
 
     for scope in token.scopes when scope.match(config.scope)?
