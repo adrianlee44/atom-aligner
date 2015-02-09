@@ -1,4 +1,4 @@
-# vertical-align package [![Build Status](https://travis-ci.org/adrianlee44/atom-vertical-align.svg?branch=master)](https://travis-ci.org/adrianlee44/atom-vertical-align)
+# vertical-align package [![Build Status](https://img.shields.io/travis/adrianlee44/atom-vertical-align/master.svg?style=flat-square)](https://travis-ci.org/adrianlee44/atom-vertical-align)
 
 Align elements and operators in Atom
 
