@@ -21,11 +21,6 @@ parseTokenizedLine = (tokenizedLine, character) ->
     after:  ""
 
   addToParsed = ->
-    # When not whitespace, check prefix
-    if (lastChar = section.before.substr(-1)) isnt " " and lastChar in config.prefixes
-      parsed.prefix  = lastChar
-      section.before = section.before.slice(0, -1)
-
     section.before = section.before.trimRight()
     section.after  = section.after.trimLeft()
     section.offset = section.before.length
@@ -38,10 +33,10 @@ parseTokenizedLine = (tokenizedLine, character) ->
       after:  ""
 
   for token in tokenizedLine.tokens
-    # When operators aren't tokenized correctly
     tokenValue = token.value.trim()
+    if operatorConfig.canAlignWith(character, tokenValue) and (not afterCharacter or config.multiple)
+      parsed.prefix = operatorConfig.isPrefixed tokenValue
 
-    if tokenValue is character and (not afterCharacter or config.multiple)
       if config.multiple
         addToParsed()
 
@@ -75,16 +70,16 @@ getSameIndentationRange = (editor, row, character) ->
   parsed    = parseTokenizedLine tokenized, character
   indent    = editor.indentationForBufferRow row
   total     = editor.getLineCount()
-  hasPrefix = parsed.prefix?
+  hasPrefix = parsed.prefix
 
   output = {start: row, end: row, offset: []}
 
-  checkOffset = (parsedObjs) ->
-    for parsedItem, i in parsedObjs
-      output.offset[i] ?= parsedItem.offset
+  checkOffset = (parsedObjects) ->
+    for parsedObject, i in parsedObjects
+      output.offset[i] ?= parsedObject.offset
 
-      if parsedItem.offset > output.offset[i]
-        output.offset[i] = parsedItem.offset
+      if parsedObject.offset > output.offset[i]
+        output.offset[i] = parsedObject.offset
 
   checkOffset parsed
 
@@ -97,7 +92,7 @@ getSameIndentationRange = (editor, row, character) ->
 
         checkOffset parsed
         output.start  = start
-        hasPrefix     = true if not hasPrefix and parsed.prefix?
+        hasPrefix     = true if not hasPrefix and parsed.prefix
         start        -= 1
 
       else
@@ -111,7 +106,7 @@ getSameIndentationRange = (editor, row, character) ->
 
         checkOffset parsed
         output.end  = end
-        hasPrefix   = true if not hasPrefix and parsed.prefix?
+        hasPrefix   = true if not hasPrefix and parsed.prefix
         end        += 1
 
       else
@@ -133,7 +128,8 @@ Get the character to align based on text
 getTokenizedAlignCharacter = (tokens) ->
   for token, i in tokens
     tokenValue = token.value.trim()
-    config     = operatorConfig.getConfig tokenValue
+
+    config = operatorConfig.getConfig tokenValue
     continue unless config
 
     for scope in token.scopes when scope.match(config.scope)?

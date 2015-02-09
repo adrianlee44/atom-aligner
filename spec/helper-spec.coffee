@@ -108,7 +108,7 @@ describe "Helper", ->
         expect(output[0].offset).toBe 7
 
       it "should return no prefix", ->
-        expect(output.prefix).toBe null
+        expect(output.prefix).toBe false
 
       it "should show the line is valid", ->
         expect(output.valid).toBeTruthy()
@@ -134,7 +134,7 @@ describe "Helper", ->
         expect(output.valid).toBeTruthy()
 
       it "should return the correct prefix", ->
-        expect(output.prefix).toBe "-"
+        expect(output.prefix).toBe true
 
       it "should get the text before = with right trimmed", ->
         expect(output[0].before).toBe "prefix"
@@ -159,7 +159,7 @@ describe "Helper", ->
         expect(output.length).toBe 3
 
       it "should not have any prefix", ->
-        expect(output.prefix).toBe null
+        expect(output.prefix).toBe false
 
       it "should have content in before for all items", ->
         content = true

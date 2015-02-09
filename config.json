@@ -10,13 +10,11 @@
     "alignment":  "right",
     "leftSpace":  false,
     "rightSpace": true,
-    "prefixes":   [],
     "scope":      "operator|assignment"
   },
   ",": {
     "leftSpace":  true,
     "rightSpace": false,
-    "prefixes":   [],
     "scope":      "delimiter",
     "multiple":   {
       "number": {

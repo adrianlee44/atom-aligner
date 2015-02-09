@@ -20,10 +20,11 @@ align = (editor) ->
 
       for row in [indentRange.start..indentRange.end]
         tokenizedLine = grammar.tokenizeLine editor.lineTextForBufferRow row
-        parsed        = helper.parseTokenizedLine tokenizedLine, character
+        lineCharacter = helper.getTokenizedAlignCharacter tokenizedLine.tokens
+        parsed        = helper.parseTokenizedLine tokenizedLine, lineCharacter
 
         for parsedItem, i in parsed
-          offset = parsedItem.offset + (if parsed.prefix? then 1 else 0)
+          offset = parsedItem.offset + (if parsed.prefix then 1 else 0)
 
           # New whitespaces to add before/after alignment character
           newSpace = ""
@@ -39,18 +40,21 @@ align = (editor) ->
 
           leftSpace  = if alignment is "left" then newSpace else ""
           leftSpace += " " if config.leftSpace
-          leftSpace += parsed.prefix if parsed.prefix?
 
           rightSpace  = if alignment is "right" then newSpace else ""
           rightSpace += " " if config.rightSpace
 
           if config.multiple
-            textBlock += (if i is 0 then "" else leftSpace) + parsedItem.before
-            textBlock += rightSpace + character unless i is parsed.length - 1
+            if i is 0
+              textBlock += parsedItem.before
+            else
+              textBlock += leftSpace + parsedItem.before.trim()
+              
+            textBlock += rightSpace + lineCharacter unless i is parsed.length - 1
 
           else
             textBlock += parsedItem.before
-            textBlock += leftSpace + character + rightSpace
+            textBlock += leftSpace + lineCharacter + rightSpace
             textBlock += parsedItem.after
 
         textBlock += "\n"

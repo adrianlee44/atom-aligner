@@ -20,7 +20,7 @@ describe "VerticalAlign", ->
 
     runs ->
       buffer = editor.buffer
-      editor.setGrammar(atom.syntax.selectGrammar('test.coffee'))
+      editor.setGrammar(atom.grammars.selectGrammar('test.coffee'))
 
   it "should align two lines correctly", ->
     editor.setCursorBufferPosition([0, 1])
@@ -77,7 +77,7 @@ describe "Aligning javascript", ->
 
     runs ->
       buffer = editor.buffer
-      editor.setGrammar(atom.syntax.selectGrammar('test.js'))
+      editor.setGrammar(atom.grammars.selectGrammar('test.js'))
 
   it "should align two lines correctly", ->
     editor.setCursorBufferPosition([0, 1])
@@ -109,7 +109,7 @@ describe "Aligning ruby", ->
 
     runs ->
       buffer = editor.buffer
-      editor.setGrammar(atom.syntax.selectGrammar('test.ruby'))
+      editor.setGrammar(atom.grammars.selectGrammar('test.ruby'))
 
   it "should align key-value operator correctly", ->
     editor.setCursorBufferPosition([1, 1])
