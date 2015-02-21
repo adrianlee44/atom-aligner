@@ -3,7 +3,7 @@
   "main": "./lib/main",
   "version": "0.7.0",
   "private": true,
-  "description": "Vertically align lines of code",
+  "description": "Easily align multi-line with support for different operators and custom configurations",
   "activationEvents": [
     "vertical-align:align"
   ],
