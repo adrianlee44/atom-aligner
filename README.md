@@ -67,6 +67,7 @@ random =
 
 
 ## Changelog
+- 2015-02-21   v0.8.0   Added user configurations (#10)
 - 2015-02-09   v0.7.0   Updated to Atom 1.0 API and fixed prefix
 - 2014-09-18   v0.6.1   Fixed aligning ',' (#8, #9)
 - 2014-09-06   v0.6.0   Updated to use latest editor API
