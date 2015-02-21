@@ -1,4 +1,6 @@
 operatorConfig = require '../lib/operator-config'
+config         = require '../config'
+extend         = require 'extend'
 
 describe 'Operator Config', ->
   describe 'getConfig', ->
@@ -27,3 +29,45 @@ describe 'Operator Config', ->
 
     it 'should return false when operator does not have prefix', ->
       expect(operatorConfig.isPrefixed('=')).toBe false
+
+  describe 'updateSetting', ->
+    setting = null
+
+    beforeEach ->
+      setting = extend true, {}, config.setting
+
+    afterEach ->
+      # Reset operatorConfig
+      operatorConfig.updateSetting()
+
+    it 'should update prefixed settings properly', ->
+      setting['='].alignment = 'right'
+
+      operatorConfig.updateSetting setting
+      expect(operatorConfig.setting['+='].alignment).toBe 'right'
+
+  describe 'getAtomConfig', ->
+    atomConfig = null
+
+    beforeEach ->
+      atomConfig = operatorConfig.getAtomConfig()
+
+    it 'should create key-value pairs for Atom config', ->
+      expect(atomConfig['=-alignment']).toBeDefined()
+
+    it 'should not create key-value pairs for prefixed operators', ->
+      expect(atomConfig['+=-alignment']).toBeUndefined()
+
+    it 'should contain title', ->
+      expect(atomConfig['=-alignment'].title).toBeDefined()
+
+  describe 'updateConfigWithAtom', ->
+    afterEach ->
+      # Reset operatorConfig
+      operatorConfig.updateSetting()
+
+    it 'should update with Atom setting changes', ->
+      setting = '=-alignment': 'right'
+
+      operatorConfig.updateConfigWithAtom setting
+      expect(operatorConfig.setting['+='].alignment).toBe 'right'

@@ -1,34 +1,54 @@
 {
-  "=": {
-    "alignment":  "left",
-    "leftSpace":  true,
-    "rightSpace": true,
-    "prefixes":   ["+", "-", "&", "|", "<", ">", "!", "~", "%", "/", "*", "."],
-    "scope":      "operator|assignment"
-  },
-  ":": {
-    "alignment":  "right",
-    "leftSpace":  false,
-    "rightSpace": true,
-    "scope":      "operator|assignment"
-  },
-  ",": {
-    "leftSpace":  true,
-    "rightSpace": false,
-    "scope":      "delimiter",
-    "multiple":   {
-      "number": {
-        "alignment": "left"
-      },
-      "string": {
-        "alignment": "right"
+  "setting": {
+    "=": {
+      "alignment":  "left",
+      "leftSpace":  true,
+      "rightSpace": true,
+      "prefixes":   ["+", "-", "&", "|", "<", ">", "!", "~", "%", "/", "*", "."],
+      "scope":      "operator|assignment"
+    },
+    ":": {
+      "alignment":  "right",
+      "leftSpace":  false,
+      "rightSpace": true,
+      "scope":      "operator|assignment"
+    },
+    ",": {
+      "leftSpace":  true,
+      "rightSpace": false,
+      "scope":      "delimiter",
+      "multiple":   {
+        "number": {
+          "alignment": "left"
+        },
+        "string": {
+          "alignment": "right"
+        }
       }
+    },
+    "=>": {
+      "alignment":  "left",
+      "leftSpace":  true,
+      "rightSpace": true,
+      "scope":      "key-value"
     }
   },
-  "=>": {
-    "alignment":  "left",
-    "leftSpace":  true,
-    "rightSpace": true,
-    "scope":      "key-value"
+  "mapping": {
+    "alignment": {
+      "title": "Padding for ",
+      "description": "Pad left or right of the character",
+      "type": "string",
+      "enum": ["left", "right"]
+    },
+    "leftSpace": {
+      "title": "Left space for ",
+      "description": "Add 1 whitespace to the left of the character",
+      "type": "boolean"
+    },
+    "rightSpace": {
+      "title": "Right space for ",
+      "description": "Add 1 whitespace to the right of the character",
+      "type": "boolean"
+    }
   }
 }

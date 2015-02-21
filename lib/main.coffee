@@ -1,7 +1,11 @@
 operatorConfig = require './operator-config'
 helper         = require './helper'
 
+config = operatorConfig.getAtomConfig()
+
 class Aligner
+  config: config
+
   align: (editor) ->
     if !editor.hasMultipleCursors()
       # Get cursor row and text
@@ -67,6 +71,8 @@ class Aligner
         editor.setCursorBufferPosition [origRow, editor.lineTextForBufferRow(origRow).length]
 
   activate: ->
+    atom.config.observe 'vertical-align', (value) ->
+      operatorConfig.updateConfigWithAtom value
     atom.commands.add 'atom-text-editor', 'vertical-align:align', =>
       @align atom.workspace.getActiveTextEditor()
 

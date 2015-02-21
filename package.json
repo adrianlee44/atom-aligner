@@ -12,5 +12,7 @@
   "engines": {
     "atom": ">=0.125.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "extend": "^2.0.0"
+  }
 }
