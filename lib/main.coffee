@@ -1,22 +1,20 @@
 operatorConfig = require './operator-config'
 helper         = require './helper'
-
-config = operatorConfig.getAtomConfig()
+{Disposable}   = require 'atom'
+providerManager = require './provider-manager'
 
 class Aligner
-  config: config
+  config: operatorConfig.getAtomConfig()
 
   align: (editor) ->
     if !editor.hasMultipleCursors()
       # Get cursor row and text
-      origRow = editor.getCursorBufferPosition().row
-
-      grammar = editor.getGrammar()
-
-      tokenized = grammar.tokenizeLine editor.lineTextForBufferRow origRow
+      origRow   = editor.getCursorBufferPosition().row
+      tokenized = helper.getTokenizedLineForBufferRow(editor, origRow)
+      scope     = editor.getRootScopeDescriptor().getScopeChain()
 
       # Get alignment character
-      character = helper.getTokenizedAlignCharacter tokenized.tokens
+      character = helper.getTokenizedAlignCharacter tokenized.tokens, scope
 
       if character
         indentRange = helper.getSameIndentationRange editor, origRow, character
@@ -24,9 +22,9 @@ class Aligner
         textBlock   = ""
 
         for row in [indentRange.start..indentRange.end]
-          tokenizedLine = grammar.tokenizeLine editor.lineTextForBufferRow row
-          lineCharacter = helper.getTokenizedAlignCharacter tokenizedLine.tokens
-          parsed        = helper.parseTokenizedLine tokenizedLine, lineCharacter
+          tokenizedLine = helper.getTokenizedLineForBufferRow(editor, row)
+          lineCharacter = helper.getTokenizedAlignCharacter tokenizedLine.tokens, scope
+          parsed        = helper.parseTokenizedLine tokenizedLine, lineCharacter, config
 
           for parsedItem, i in parsed
             offset = parsedItem.offset + (if parsed.prefix then 1 else 0)
@@ -75,5 +73,13 @@ class Aligner
       operatorConfig.updateConfigWithAtom value
     atom.commands.add 'atom-text-editor', 'vertical-align:align', =>
       @align atom.workspace.getActiveTextEditor()
+
+  registerProviders: (provider) ->
+    # Register with providerManager
+    providerManager.register provider
+
+    new Disposable ->
+      # Unregister provider from providerManager
+      providerManager.unregister provider
 
 module.exports = new Aligner()

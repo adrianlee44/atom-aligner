@@ -2,6 +2,12 @@ helper = require '../lib/helper'
 
 describe "Helper", ->
   editor = null
+  config =
+    alignment:  "left"
+    leftSpace:  true
+    rightSpace: true
+    prefixes:   ["+", "-", "&", "|", "<", ">", "!", "~", "%", "/", "*", "."]
+    scope:      "operator|assignment"
 
   beforeEach ->
     waitsForPromise ->
@@ -96,7 +102,7 @@ describe "Helper", ->
       output = null
       beforeEach ->
         line = grammar.tokenizeLine editor.lineTextForBufferRow 2
-        output = helper.parseTokenizedLine line, "="
+        output = helper.parseTokenizedLine line, "=", config
 
       it "should get the text before = with right trimmed", ->
         expect(output[0].before).toBe "  hello"
@@ -118,7 +124,7 @@ describe "Helper", ->
       beforeEach ->
         grammar = editor.getGrammar()
         line    = grammar.tokenizeLine editor.lineTextForBufferRow 4
-        output  = helper.parseTokenizedLine line, "="
+        output  = helper.parseTokenizedLine line, "=", config
 
       it "should show the line is invalid", ->
         expect(output.valid).toBeFalsy()
@@ -128,7 +134,7 @@ describe "Helper", ->
       beforeEach ->
         grammar = editor.getGrammar()
         line    = grammar.tokenizeLine editor.lineTextForBufferRow 9
-        output  = helper.parseTokenizedLine line, "-="
+        output  = helper.parseTokenizedLine line, "-=", config
 
       it "should show the line is valid", ->
         expect(output.valid).toBeTruthy()
@@ -148,9 +154,18 @@ describe "Helper", ->
     describe "parsing a line with multiple characters", ->
       output = null
       beforeEach ->
+        commaConfig =
+          leftSpace:  true
+          rightSpace: false
+          scope:      "delimiter"
+          multiple:
+            number:
+              alignment: "left"
+            string:
+              alignment: "right"
         grammar = editor.getGrammar()
         line    = grammar.tokenizeLine editor.lineTextForBufferRow 13
-        output  = helper.parseTokenizedLine line, ","
+        output  = helper.parseTokenizedLine line, ",", commaConfig
 
       it "should show the line is valid", ->
         expect(output.valid).toBeTruthy()

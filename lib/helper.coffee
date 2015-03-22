@@ -7,13 +7,13 @@ operatorConfig = require './operator-config'
 Parsing line with operator
 @param {Object} tokenizedLine Tokenized line object from editor display buffer
 @param {String} character Character to align
+@param {Object} config Character config
 @returns {Object} Information about the tokenized line including text before character,
                   text after character, character prefix, offset and if the line is
                   valid
 ###
-parseTokenizedLine = (tokenizedLine, character) ->
+parseTokenizedLine = (tokenizedLine, character, config) ->
   afterCharacter = false
-  config         = operatorConfig.getConfig character
   parsed         = []
   parsed.prefix  = null
   section        =
@@ -64,10 +64,11 @@ getSameIndentationRange = (editor, row, character) ->
   start = row - 1
   end   = row + 1
 
-  grammar   = editor.getGrammar()
-  tokenized = grammar.tokenizeLine editor.lineTextForBufferRow row
+  tokenized = getTokenizedLineForBufferRow editor, row
+  scope     = editor.getRootScopeDescriptor().getScopeChain()
+  config    = operatorConfig.getConfig character
 
-  parsed    = parseTokenizedLine tokenized, character
+  parsed    = parseTokenizedLine tokenized, character, config
   indent    = editor.indentationForBufferRow row
   total     = editor.getLineCount()
   hasPrefix = parsed.prefix
@@ -85,10 +86,10 @@ getSameIndentationRange = (editor, row, character) ->
 
   while start > -1 or end < total
     if start > -1
-      startLine = grammar.tokenizeLine editor.lineTextForBufferRow start
+      startLine = getTokenizedLineForBufferRow editor, start
 
       if startLine? and editor.indentationForBufferRow(start) is indent and
-          (parsed = parseTokenizedLine startLine, character) and parsed.valid
+          (parsed = parseTokenizedLine startLine, character, config) and parsed.valid
 
         checkOffset parsed
         output.start  = start
@@ -99,10 +100,10 @@ getSameIndentationRange = (editor, row, character) ->
         start = -1
 
     if end < total + 1
-      endLine = grammar.tokenizeLine editor.lineTextForBufferRow end
+      endLine = getTokenizedLineForBufferRow editor, end
 
       if endLine? and editor.indentationForBufferRow(end) is indent and
-          (parsed = parseTokenizedLine endLine, character) and parsed.valid
+          (parsed = parseTokenizedLine endLine, character, config) and parsed.valid
 
         checkOffset parsed
         output.end  = end
@@ -123,20 +124,25 @@ getSameIndentationRange = (editor, row, character) ->
 @description
 Get the character to align based on text
 @param {Array} tokens Line tokens
+@param {String} scope
 @returns {String} Alignment character
 ###
-getTokenizedAlignCharacter = (tokens) ->
+getTokenizedAlignCharacter = (tokens, scope = 'base') ->
   for token, i in tokens
     tokenValue = token.value.trim()
 
-    config = operatorConfig.getConfig tokenValue
+    config = operatorConfig.getConfig tokenValue, scope
     continue unless config
 
     for scope in token.scopes when scope.match(config.scope)?
       return tokenValue
 
+getTokenizedLineForBufferRow = (editor, row) ->
+  editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(row)
+
 module.exports = {
   getSameIndentationRange
   parseTokenizedLine
   getTokenizedAlignCharacter
+  getTokenizedLineForBufferRow
 }

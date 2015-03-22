@@ -1,5 +1,6 @@
-configs = require '../config'
-extend   = require 'extend'
+configs         = require '../config'
+extend          = require 'extend'
+providerManager = require './provider-manager'
 
 ###
 Example for '='
@@ -45,27 +46,38 @@ class OperationConfig
 
   ###
   @function
+  @name convertAtomConfig
+  @description
+  Convert config in Atom format to usable config by vertical-align
+  @param {Object} config
+  ###
+  convertAtomConfig: (config) ->
+    convertedConfig = {}
+
+    for key, value of config
+      [character, property] = key.split '-'
+
+      convertedConfig[character] ?= {}
+      convertedConfig[character][property] = value
+
+    return convertedConfig
+
+  ###
+  @function
   @name updateConfigWithAtom
   @description
   Convert Atom config object into supported format and update config
   @param {Object} newConfig Config object in Atom format
   ###
   updateConfigWithAtom: (newConfig) ->
-    convertedConfig = {}
-
-    for key, value of newConfig
-      [character, property] = key.split '-'
-
-      convertedConfig[character] ?= {}
-      convertedConfig[character][property] = value
-
-    @updateSetting convertedConfig
+    config = @convertAtomConfig(newConfig)
+    @updateSetting config
 
   ###
   @function
   @name getAtomConfig
   @description
-  Get config object for Atom
+  Get config object for Atom used in package setting
   @returns {Object}
   ###
   getAtomConfig: ->
@@ -87,9 +99,16 @@ class OperationConfig
   @function
   @name getConfig
   @param {string} character
+  @param {String} scope
   @returns {boolean}
   ###
-  getConfig: (character) ->
+  getConfig: (character, scope = 'base') ->
+    providerId = providerManager.getProviderIdByScope scope
+
+    if providerId
+      config = @convertAtomConfig(atom.config.get(providerId))
+      return config[character]
+
     return @setting[character]
 
   ###
@@ -100,13 +119,14 @@ class OperationConfig
   for checking operator with prefixes
   @param {string} character Original character
   @param {string} toMatch Character to see if it can be align with original character
+  @param {string} scope
   @returns {boolean}
   ###
-  canAlignWith: (character, toMatch) ->
+  canAlignWith: (character, toMatch, scope = 'base') ->
     if character is toMatch
       return true
 
-    alignWith = @getConfig(character).alignWith
+    alignWith = @getConfig(character, scope).alignWith
 
     return alignWith? && (toMatch in alignWith)
 
@@ -116,10 +136,11 @@ class OperationConfig
   @description
   Check if the operator/character has prefix or not
   @param {string} character
+  @param {string} scope
   @returns {boolean}
   ###
-  isPrefixed: (character) ->
-    prefixed = @getConfig(character)?.prefixed
+  isPrefixed: (character, scope = 'base') ->
+    prefixed = @getConfig(character, scope)?.prefixed
 
     return prefixed? && (character in prefixed)
 

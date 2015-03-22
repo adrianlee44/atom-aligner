@@ -14,5 +14,13 @@
   },
   "dependencies": {
     "extend": "^2.0.0"
+  },
+  "consumedServices": {
+    "vertical-align.provider": {
+      "description": "A package for aligning code",
+      "versions": {
+        "1.0.0": "registerProviders"
+      }
+    }
   }
 }
