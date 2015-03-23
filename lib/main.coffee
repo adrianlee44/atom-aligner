@@ -18,7 +18,7 @@ class Aligner
 
       if character
         indentRange = helper.getSameIndentationRange editor, origRow, character
-        config      = operatorConfig.getConfig character
+        config      = operatorConfig.getConfig character, scope
         textBlock   = ""
 
         for row in [indentRange.start..indentRange.end]

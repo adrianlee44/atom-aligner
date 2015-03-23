@@ -14,21 +14,27 @@ describe 'Operator Config', ->
       expect(operatorConfig.getConfig('+=')).toBeDefined()
 
   describe 'canAlignWith', ->
+    characterConfig = null
+    beforeEach ->
+      characterConfig = operatorConfig.getConfig '='
+
     it 'should return true if they are the same', ->
-      expect(operatorConfig.canAlignWith('=', '=')).toBe true
+      expect(operatorConfig.canAlignWith('=', '=', characterConfig)).toBe true
 
     it 'should return true for supported prefixed operator', ->
-      expect(operatorConfig.canAlignWith('=', '+=')).toBe true
+      expect(operatorConfig.canAlignWith('=', '+=', characterConfig)).toBe true
 
     it 'should return false for unsupported prefixed operator', ->
-      expect(operatorConfig.canAlignWith('=', '1=')).toBe false
+      expect(operatorConfig.canAlignWith('=', '1=', characterConfig)).toBe false
 
   describe 'isPrefixed', ->
     it 'should return true when operator has prefix', ->
-      expect(operatorConfig.isPrefixed('+=')).toBe true
+      characterConfig = operatorConfig.getConfig '+='
+      expect(operatorConfig.isPrefixed('+=', characterConfig)).toBe true
 
     it 'should return false when operator does not have prefix', ->
-      expect(operatorConfig.isPrefixed('=')).toBe false
+      characterConfig = operatorConfig.getConfig '='
+      expect(operatorConfig.isPrefixed('=', characterConfig)).toBe false
 
   describe 'updateSetting', ->
     setting = null

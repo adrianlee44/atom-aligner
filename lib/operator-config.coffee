@@ -119,14 +119,14 @@ class OperationConfig
   for checking operator with prefixes
   @param {string} character Original character
   @param {string} toMatch Character to see if it can be align with original character
-  @param {string} scope
+  @param {object} config
   @returns {boolean}
   ###
-  canAlignWith: (character, toMatch, scope = 'base') ->
+  canAlignWith: (character, toMatch, config) ->
     if character is toMatch
       return true
 
-    alignWith = @getConfig(character, scope).alignWith
+    alignWith = config.alignWith
 
     return alignWith? && (toMatch in alignWith)
 
@@ -136,11 +136,11 @@ class OperationConfig
   @description
   Check if the operator/character has prefix or not
   @param {string} character
-  @param {string} scope
+  @param {Object} config
   @returns {boolean}
   ###
-  isPrefixed: (character, scope = 'base') ->
-    prefixed = @getConfig(character, scope)?.prefixed
+  isPrefixed: (character, config) ->
+    prefixed = config?.prefixed
 
     return prefixed? && (character in prefixed)
 

@@ -34,8 +34,8 @@ parseTokenizedLine = (tokenizedLine, character, config) ->
 
   for token in tokenizedLine.tokens
     tokenValue = token.value.trim()
-    if operatorConfig.canAlignWith(character, tokenValue) and (not afterCharacter or config.multiple)
-      parsed.prefix = operatorConfig.isPrefixed tokenValue
+    if operatorConfig.canAlignWith(character, tokenValue, config) and (not afterCharacter or config.multiple)
+      parsed.prefix = operatorConfig.isPrefixed tokenValue, config
 
       if config.multiple
         addToParsed()
@@ -66,7 +66,7 @@ getSameIndentationRange = (editor, row, character) ->
 
   tokenized = getTokenizedLineForBufferRow editor, row
   scope     = editor.getRootScopeDescriptor().getScopeChain()
-  config    = operatorConfig.getConfig character
+  config    = operatorConfig.getConfig character, scope
 
   parsed    = parseTokenizedLine tokenized, character, config
   indent    = editor.indentationForBufferRow row

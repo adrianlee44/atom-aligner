@@ -1,13 +1,9 @@
-helper = require '../lib/helper'
+helper         = require '../lib/helper'
+operatorConfig = require '../lib/operator-config'
 
 describe "Helper", ->
   editor = null
-  config =
-    alignment:  "left"
-    leftSpace:  true
-    rightSpace: true
-    prefixes:   ["+", "-", "&", "|", "<", ">", "!", "~", "%", "/", "*", "."]
-    scope:      "operator|assignment"
+  config = null
 
   beforeEach ->
     waitsForPromise ->
@@ -19,6 +15,8 @@ describe "Helper", ->
       editor.setGrammar(atom.grammars.selectGrammar('text.coffee'))
 
     waitsForPromise ->
+      config = operatorConfig.getConfig '='
+
       atom.packages.activatePackage('language-coffee-script')
 
   describe "getSameIndentationRange", ->
