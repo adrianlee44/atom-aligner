@@ -1,5 +1,5 @@
 {
-  "name": "vertical-align",
+  "name": "aligner",
   "main": "./lib/main",
   "version": "0.8.0",
   "private": true,
