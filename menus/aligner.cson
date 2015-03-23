@@ -3,9 +3,9 @@
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'Vertical Align'
+      'label': 'Aligner'
       'submenu': [
-        { 'label': 'Align', 'command': 'vertical-align:align' }
+        { 'label': 'Align', 'command': 'aligner:align' }
       ]
     ]
   }

@@ -7,7 +7,7 @@ describe 'ProviderManager', ->
   describe 'registering a provider', ->
     provider =
       selector: ['.source.coffee']
-      id:       'vertical-align-coffee'
+      id:       'aligner-coffee'
       config:
         ':-alignment': 'left'
 
@@ -26,12 +26,12 @@ describe 'ProviderManager', ->
     it 'should get the id', ->
       providerId = providerManager.getProviderIdByScope('.source.coffee')
 
-      expect(providerId).toBe 'vertical-align-coffee'
+      expect(providerId).toBe 'aligner-coffee'
 
   it ' should unregistering a provider', ->
     provider =
       selector: ['.source.coffee']
-      id:       'vertical-align-coffee'
+      id:       'aligner-coffee'
       config:
         ':-alignment': 'left'
 

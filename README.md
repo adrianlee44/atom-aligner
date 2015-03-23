@@ -1,10 +1,10 @@
-# vertical-align package [![Build Status](https://img.shields.io/travis/adrianlee44/atom-vertical-align/master.svg?style=flat-square)](https://travis-ci.org/adrianlee44/atom-vertical-align)
+# aligner package [![Build Status](https://img.shields.io/travis/adrianlee44/atom-aligner/master.svg?style=flat-square)](https://travis-ci.org/adrianlee44/atom-aligner)
 
 Easily align multi-line with support for different operators and custom configurations
 
 Mac: `ctrl-cmd-/` Linux/Windows: `ctrl-alt-/`
 
-![vertical-align](https://raw.github.com/adrianlee44/atom-vertical-align/master/demo.gif)
+![aligner](https://raw.github.com/adrianlee44/atom-aligner/master/demo.gif)
 
 ### Custom configuration
 Package allows user to change the way characters are aligned.
@@ -25,7 +25,7 @@ random =
   foo   : "bar"
   bar   : "beer"
 ```
-For more information, visit [wiki](https://github.com/adrianlee44/atom-vertical-align/wiki/User-configurations)
+For more information, visit [wiki](https://github.com/adrianlee44/atom-aligner/wiki/User-configurations)
 
 ### Supported character/operator
 - `=`: assignment
@@ -67,6 +67,7 @@ random =
 
 
 ## Changelog
+- 2015-03-22   v0.8.1   Renamed to aligner
 - 2015-02-21   v0.8.0   Added user configurations (#10)
 - 2015-02-09   v0.7.0   Updated to Atom 1.0 API and fixed prefix
 - 2014-09-18   v0.6.1   Fixed aligning ',' (#8, #9)

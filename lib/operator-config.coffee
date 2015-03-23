@@ -48,7 +48,7 @@ class OperationConfig
   @function
   @name convertAtomConfig
   @description
-  Convert config in Atom format to usable config by vertical-align
+  Convert config in Atom format to usable config by aligner
   @param {Object} config
   ###
   convertAtomConfig: (config) ->

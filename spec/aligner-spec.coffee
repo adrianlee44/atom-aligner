@@ -5,7 +5,7 @@
 # To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
 # or `fdescribe`). Remove the `f` to unfocus the block.
 
-describe "VerticalAlign", ->
+describe "Aligner", ->
   activationPromise = null
   editor            = null
   buffer            = null
@@ -15,7 +15,7 @@ describe "VerticalAlign", ->
       activationPromise = atom.packages.activatePackage('language-coffee-script')
 
     waitsForPromise ->
-      atom.project.open('vertical-align-sample.coffee').then (o) ->
+      atom.project.open('aligner-sample.coffee').then (o) ->
         editor = o
 
     runs ->
@@ -72,7 +72,7 @@ describe "Aligning javascript", ->
       activationPromise = atom.packages.activatePackage('language-javascript')
 
     waitsForPromise ->
-      atom.project.open('vertical-align-sample.js').then (o) ->
+      atom.project.open('aligner-sample.js').then (o) ->
         editor = o
 
     runs ->
@@ -104,7 +104,7 @@ describe "Aligning ruby", ->
       activationPromise = atom.packages.activatePackage('language-ruby')
 
     waitsForPromise ->
-      atom.project.open('vertical-align-sample.ruby').then (o) ->
+      atom.project.open('aligner-sample.ruby').then (o) ->
         editor = o
 
     runs ->

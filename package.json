@@ -3,11 +3,11 @@
   "main": "./lib/main",
   "version": "0.8.1",
   "private": true,
-  "description": "Easily align multi-line with support for different operators and custom configurations",
+  "description": "Easily align multi-line with support for different operators and custom configurations (Previously vertical-align)",
   "activationEvents": [
-    "vertical-align:align"
+    "aligner:align"
   ],
-  "repository": "https://github.com/adrianlee44/atom-vertical-align",
+  "repository": "https://github.com/adrianlee44/atom-aligner",
   "license": "MIT",
   "engines": {
     "atom": ">=0.125.0"
@@ -16,7 +16,7 @@
     "extend": "^2.0.0"
   },
   "consumedServices": {
-    "vertical-align.provider": {
+    "aligner.provider": {
       "description": "A package for aligning code",
       "versions": {
         "1.0.0": "registerProviders"

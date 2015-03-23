@@ -8,6 +8,6 @@
 # For more detailed documentation see
 # https://atom.io/docs/latest/advanced/keymaps
 '.platform-darwin atom-text-editor':
-  'ctrl-cmd-/': 'vertical-align:align'
+  'ctrl-cmd-/': 'aligner:align'
 '.platform-win32 atom-text-editor, .platform-linux atom-text-editor':
-  'ctrl-alt-/': 'vertical-align:align'
+  'ctrl-alt-/': 'aligner:align'

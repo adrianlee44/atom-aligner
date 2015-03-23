@@ -69,9 +69,9 @@ class Aligner
         editor.setCursorBufferPosition [origRow, editor.lineTextForBufferRow(origRow).length]
 
   activate: ->
-    atom.config.observe 'vertical-align', (value) ->
+    atom.config.observe 'aligner', (value) ->
       operatorConfig.updateConfigWithAtom value
-    atom.commands.add 'atom-text-editor', 'vertical-align:align', =>
+    atom.commands.add 'atom-text-editor', 'aligner:align', =>
       @align atom.workspace.getActiveTextEditor()
 
   registerProviders: (provider) ->
