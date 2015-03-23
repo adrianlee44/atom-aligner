@@ -67,6 +67,7 @@ random =
 ```
 
 ## Changelog
+- 2015-03-23   v0.9.1   Fixed add-ons not working properly
 - 2015-03-22   v0.9.0   Add support for aligner addons
 - 2015-03-22   v0.8.1   Renamed to aligner
 - 2015-02-21   v0.8.0   Added user configurations (#10)
