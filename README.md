@@ -64,6 +64,7 @@ random =
 - Javascript
 - Coffeescript
 - Ruby
+- CSS (with [aligner-css](https://github.com/adrianlee44/atom-aligner-css) addon)
 
 
 ## Changelog
