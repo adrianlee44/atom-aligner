@@ -11,6 +11,12 @@ Package allows user to change the way characters are aligned.
 - Pad either left or right of character
 - If an extra whitespace should be added to the left and/or right of the character
 
+##### Supported Languages
+- Javascript
+- Coffeescript
+- Ruby
+- CSS, SASS, and SCSS (with [aligner-css](https://github.com/adrianlee44/atom-aligner-css) addon)
+
 User can either align like this,
 ```coffeescript
 random =
@@ -60,14 +66,8 @@ random =
 :pinyin          => pinyin
 ```
 
-##### Tested Supported Languages
-- Javascript
-- Coffeescript
-- Ruby
-- CSS (with [aligner-css](https://github.com/adrianlee44/atom-aligner-css) addon)
-
-
 ## Changelog
+- 2015-03-22   v0.9.0   Add support for aligner addons
 - 2015-03-22   v0.8.1   Renamed to aligner
 - 2015-02-21   v0.8.0   Added user configurations (#10)
 - 2015-02-09   v0.7.0   Updated to Atom 1.0 API and fixed prefix
