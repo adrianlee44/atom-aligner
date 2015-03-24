@@ -4,6 +4,9 @@ Easily align multi-line with support for different operators and custom configur
 
 Mac: `ctrl-cmd-/` Linux/Windows: `ctrl-alt-/`
 
+### Update
+This package has recently been renamed from `vertical-align` to `aligner` and might be causing some update problems. Please uninstall `vertical-align` and install `aligner` to fix the problem.
+
 ![aligner](https://raw.github.com/adrianlee44/atom-aligner/master/demo.gif)
 
 ### Custom configuration
