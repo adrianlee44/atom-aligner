@@ -17,8 +17,9 @@ Package allows user to change the way characters are aligned.
 ##### Supported Languages
 - Javascript
 - Coffeescript
-- Ruby
-- CSS, SASS, and SCSS (with [aligner-css](https://github.com/adrianlee44/atom-aligner-css) addon)
+- Ruby (with [aligner-ruby](https://github.com/adrianlee44/atom-aligner-ruby) addon)
+- CSS & LESS (with [aligner-css](https://github.com/adrianlee44/atom-aligner-css) addon)
+- SASS & SCSS (with [aligner-scss](https://github.com/adrianlee44/atom-aligner-scss) addon)
 
 User can either align like this,
 ```coffeescript
