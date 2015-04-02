@@ -101,24 +101,3 @@ describe "Aligning javascript", ->
     editor.setCursorBufferPosition [9, 1]
     align(editor)
     expect(buffer.lineForRow(10)).toBe '  ["3"    , 2, 4]'
-
-describe "Aligning ruby", ->
-  editor = null
-  buffer = null
-
-  beforeEach ->
-    waitsForPromise ->
-      atom.packages.activatePackage('language-ruby')
-
-    waitsForPromise ->
-      atom.project.open('aligner-sample.ruby').then (o) ->
-        editor = o
-
-    runs ->
-      buffer = editor.buffer
-      editor.setGrammar(atom.grammars.selectGrammar('test.ruby'))
-
-  it "should align key-value operator correctly", ->
-    editor.setCursorBufferPosition([1, 1])
-    align(editor)
-    expect(buffer.lineForRow(3)).toBe '  :jyutping        => jyutping,'
