@@ -17,6 +17,7 @@ class Aligner
       character = helper.getTokenizedAlignCharacter tokenized.tokens, scope
 
       if character
+        indentLevel = editor.indentationForBufferRow origRow
         indentRange = helper.getSameIndentationRange editor, origRow, character
         config      = operatorConfig.getConfig character, scope
         textBlock   = ""
@@ -25,6 +26,9 @@ class Aligner
           tokenizedLine = helper.getTokenizedLineForBufferRow(editor, row)
           lineCharacter = helper.getTokenizedAlignCharacter tokenizedLine.tokens, scope
           parsed        = helper.parseTokenizedLine tokenizedLine, lineCharacter, config
+
+          # Construct new line
+          currentLine = editor.buildIndentString indentLevel
 
           for parsedItem, i in parsed
             offset = parsedItem.offset + (if parsed.prefix then 1 else 0)
@@ -47,20 +51,21 @@ class Aligner
             rightSpace  = if alignment is "right" then newSpace else ""
             rightSpace += " " if config.rightSpace
 
+
             if config.multiple
               if i is 0
-                textBlock += parsedItem.before
+                currentLine += parsedItem.before
               else
-                textBlock += leftSpace + parsedItem.before.trim()
+                currentLine += leftSpace + parsedItem.before.trim()
 
-              textBlock += rightSpace + lineCharacter unless i is parsed.length - 1
+              currentLine += rightSpace + lineCharacter unless i is parsed.length - 1
 
             else
-              textBlock += parsedItem.before
-              textBlock += leftSpace + lineCharacter + rightSpace
-              textBlock += parsedItem.after
+              currentLine += parsedItem.before
+              currentLine += leftSpace + lineCharacter + rightSpace
+              currentLine += parsedItem.after
 
-          textBlock += "\n"
+          textBlock += "#{currentLine}\n"
 
         # Replace the whole block
         editor.setTextInBufferRange([[indentRange.start, 0], [indentRange.end + 1, 0]], textBlock)
