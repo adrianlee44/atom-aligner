@@ -62,15 +62,9 @@ random =
 ["helloText", 123456, "world"]
 ["foo"      ,  32124, "bar"]
 ```
-- `=>`: assignment
-```ruby
-:full_detail_url => fd_url,
-:chars_trad      => chars_trad,
-:jyutping        => jyutping,
-:pinyin          => pinyin
-```
 
 ## Changelog
+- 2015-04-02   v0.10.0   Fixed indentation, invisibles and tabs bugs (#15, #17). Removed Ruby support from `aligner`. Please install `aligner-ruby`.
 - 2015-03-23   v0.9.1   Fixed add-ons not working properly
 - 2015-03-22   v0.9.0   Add support for aligner addons
 - 2015-03-22   v0.8.1   Renamed to aligner
