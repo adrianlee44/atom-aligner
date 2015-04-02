@@ -7,17 +7,15 @@ describe "Helper", ->
 
   beforeEach ->
     waitsForPromise ->
+      atom.packages.activatePackage('language-coffee-script')
+
+    waitsForPromise ->
       atom.project.open('helper-sample.coffee').then (o) ->
         editor = o
 
     runs ->
       buffer = editor.buffer
-      editor.setGrammar(atom.grammars.selectGrammar('text.coffee'))
-
-    waitsForPromise ->
       config = operatorConfig.getConfig '='
-
-      atom.packages.activatePackage('language-coffee-script')
 
   describe "getSameIndentationRange", ->
     describe "should return valid range object when cursor is in the middle", ->
@@ -32,7 +30,7 @@ describe "Helper", ->
         expect(output.end).toBe 3
 
       it "should get the valid offset", ->
-        expect(output.offset).toEqual [7]
+        expect(output.offset).toEqual [5]
 
     describe "should return valid range object when cursor is on the last line", ->
       output = null
@@ -46,7 +44,7 @@ describe "Helper", ->
         expect(output.end).toBe 3
 
       it "should get the valid offset", ->
-        expect(output.offset).toEqual [7]
+        expect(output.offset).toEqual [5]
 
     describe "should return valid range object when cursor is on the first line", ->
       output = null
@@ -60,7 +58,7 @@ describe "Helper", ->
         expect(output.end).toBe 3
 
       it "should get the valid offset", ->
-        expect(output.offset).toEqual [7]
+        expect(output.offset).toEqual [5]
 
   describe "getTokenizedAlignCharacter", ->
     grammar = null
@@ -148,6 +146,37 @@ describe "Helper", ->
 
       it "should get the offset", ->
         expect(output[0].offset).toBe 6
+
+    describe "parsing a line with leading and/or trailing whitespaces", ->
+      output = null
+      beforeEach ->
+        atom.config.set 'editor.showInvisibles', true
+
+      afterEach ->
+        atom.config.set 'editor.showInvisibles', false
+        atom.config.set 'editor.softTabs', true
+
+      it "should not include leading whitespaces", ->
+        line   = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(17)
+        output = helper.parseTokenizedLine line, "=", config
+
+        expect(output[0].before).toBe "testing"
+        expect(output[0].after).toBe "123"
+
+      it "should include trailing whitespaces", ->
+        line   = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(18)
+        output = helper.parseTokenizedLine line, "=", config
+
+        expect(output[0].before).toBe "test"
+        expect(output[0].after).toBe "'abc'      "
+
+      it "should handle tabs correctly", ->
+        atom.config.set 'editor.softTabs', false
+        line   = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(17)
+        output = helper.parseTokenizedLine line, "=", config
+
+        expect(output[0].before).toBe "testing"
+        expect(output[0].after).toBe "123"
 
     describe "parsing a line with multiple characters", ->
       output = null

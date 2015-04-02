@@ -6,13 +6,12 @@
 # or `fdescribe`). Remove the `f` to unfocus the block.
 
 describe "Aligner", ->
-  activationPromise = null
-  editor            = null
-  buffer            = null
+  editor = null
+  buffer = null
 
   beforeEach ->
     waitsForPromise ->
-      activationPromise = atom.packages.activatePackage('language-coffee-script')
+      atom.packages.activatePackage('language-coffee-script')
 
     waitsForPromise ->
       atom.project.open('aligner-sample.coffee').then (o) ->
@@ -20,7 +19,6 @@ describe "Aligner", ->
 
     runs ->
       buffer = editor.buffer
-      editor.setGrammar(atom.grammars.selectGrammar('test.coffee'))
 
   it "should align two lines correctly", ->
     editor.setCursorBufferPosition([0, 1])
@@ -62,14 +60,24 @@ describe "Aligner", ->
     align(editor)
     expect(buffer.lineForRow(21)).toBe '  ["abc"  , 19293, 102304, "more"]'
 
+  it "should align and keep the same indentation", ->
+    editor.setCursorBufferPosition([24, 1])
+    align(editor)
+    expect(buffer.lineForRow(24)).toBe '    test    = "123"'
+
+  it "should align and keep the same indentation", ->
+    atom.config.set 'editor.softTabs', false
+    editor.setCursorBufferPosition([24, 1])
+    align(editor)
+    expect(buffer.lineForRow(24)).toBe '    test    = "123"'
+
 describe "Aligning javascript", ->
-  activationPromise = null
-  editor            = null
-  buffer            = null
+  editor = null
+  buffer = null
 
   beforeEach ->
     waitsForPromise ->
-      activationPromise = atom.packages.activatePackage('language-javascript')
+      atom.packages.activatePackage('language-javascript')
 
     waitsForPromise ->
       atom.project.open('aligner-sample.js').then (o) ->
@@ -95,13 +103,12 @@ describe "Aligning javascript", ->
     expect(buffer.lineForRow(10)).toBe '  ["3"    , 2, 4]'
 
 describe "Aligning ruby", ->
-  activationPromise = null
-  editor            = null
-  buffer            = null
+  editor = null
+  buffer = null
 
   beforeEach ->
     waitsForPromise ->
-      activationPromise = atom.packages.activatePackage('language-ruby')
+      atom.packages.activatePackage('language-ruby')
 
     waitsForPromise ->
       atom.project.open('aligner-sample.ruby').then (o) ->

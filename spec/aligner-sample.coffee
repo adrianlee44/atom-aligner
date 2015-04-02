@@ -21,3 +21,6 @@ multipleOnSameLine = [
   ["hello", 2112, 12939, "testing"]
   ["abc", 19293, 102304, "more"]
 ]
+
+    test = "123"
+    testing = "abc"

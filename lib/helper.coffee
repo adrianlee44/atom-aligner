@@ -16,7 +16,12 @@ parseTokenizedLine = (tokenizedLine, character, config) ->
   afterCharacter = false
   parsed         = []
   parsed.prefix  = null
-  section        =
+  whitespaces    = tokenizedLine.firstNonWhitespaceIndex
+
+  if tokenizedLine.invisibles
+    whitespaceInvisible = new RegExp(tokenizedLine.invisibles.space, "g")
+
+  section = 
     before: ""
     after:  ""
 
@@ -33,9 +38,20 @@ parseTokenizedLine = (tokenizedLine, character, config) ->
       after:  ""
 
   for token in tokenizedLine.tokens
-    tokenValue = token.value.trim()
-    if operatorConfig.canAlignWith(character, tokenValue, config) and (not afterCharacter or config.multiple)
-      parsed.prefix = operatorConfig.isPrefixed tokenValue, config
+    # To account for leading whitespaces
+    if whitespaces > 0
+      whitespaces -= token.screenDelta
+      continue
+
+    tokenValue = token.value
+
+    # To convert trailing whitespace invisible to whitespace
+    if token.firstTrailingWhitespaceIndex? and token.hasInvisibleCharacters
+      tokenValue = tokenValue.substring(0, token.firstTrailingWhitespaceIndex) +
+        tokenValue.substring(token.firstTrailingWhitespaceIndex).replace(whitespaceInvisible, " ")
+
+    if operatorConfig.canAlignWith(character, tokenValue.trim(), config) and (not afterCharacter or config.multiple)
+      parsed.prefix = operatorConfig.isPrefixed tokenValue.trim(), config
 
       if config.multiple
         addToParsed()
@@ -44,7 +60,7 @@ parseTokenizedLine = (tokenizedLine, character, config) ->
       continue
 
     variable           = if afterCharacter and not config.multiple then "after" else "before"
-    section[variable] += token.value
+    section[variable] += tokenValue
 
   # Add the last section to pared
   addToParsed()
