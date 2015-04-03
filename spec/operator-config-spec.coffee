@@ -77,3 +77,16 @@ describe 'Operator Config', ->
 
       operatorConfig.updateConfigWithAtom setting
       expect(operatorConfig.setting['+='].alignment).toBe 'right'
+
+  describe 'convertAtomConfig', ->
+    it 'should convert 1 level object path correctly', ->
+      output = operatorConfig.convertAtomConfig
+        ':-assignment': 'right'
+
+      expect(output[':'].assignment).toBe 'right'
+
+    it 'should convert nested object path correctly', ->
+      output = operatorConfig.convertAtomConfig
+        ':-multiple-string-assignment': 'right'
+
+      expect(output[':'].multiple.string.assignment).toBe 'right'

@@ -10,9 +10,13 @@ class ProviderManager
     @providers.splice index, 1
 
   getProviderIdByScope: (scope) ->
+    provider = this.getProviderByScope scope
+    return provider?.id
+
+  getProviderByScope: (scope) ->
     for provider in @providers
       if provider.selector.indexOf(scope) != -1
-        return provider.id
+        return provider
 
     return null
 

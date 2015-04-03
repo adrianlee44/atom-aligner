@@ -55,10 +55,15 @@ class OperationConfig
     convertedConfig = {}
 
     for key, value of config
-      [character, property] = key.split '-'
+      [configPath... , property] = key.split '-'
 
-      convertedConfig[character] ?= {}
-      convertedConfig[character][property] = value
+      # iternate to the correct object depth
+      currentObject = convertedConfig
+      for configPathKey in configPath
+        currentObject[configPathKey] ?= {}
+        currentObject = currentObject[configPathKey]
+
+      currentObject[property] = value
 
     return convertedConfig
 
@@ -103,10 +108,17 @@ class OperationConfig
   @returns {boolean}
   ###
   getConfig: (character, scope = 'base') ->
-    providerId = providerManager.getProviderIdByScope scope
+    provider   = providerManager.getProviderByScope scope
+    providerId = provider?.id
 
     if providerId
-      config = @convertAtomConfig(atom.config.get(providerId))
+      config = atom.config.get(providerId) or {}
+
+      if provider.privateConfig?
+        extend config, provider.privateConfig
+
+      config = @convertAtomConfig config
+
       return config[character]
 
     return @setting[character]
