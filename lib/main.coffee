@@ -40,7 +40,7 @@ class Aligner
 
             if config.multiple
               type      = if isNaN(+parsedItem.before) then "string" else "number"
-              alignment = config.multiple[type].alignment
+              alignment = config.multiple[type]?.alignment or "left"
 
             else
               alignment = config.alignment
