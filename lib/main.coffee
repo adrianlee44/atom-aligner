@@ -27,7 +27,7 @@ class Aligner
           lineCharacter = helper.getTokenizedAlignCharacter tokenizedLine.tokens, scope
           parsed        = helper.parseTokenizedLine tokenizedLine, lineCharacter, config
 
-          # Construct new line
+          # Construct new line with proper indentation
           currentLine = editor.buildIndentString indentLevel
 
           for parsedItem, i in parsed
@@ -48,17 +48,16 @@ class Aligner
             leftSpace  = if alignment is "left" then newSpace else ""
             leftSpace += " " if config.leftSpace
 
-            rightSpace  = if alignment is "right" then newSpace else ""
-            rightSpace += " " if config.rightSpace
-
+            rightSpace = if alignment is "right" then newSpace else ""
+            # ignore right space config when aligning multiple on the same line
+            if config.rightSpace and not (config.multiple and i is 0)
+              rightSpace += " "
 
             if config.multiple
-              if i is 0
-                currentLine += parsedItem.before
-              else
-                currentLine += leftSpace + parsedItem.before.trim()
-
-              currentLine += rightSpace + lineCharacter unless i is parsed.length - 1
+              # NOTE: rightSpace here instead of after lineCharacter to get the proper
+              # offset for the token
+              currentLine += rightSpace + parsedItem.before.trim()
+              currentLine += leftSpace + lineCharacter unless i is parsed.length - 1
 
             else
               currentLine += parsedItem.before
