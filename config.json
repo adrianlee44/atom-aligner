@@ -14,15 +14,15 @@
       "scope":      "operator|assignment"
     },
     ",": {
-      "leftSpace":  true,
-      "rightSpace": false,
+      "leftSpace":  false,
+      "rightSpace": true,
       "scope":      "delimiter",
       "multiple":   {
         "number": {
-          "alignment": "left"
+          "alignment": "right"
         },
         "string": {
-          "alignment": "right"
+          "alignment": "left"
         }
       }
     }
