@@ -17,9 +17,9 @@ Package allows user to change the way characters are aligned.
 ##### Supported Languages
 - Javascript
 - Coffeescript
-- Ruby (with [aligner-ruby](https://github.com/adrianlee44/atom-aligner-ruby) addon)
-- CSS & LESS (with [aligner-css](https://github.com/adrianlee44/atom-aligner-css) addon)
-- SASS & SCSS (with [aligner-scss](https://github.com/adrianlee44/atom-aligner-scss) addon)
+- Ruby ([aligner-ruby](https://github.com/adrianlee44/atom-aligner-ruby))
+- CSS & LESS ([aligner-css](https://github.com/adrianlee44/atom-aligner-css))
+- SASS & SCSS ([aligner-scss](https://github.com/adrianlee44/atom-aligner-scss))
 
 User can either align like this,
 ```coffeescript
@@ -64,6 +64,7 @@ random =
 ```
 
 ## Changelog
+- 2015-04-06   v0.10.1   Fixed `,` left and right space reversed (#14)
 - 2015-04-02   v0.10.0   Fixed indentation, invisibles and tabs bugs (#15, #17). Removed Ruby support from `aligner`. Please install `aligner-ruby`.
 - 2015-03-23   v0.9.1   Fixed add-ons not working properly
 - 2015-03-22   v0.9.0   Add support for aligner addons
