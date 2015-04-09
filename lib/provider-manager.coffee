@@ -1,4 +1,5 @@
 operatorConfig = require './operator-config'
+{Disposable}   = require 'atom'
 
 class ProviderManager
   constructor: ->
@@ -17,6 +18,9 @@ class ProviderManager
 
     @listeners[provider.id] = atom.config.observe provider.id, (value) ->
       operatorConfig.updateConfigWithAtom provider.id, value
+
+    # Unregister provider from providerManager
+    return new Disposable => @unregister provider
 
   unregister: (provider) ->
     id = provider?.id

@@ -1,6 +1,5 @@
-operatorConfig = require './operator-config'
-helper         = require './helper'
-{Disposable}   = require 'atom'
+operatorConfig  = require './operator-config'
+helper          = require './helper'
 providerManager = require './provider-manager'
 
 class Aligner
@@ -81,10 +80,6 @@ class Aligner
 
   registerProviders: (provider) ->
     # Register with providerManager
-    return unless providerManager.register provider
-
-    new Disposable ->
-      # Unregister provider from providerManager
-      providerManager.unregister provider
+    providerManager.register provider
 
 module.exports = new Aligner()
