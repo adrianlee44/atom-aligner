@@ -21,7 +21,7 @@ parseTokenizedLine = (tokenizedLine, character, config) ->
   if tokenizedLine.invisibles
     whitespaceInvisible = new RegExp(tokenizedLine.invisibles.space, "g")
 
-  section = 
+  section =
     before: ""
     after:  ""
 
@@ -140,17 +140,17 @@ getSameIndentationRange = (editor, row, character) ->
 @description
 Get the character to align based on text
 @param {Array} tokens Line tokens
-@param {String} scope
+@param {String} languageScope
 @returns {String} Alignment character
 ###
-getTokenizedAlignCharacter = (tokens, scope = 'base') ->
-  for token, i in tokens
+getTokenizedAlignCharacter = (tokens, languageScope = 'base') ->
+  for token in tokens
     tokenValue = token.value.trim()
 
-    config = operatorConfig.getConfig tokenValue, scope
+    config = operatorConfig.getConfig tokenValue, languageScope
     continue unless config
 
-    for scope in token.scopes when scope.match(config.scope)?
+    for tokenScope in token.scopes when tokenScope.match(config.scope)?
       return tokenValue
 
 getTokenizedLineForBufferRow = (editor, row) ->

@@ -1,19 +1,33 @@
+operatorConfig = require './operator-config'
+
 class ProviderManager
   constructor: ->
-    @providers = []
+    @providers = {}
+    @listeners = {}
 
   register: (provider) ->
-    @providers.push provider
+    return false unless provider?.id?
+
+    if @providers[provider.id]?
+      throw Error "Aligner: Package has already been activated"
+
+    @providers[provider.id] = provider
+
+    operatorConfig.add provider.id, provider
+
+    @listeners[provider.id] = atom.config.observe provider.id, (value) ->
+      operatorConfig.updateConfigWithAtom provider.id, value
 
   unregister: (provider) ->
-    index = @providers.indexOf provider
-    @providers.splice index, 1
+    id = provider?.id
 
-  getProviderIdByScope: (scope) ->
-    for provider in @providers
-      if provider.selector.indexOf(scope) != -1
-        return provider.id
+    if id and @providers[id]
+      @providers[id] = null
 
-    return null
+      operatorConfig.remove id
+
+      if @listeners[id]?
+        @listeners[id].dispose()
+        @listeners[id] = null
 
 module.exports = new ProviderManager()
