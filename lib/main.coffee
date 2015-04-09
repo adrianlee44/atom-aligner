@@ -74,13 +74,14 @@ class Aligner
 
   activate: ->
     atom.config.observe 'aligner', (value) ->
-      operatorConfig.updateConfigWithAtom value
+      operatorConfig.updateConfigWithAtom 'aligner', value
+
     atom.commands.add 'atom-text-editor', 'aligner:align', =>
       @align atom.workspace.getActiveTextEditor()
 
   registerProviders: (provider) ->
     # Register with providerManager
-    providerManager.register provider
+    return unless providerManager.register provider
 
     new Disposable ->
       # Unregister provider from providerManager

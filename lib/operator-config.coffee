@@ -1,6 +1,5 @@
-configs         = require '../config'
-extend          = require 'extend'
-providerManager = require './provider-manager'
+configs = require '../config'
+extend  = require 'extend'
 
 ###
 Example for '='
@@ -18,22 +17,50 @@ prefixed {array} Array of operators that have prefixes
 
 class OperationConfig
   constructor: ->
-    @updateSetting()
-    @mapping = configs.mapping
+    @settings = {}
+    @add 'aligner', configs
+
+  ###
+  @function
+  @name add
+  @description
+  Add/register provider config
+  @param {string} id Provider id
+  @param {Object} provider Provider object
+  ###
+  add: (id, provider) ->
+    if @settings[id]?
+      throw Error "Package has already been activated"
+
+    allConfigs    = extend {}, provider.config, provider.privateConfig
+    @settings[id] = @convertAtomConfig allConfigs
+
+    @settings[id].selector = provider.selector?.slice 0
+
+    @initializePrefix @settings[id]
+
+  remove: (id) ->
+    if @settings[id]?
+      @settings[id] = null
+
+  removeAll: ->
+    @settings = {}
 
   ###
   @function
   @name updateSetting
   @description
   Update aligner setting based on config.json format
-  @param {Object|null} newConfig Config object based on config.json format
-  Not passing in an object will update with default config
+  @param {string} packageId
+  @param {object} newConfig
   ###
-  updateSetting: (newConfig) ->
-    @setting = extend true, {}, configs.setting, newConfig
+  updateSetting: (packageId = 'aligner', newConfig) ->
+    if @settings[packageId]
+      extend true, @settings[packageId], newConfig
 
-    for key, config of @setting
-      if config.prefixes?
+  initializePrefix: (configs) ->
+    for key, config of configs
+      if key isnt 'selector' and config.prefixes?
         config.alignWith = [key]
         config.prefixed  = []
 
@@ -42,19 +69,20 @@ class OperationConfig
 
           config.alignWith.push keyWithPrefix
           config.prefixed.push keyWithPrefix
-          @setting[keyWithPrefix] = config
+          configs[keyWithPrefix] = config
 
   ###
   @function
   @name convertAtomConfig
   @description
   Convert config in Atom format to usable config by aligner
-  @param {Object} config
+  @param {Object} schema
+  @returns {Object} Converted config object
   ###
-  convertAtomConfig: (config) ->
+  convertAtomConfig: (schema) ->
     convertedConfig = {}
 
-    for key, value of config
+    for key, value of schema
       [configPath... , property] = key.split '-'
 
       # iternate to the correct object depth
@@ -63,7 +91,8 @@ class OperationConfig
         currentObject[configPathKey] ?= {}
         currentObject = currentObject[configPathKey]
 
-      currentObject[property] = value
+      currentObject[property] =
+        if value.default? then value.default else value
 
     return convertedConfig
 
@@ -74,9 +103,8 @@ class OperationConfig
   Convert Atom config object into supported format and update config
   @param {Object} newConfig Config object in Atom format
   ###
-  updateConfigWithAtom: (newConfig) ->
-    config = @convertAtomConfig(newConfig)
-    @updateSetting config
+  updateConfigWithAtom: (packageId = 'aligner', newConfig) ->
+    @updateSetting packageId, @convertAtomConfig(newConfig)
 
   ###
   @function
@@ -86,42 +114,21 @@ class OperationConfig
   @returns {Object}
   ###
   getAtomConfig: ->
-    output = {}
-
-    for key, config of configs.setting
-      for configKey, configValue of config
-        atomConfigKey = "#{key}-#{configKey}"
-        continue unless @mapping[configKey]?
-        output[atomConfigKey] = extend true, {}, @mapping[configKey]
-        output[atomConfigKey].default = configValue
-
-        if output[atomConfigKey].title
-          output[atomConfigKey].title += "'#{key}'"
-
-    return output
+    return configs.config
 
   ###
   @function
   @name getConfig
   @param {string} character
-  @param {String} scope
-  @returns {boolean}
+  @param {String} languageScope
+  @returns {object}
   ###
-  getConfig: (character, scope = 'base') ->
-    provider   = providerManager.getProviderByScope scope
-    providerId = provider?.id
+  getConfig: (character, languageScope = 'base') ->
+    for id, config of @settings
+      if config.selector? and config.selector.indexOf(languageScope) isnt -1
+        return config[character]
 
-    if providerId
-      config = atom.config.get(providerId) or {}
-
-      if provider.privateConfig?
-        extend config, provider.privateConfig
-
-      config = @convertAtomConfig config
-
-      return config[character]
-
-    return @setting[character]
+    return @settings.aligner[character]
 
   ###
   @function

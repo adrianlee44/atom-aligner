@@ -2,7 +2,7 @@ providerManager = require '../lib/provider-manager'
 
 describe 'ProviderManager', ->
   it 'should initialize an empty list', ->
-    expect(providerManager.providers.length).toBe 0
+    expect(providerManager.providers).toEqual {}
 
   describe 'registering a provider', ->
     provider =
@@ -15,30 +15,28 @@ describe 'ProviderManager', ->
       providerManager.register provider
 
     afterEach ->
-      providerManager.providers.length = 0
+      providerManager.unregister provider
 
     it 'should register a provider', ->
-      expect(providerManager.providers.length).toBe 1
+      expect(providerManager.providers['aligner-coffee']).toBeDefined()
 
     it 'should be the same provider', ->
-      expect(providerManager.providers[0]).toEqual provider
+      expect(providerManager.providers['aligner-coffee']).toEqual provider
 
-    it 'should get the id', ->
-      providerId = providerManager.getProviderIdByScope('.source.coffee')
-
-      expect(providerId).toBe 'aligner-coffee'
-
-  it ' should unregistering a provider', ->
+  it 'should unregistering a provider', ->
     provider =
       selector: ['.source.coffee']
       id:       'aligner-coffee'
       config:
         ':-alignment': 'left'
 
+    afterEach ->
+      providerManager.unregister provider
+
     providerManager.register provider
 
-    expect(providerManager.providers.length).toBe 1
+    expect(providerManager.providers['aligner-coffee']).toBeDefined()
 
     providerManager.unregister provider
 
-    expect(providerManager.providers.length).toBe 0
+    expect(providerManager.providers['aligner-coffee']).toBe null
