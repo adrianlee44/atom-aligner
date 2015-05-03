@@ -4,9 +4,9 @@
   "version": "0.11.0",
   "private": true,
   "description": "Easily align multi-line with support for different operators and custom configurations (Previously vertical-align)",
-  "activationEvents": [
-    "aligner:align"
-  ],
+  "activationCommands": {
+    "atom-text-editor": ["aligner:align"]
+  },
   "repository": "https://github.com/adrianlee44/atom-aligner",
   "license": "MIT",
   "engines": {
