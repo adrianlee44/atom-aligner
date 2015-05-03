@@ -65,6 +65,7 @@ random =
 ```
 
 ## Changelog
+- 2015-05-03   v0.12.0   Removed deprecated config. Bumped Atom requirement to v0.195.0
 - 2015-04-10   v0.11.0   Cleaned up add-on API
 - 2015-04-06   v0.10.1   Fixed `,` left and right space reversed (#14)
 - 2015-04-02   v0.10.0   Fixed indentation, invisibles and tabs bugs (#15, #17). Removed Ruby support from `aligner`. Please install `aligner-ruby`.
