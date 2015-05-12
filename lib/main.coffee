@@ -6,70 +6,72 @@ class Aligner
   config: operatorConfig.getAtomConfig()
 
   align: (editor) ->
-    if !editor.hasMultipleCursors()
-      # Get cursor row and text
-      origRow   = editor.getCursorBufferPosition().row
-      tokenized = helper.getTokenizedLineForBufferRow(editor, origRow)
-      scope     = editor.getRootScopeDescriptor().getScopeChain()
+    @alignAtCursor(editor, point) for point in editor.getCursorBufferPositions()
+    return
 
-      # Get alignment character
-      character = helper.getTokenizedAlignCharacter tokenized.tokens, scope
+  alignAtCursor: (editor, cursor) ->
+    origRow   = cursor.row
+    tokenized = helper.getTokenizedLineForBufferRow(editor, origRow)
+    scope     = editor.getRootScopeDescriptor().getScopeChain()
 
-      if character
-        indentLevel = editor.indentationForBufferRow origRow
-        indentRange = helper.getSameIndentationRange editor, origRow, character
-        config      = operatorConfig.getConfig character, scope
-        textBlock   = ""
+    # Get alignment character
+    character = helper.getTokenizedAlignCharacter tokenized.tokens, scope
 
-        for row in [indentRange.start..indentRange.end]
-          tokenizedLine = helper.getTokenizedLineForBufferRow(editor, row)
-          lineCharacter = helper.getTokenizedAlignCharacter tokenizedLine.tokens, scope
-          parsed        = helper.parseTokenizedLine tokenizedLine, lineCharacter, config
+    if character
+      indentLevel = editor.indentationForBufferRow origRow
+      indentRange = helper.getSameIndentationRange editor, origRow, character
+      config      = operatorConfig.getConfig character, scope
+      textBlock   = ""
 
-          # Construct new line with proper indentation
-          currentLine = editor.buildIndentString indentLevel
+      for row in [indentRange.start..indentRange.end]
+        tokenizedLine = helper.getTokenizedLineForBufferRow(editor, row)
+        lineCharacter = helper.getTokenizedAlignCharacter tokenizedLine.tokens, scope
+        parsed        = helper.parseTokenizedLine tokenizedLine, lineCharacter, config
 
-          for parsedItem, i in parsed
-            offset = parsedItem.offset + (if parsed.prefix then 1 else 0)
+        # Construct new line with proper indentation
+        currentLine = editor.buildIndentString indentLevel
 
-            # New whitespaces to add before/after alignment character
-            newSpace = ""
-            for j in [1..indentRange.offset[i] - offset] by 1
-              newSpace += " "
+        for parsedItem, i in parsed
+          offset = parsedItem.offset + (if parsed.prefix then 1 else 0)
 
-            if config.multiple
-              type      = if isNaN(+parsedItem.before) then "string" else "number"
-              alignment = config.multiple[type]?.alignment or "left"
+          # New whitespaces to add before/after alignment character
+          newSpace = ""
+          for j in [1..indentRange.offset[i] - offset] by 1
+            newSpace += " "
 
-            else
-              alignment = config.alignment
+          if config.multiple
+            type      = if isNaN(+parsedItem.before) then "string" else "number"
+            alignment = config.multiple[type]?.alignment or "left"
 
-            leftSpace  = if alignment is "left" then newSpace else ""
-            leftSpace += " " if config.leftSpace
+          else
+            alignment = config.alignment
 
-            rightSpace = if alignment is "right" then newSpace else ""
-            # ignore right space config when aligning multiple on the same line
-            if config.rightSpace and not (config.multiple and i is 0)
-              rightSpace += " "
+          leftSpace  = if alignment is "left" then newSpace else ""
+          leftSpace += " " if config.leftSpace
 
-            if config.multiple
-              # NOTE: rightSpace here instead of after lineCharacter to get the proper
-              # offset for the token
-              currentLine += rightSpace + parsedItem.before.trim()
-              currentLine += leftSpace + lineCharacter unless i is parsed.length - 1
+          rightSpace = if alignment is "right" then newSpace else ""
+          # ignore right space config when aligning multiple on the same line
+          if config.rightSpace and not (config.multiple and i is 0)
+            rightSpace += " "
 
-            else
-              currentLine += parsedItem.before
-              currentLine += leftSpace + lineCharacter + rightSpace
-              currentLine += parsedItem.after
+          if config.multiple
+            # NOTE: rightSpace here instead of after lineCharacter to get the proper
+            # offset for the token
+            currentLine += rightSpace + parsedItem.before.trim()
+            currentLine += leftSpace + lineCharacter unless i is parsed.length - 1
 
-          textBlock += "#{currentLine}\n"
+          else
+            currentLine += parsedItem.before
+            currentLine += leftSpace + lineCharacter + rightSpace
+            currentLine += parsedItem.after
 
-        # Replace the whole block
-        editor.setTextInBufferRange([[indentRange.start, 0], [indentRange.end + 1, 0]], textBlock)
+        textBlock += "#{currentLine}\n"
 
-        # Update the cursor to the end of the original line
-        editor.setCursorBufferPosition [origRow, editor.lineTextForBufferRow(origRow).length]
+      # Replace the whole block
+      editor.setTextInBufferRange([[indentRange.start, 0], [indentRange.end + 1, 0]], textBlock)
+
+      # Update the cursor to the end of the original line
+      editor.setCursorBufferPosition [origRow, editor.lineTextForBufferRow(origRow).length]
 
   activate: ->
     atom.config.observe 'aligner', (value) ->
