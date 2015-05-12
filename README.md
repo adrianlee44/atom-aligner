@@ -4,9 +4,6 @@ Easily align multi-line with support for different operators and custom configur
 
 Mac: `ctrl-cmd-/` Linux/Windows: `ctrl-alt-/`
 
-### Update
-This package has recently been renamed from `vertical-align` to `aligner` and might be causing some update problems. Please uninstall `vertical-align` and install `aligner` to fix the problem.
-
 ![aligner](https://raw.github.com/adrianlee44/atom-aligner/master/demo.gif)
 
 ### Custom configuration
@@ -67,23 +64,8 @@ random =
 ## Changelog
 - 2015-05-03   v0.12.0   Removed deprecated config. Bumped Atom requirement to v0.195.0
 - 2015-04-10   v0.11.0   Cleaned up add-on API
-- 2015-04-06   v0.10.1   Fixed `,` left and right space reversed (#14)
-- 2015-04-02   v0.10.0   Fixed indentation, invisibles and tabs bugs (#15, #17). Removed Ruby support from `aligner`. Please install `aligner-ruby`.
-- 2015-03-23   v0.9.1   Fixed add-ons not working properly
-- 2015-03-22   v0.9.0   Add support for aligner addons
-- 2015-03-22   v0.8.1   Renamed to aligner
-- 2015-02-21   v0.8.0   Added user configurations (#10)
-- 2015-02-09   v0.7.0   Updated to Atom 1.0 API and fixed prefix
-- 2014-09-18   v0.6.1   Fixed aligning ',' (#8, #9)
-- 2014-09-06   v0.6.0   Updated to use latest editor API
-- 2014-08-18   v0.5.2   Removed deprecated Atom function
-- 2014-08-08   v0.5.1   Added support for => operator
-- 2014-07-09   v0.5.0   Added keybinding for Linux and Windows
-- 2014-04-29   v0.4.0   Added inline array alignment support
-- 2014-04-18   v0.3.1   Fixed aligning ':'
-- 2014-04-16   v0.3.0   Full rewrite to make vertical-align more robust
-- 2014-03-06   v0.2.0   Updated README
-- 2014-03-06   v0.1.0   Initial release
+
+Check [changelog](https://github.com/adrianlee44/atom-aligner/blob/master/CHANGELOG.md) for more information
 
 ## TODO:
 - Add multi-cursors support
