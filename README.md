@@ -66,6 +66,3 @@ random =
 - 2015-04-10   v0.11.0   Cleaned up add-on API
 
 Check [changelog](https://github.com/adrianlee44/atom-aligner/blob/master/CHANGELOG.md) for more information
-
-## TODO:
-- Add multi-cursors support
