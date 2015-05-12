@@ -1,3 +1,6 @@
+## v0.13.0 (2015-05-12)
+- Multiple cursors support
+
 ## v0.12.0 (2015-05-03)
 - Removed deprecated config.
 - Bumped Atom requirement to v0.195.0

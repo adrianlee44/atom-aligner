@@ -62,7 +62,7 @@ random =
 ```
 
 ## Changelog
+- 2015-05-12   v0.13.0   Multipl cursors support
 - 2015-05-03   v0.12.0   Removed deprecated config. Bumped Atom requirement to v0.195.0
-- 2015-04-10   v0.11.0   Cleaned up add-on API
 
 Check [changelog](https://github.com/adrianlee44/atom-aligner/blob/master/CHANGELOG.md) for more information
