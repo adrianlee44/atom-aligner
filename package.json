@@ -1,7 +1,7 @@
 {
   "name": "aligner",
   "main": "./lib/main",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "private": true,
   "description": "Easily align multi-line with support for different operators and custom configurations (Previously vertical-align)",
   "activationCommands": {
