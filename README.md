@@ -17,6 +17,7 @@ Package allows user to change the way characters are aligned.
 - Ruby ([aligner-ruby](https://github.com/adrianlee44/atom-aligner-ruby))
 - CSS & LESS ([aligner-css](https://github.com/adrianlee44/atom-aligner-css))
 - SASS & SCSS ([aligner-scss](https://github.com/adrianlee44/atom-aligner-scss))
+- PHP ([aligner-php](https://github.com/adrianlee44/atom-aligner-php))
 - For documentation to create aligner add-ons, check this  [page](https://github.com/adrianlee44/atom-aligner/wiki/Creating-aligner-add-ons)
 
 User can either align like this,
