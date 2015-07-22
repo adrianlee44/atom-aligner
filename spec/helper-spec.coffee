@@ -172,11 +172,11 @@ describe "Helper", ->
 
       it "should handle tabs correctly", ->
         atom.config.set 'editor.softTabs', false
-        line   = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(17)
+        line   = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(18)
         output = helper.parseTokenizedLine line, "=", config
 
-        expect(output[0].before).toBe "testing"
-        expect(output[0].after).toBe "123"
+        expect(output[0].before).toBe "test"
+        expect(output[0].after).toBe "'abc'      "
 
     describe "parsing a line with multiple characters", ->
       output = null

@@ -18,9 +18,6 @@ parseTokenizedLine = (tokenizedLine, character, config) ->
   parsed.prefix  = null
   whitespaces    = tokenizedLine.firstNonWhitespaceIndex
 
-  if tokenizedLine.invisibles
-    whitespaceInvisible = new RegExp(tokenizedLine.invisibles.space, "g")
-
   section =
     before: ""
     after:  ""
@@ -43,12 +40,7 @@ parseTokenizedLine = (tokenizedLine, character, config) ->
       whitespaces -= token.screenDelta
       continue
 
-    tokenValue = token.value
-
-    # To convert trailing whitespace invisible to whitespace
-    if token.firstTrailingWhitespaceIndex? and token.hasInvisibleCharacters
-      tokenValue = tokenValue.substring(0, token.firstTrailingWhitespaceIndex) +
-        tokenValue.substring(token.firstTrailingWhitespaceIndex).replace(whitespaceInvisible, " ")
+    tokenValue = _formatTokenValue token, tokenizedLine.invisibles
 
     if operatorConfig.canAlignWith(character, tokenValue.trim(), config) and (not afterCharacter or config.multiple)
       parsed.prefix = operatorConfig.isPrefixed tokenValue.trim(), config
@@ -156,9 +148,28 @@ getTokenizedAlignCharacter = (tokens, languageScope = 'base') ->
 getTokenizedLineForBufferRow = (editor, row) ->
   editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(row)
 
+_formatTokenValue = (token, invisibles) ->
+  value = token.value
+
+  # To convert trailing whitespace invisible to whitespace
+  if token.firstTrailingWhitespaceIndex? and token.hasInvisibleCharacters
+    trailing = value.substring(token.firstTrailingWhitespaceIndex)
+
+    if invisibles.space?
+      trailing = trailing.replace(new RegExp(invisibles.space, 'g'), " ")
+
+    if invisibles.tab?
+      trailing = trailing.replace(new RegExp(invisibles.tab, 'g'), "\t")
+
+    value = value.substring(0, token.firstTrailingWhitespaceIndex) + trailing
+
+  return value
+
+
 module.exports = {
   getSameIndentationRange
   parseTokenizedLine
   getTokenizedAlignCharacter
   getTokenizedLineForBufferRow
+  _formatTokenValue
 }
