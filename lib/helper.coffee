@@ -35,12 +35,19 @@ parseTokenizedLine = (tokenizedLine, character, config) ->
       after:  ""
 
   for token in tokenizedLine.tokens
+    tokenValue = token.value
+
     # To account for leading whitespaces
     if whitespaces > 0
-      whitespaces -= token.screenDelta
-      continue
+      # if for some reason there is more whitespaces than the length of first token
+      if whitespaces > tokenValue.length
+        whitespaces -= tokenValue.length
+        continue
 
-    tokenValue = _formatTokenValue token, tokenizedLine.invisibles
+      tokenValue = tokenValue.substring token.firstNonWhitespaceIndex
+      whitespaces -= token.firstNonWhitespaceIndex
+
+    tokenValue = _formatTokenValue tokenValue, token, tokenizedLine.invisibles
 
     if operatorConfig.canAlignWith(character, tokenValue.trim(), config) and (not afterCharacter or config.multiple)
       parsed.prefix = operatorConfig.isPrefixed tokenValue.trim(), config
@@ -148,9 +155,7 @@ getTokenizedAlignCharacter = (tokens, languageScope = 'base') ->
 getTokenizedLineForBufferRow = (editor, row) ->
   editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(row)
 
-_formatTokenValue = (token, invisibles) ->
-  value = token.value
-
+_formatTokenValue = (value, token, invisibles) ->
   # To convert trailing whitespace invisible to whitespace
   if token.firstTrailingWhitespaceIndex? and token.hasInvisibleCharacters
     trailing = value.substring(token.firstTrailingWhitespaceIndex)

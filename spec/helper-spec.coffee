@@ -178,6 +178,19 @@ describe "Helper", ->
         expect(output[0].before).toBe "test"
         expect(output[0].after).toBe "'abc'      "
 
+    describe "parse a line with different tab length", ->
+      beforeEach ->
+        atom.config.set 'editor.tabLength', 4
+
+      afterEach ->
+        atom.config.set 'editor.tabLength', 2
+
+      it 'should parse leading whitespace correctly', ->
+        line = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(6)
+        output = helper.parseTokenizedLine line, ':', config
+        expect(output[0].before).toBe "test"
+        expect(output[0].after).toBe "\"123\""
+
     describe "parsing a line with multiple characters", ->
       output = null
       beforeEach ->
