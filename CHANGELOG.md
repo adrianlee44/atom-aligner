@@ -1,3 +1,7 @@
+## v0.13.1 (2015-07-23)
+- Fix tab length of 4 breaks leading whitespace
+- Fix trailing tab not rendering correctly after aligning
+
 ## v0.13.0 (2015-05-12)
 - Multiple cursors support
 
