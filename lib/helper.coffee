@@ -103,13 +103,18 @@ getSameIndentationRange = (editor, row, character) ->
     if start > -1
       startLine = getTokenizedLineForBufferRow editor, start
 
-      if startLine? and editor.indentationForBufferRow(start) is indent and
-          (parsed = parseTokenizedLine startLine, character, config) and parsed.valid
+      if startLine? and editor.indentationForBufferRow(start) is indent
+        if atom.config.get('aligner.alignAcrossComments') and startLine.isComment()
+          start -= 1
 
-        checkOffset parsed
-        output.start  = start
-        hasPrefix     = true if not hasPrefix and parsed.prefix
-        start        -= 1
+        else if (parsed = parseTokenizedLine startLine, character, config) and parsed.valid
+          checkOffset parsed
+          output.start  = start
+          hasPrefix     = true if not hasPrefix and parsed.prefix
+          start        -= 1
+
+        else
+          start = -1
 
       else
         start = -1
@@ -117,13 +122,18 @@ getSameIndentationRange = (editor, row, character) ->
     if end < total + 1
       endLine = getTokenizedLineForBufferRow editor, end
 
-      if endLine? and editor.indentationForBufferRow(end) is indent and
-          (parsed = parseTokenizedLine endLine, character, config) and parsed.valid
+      if endLine? and editor.indentationForBufferRow(end) is indent
+        if atom.config.get('aligner.alignAcrossComments') and endLine.isComment()
+          end += 1
 
-        checkOffset parsed
-        output.end  = end
-        hasPrefix   = true if not hasPrefix and parsed.prefix
-        end        += 1
+        else if (parsed = parseTokenizedLine endLine, character, config) and parsed.valid
+          checkOffset parsed
+          output.end  = end
+          hasPrefix   = true if not hasPrefix and parsed.prefix
+          end        += 1
+
+        else
+          end = total + 1
 
       else
         end = total + 1

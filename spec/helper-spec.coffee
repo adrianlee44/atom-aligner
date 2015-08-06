@@ -17,7 +17,26 @@ describe "Helper", ->
       buffer = editor.buffer
       config = operatorConfig.getConfig '='
 
+  afterEach ->
+    atom.config.unset('aligner')
+
   describe "getSameIndentationRange", ->
+    describe "should include comments", ->
+      output = null
+
+      beforeEach ->
+        atom.config.set('aligner.alignAcrossComments', true)
+        output = helper.getSameIndentationRange editor, 23, ':'
+
+      it "should get the valid start row", ->
+        expect(output.start).toBe 23
+
+      it "should get the valid end row", ->
+        expect(output.end).toBe 33
+
+      it "should get the valid offset", ->
+        expect(output.offset).toEqual [6]
+
     describe "should return valid range object when cursor is in the middle", ->
       output = null
       beforeEach ->

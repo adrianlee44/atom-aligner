@@ -16,4 +16,18 @@ multipleOnSameLine = [
 ]
 
         testing = 123
-        test = 'abc'      
+        test = 'abc'
+
+colorMapping =
+  # block 1
+  red: '#FF0000'
+  white: '#FFFFFF'
+  black: '#000000'
+  # block 2
+  blue: '#0000FF'
+  green: '#00FF00'
+  purple: '#FF00E1'
+  #block 3
+  gray: '#A8A8A8'
+  yellow: '#F6FF00'
+  orange: '#FFAE00'
