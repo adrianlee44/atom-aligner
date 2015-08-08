@@ -63,7 +63,7 @@ random =
 ```
 
 ## Changelog
-- 2015-07-23   v0.13.1   Fix tab length of 4 breaks leading whitespace. Fix trailing tab not rendering correctly after aligning
-- 2015-05-12   v0.13.0   Multiple cursors support
+### v0.14.0 (2015-08-08)
+- Add `Align across comments` option
 
 Check [changelog](https://github.com/adrianlee44/atom-aligner/blob/master/CHANGELOG.md) for more information

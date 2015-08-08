@@ -1,3 +1,6 @@
+## v0.14.0 (2015-08-08)
+- Add `Align across comments` option
+
 ## v0.13.1 (2015-07-23)
 - Fix tab length of 4 breaks leading whitespace
 - Fix trailing tab not rendering correctly after aligning
