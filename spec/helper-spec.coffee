@@ -1,11 +1,14 @@
 helper         = require '../lib/helper'
 operatorConfig = require '../lib/operator-config'
+path           = require 'path'
 
 describe "Helper", ->
   editor = null
   config = null
 
   beforeEach ->
+    atom.project.setPaths([path.join(__dirname, 'fixtures')])
+
     waitsForPromise ->
       atom.packages.activatePackage('language-coffee-script')
 
@@ -14,7 +17,6 @@ describe "Helper", ->
         editor = o
 
     runs ->
-      buffer = editor.buffer
       config = operatorConfig.getConfig '='
 
   afterEach ->
@@ -29,10 +31,10 @@ describe "Helper", ->
         output = helper.getSameIndentationRange editor, 23, ':'
 
       it "should get the valid start row", ->
-        expect(output.start).toBe 23
+        expect(output.start).toBe 22
 
       it "should get the valid end row", ->
-        expect(output.end).toBe 33
+        expect(output.end).toBe 32
 
       it "should get the valid offset", ->
         expect(output.offset).toEqual [6]

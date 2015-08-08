@@ -16,7 +16,7 @@ multipleOnSameLine = [
 ]
 
         testing = 123
-        test = 'abc'
+        test = 'abc'      
 
 colorMapping =
   # block 1
