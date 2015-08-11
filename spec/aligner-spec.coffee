@@ -20,6 +20,9 @@ describe "Aligner", ->
 
       activationPromise = atom.packages.activatePackage("aligner")
 
+  afterEach ->
+    atom.config.unset('aligner')
+
   it "should align two lines correctly", ->
     editor.setCursorBufferPosition([0, 1])
     atom.commands.dispatch editorView, 'aligner:align'
@@ -123,6 +126,34 @@ describe "Aligner", ->
       expect(editor.lineTextForBufferRow(1)).toBe 'test    = "321"'
       expect(editor.lineTextForBufferRow(6)).toBe "  foo:        bar"
       expect(editor.lineTextForBufferRow(10)).toBe 'longPrefix  = "test"'
+
+  it "should align multiple blocks across comments", ->
+    atom.config.set('aligner.alignAcrossComments', true)
+    editor.setCursorBufferPosition([31, 0])
+
+    atom.commands.dispatch editorView, 'aligner:align'
+
+    waitsForPromise -> activationPromise
+
+    runs ->
+      expect(editor.lineTextForBufferRow(31)).toBe "  black:  '#000000'"
+      expect(editor.lineTextForBufferRow(32)).toBe "  # block 2"
+      expect(editor.lineTextForBufferRow(38)).toBe "  yellow: '#F6FF00'"
+
+  it "should align multiple blocks across comments when invisibes are on", ->
+    atom.config.set('aligner.alignAcrossComments', true)
+    atom.config.set 'editor.showInvisibles', true
+    atom.config.set 'editor.softTabs', false
+    editor.setCursorBufferPosition([31, 0])
+
+    atom.commands.dispatch editorView, 'aligner:align'
+
+    waitsForPromise -> activationPromise
+
+    runs ->
+      expect(editor.lineTextForBufferRow(31)).toBe "  black:  '#000000'"
+      expect(editor.lineTextForBufferRow(32)).toBe "  # block 2"
+      expect(editor.lineTextForBufferRow(38)).toBe "  yellow: '#F6FF00'"
 
 describe "Aligning javascript", ->
   [editor, workspaceElement, editorView, activationPromise] = []

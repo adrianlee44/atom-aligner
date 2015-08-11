@@ -25,6 +25,11 @@ class Aligner
 
       for row in [indentRange.start..indentRange.end]
         tokenizedLine = helper.getTokenizedLineForBufferRow(editor, row)
+
+        if atom.config.get('aligner.alignAcrossComments') and tokenizedLine.isComment()
+          textBlock += editor.lineTextForBufferRow(row) + "\n"
+          continue
+
         lineCharacter = helper.getTokenizedAlignCharacter tokenizedLine.tokens, scope
         parsed        = helper.parseTokenizedLine tokenizedLine, lineCharacter, config
 
