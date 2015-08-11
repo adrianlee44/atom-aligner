@@ -63,7 +63,8 @@ random =
 ```
 
 ## Changelog
-### v0.14.0 (2015-08-08)
-- Add `Align across comments` option
+### v0.15.0 (2015-08-11)
+- Align when using selection or have multiple selections
+- Fix undefined appended to comment block when `align across comment` option is on
 
 Check [changelog](https://github.com/adrianlee44/atom-aligner/blob/master/CHANGELOG.md) for more information
