@@ -6,28 +6,30 @@ class Aligner
   config: operatorConfig.getAtomConfig()
 
   align: (editor) ->
-    @alignAtCursor(editor, point) for point in editor.getCursorBufferPositions()
+    for range in editor.getSelectedBufferRanges()
+      nextLineNumber = range.start.row
+      for rowNumber in [range.start.row...range.end.row + 1] when rowNumber >= nextLineNumber
+        nextLineNumber = @alignAtRow(editor, rowNumber) + 1
     return
 
-  alignAtCursor: (editor, cursor) ->
-    origRow   = cursor.row
-    tokenized = helper.getTokenizedLineForBufferRow(editor, origRow)
+  alignAtRow: (editor, row) ->
+    tokenized = helper.getTokenizedLineForBufferRow(editor, row)
     scope     = editor.getRootScopeDescriptor().getScopeChain()
 
     # Get alignment character
     character = helper.getTokenizedAlignCharacter tokenized.tokens, scope
 
     if character
-      indentLevel = editor.indentationForBufferRow origRow
-      indentRange = helper.getSameIndentationRange editor, origRow, character
+      indentLevel = editor.indentationForBufferRow row
+      indentRange = helper.getSameIndentationRange editor, row, character
       config      = operatorConfig.getConfig character, scope
       textBlock   = ""
 
-      for row in [indentRange.start..indentRange.end]
-        tokenizedLine = helper.getTokenizedLineForBufferRow(editor, row)
+      for currentRow in [indentRange.start..indentRange.end]
+        tokenizedLine = helper.getTokenizedLineForBufferRow(editor, currentRow)
 
         if atom.config.get('aligner.alignAcrossComments') and tokenizedLine.isComment()
-          textBlock += editor.lineTextForBufferRow(row) + "\n"
+          textBlock += editor.lineTextForBufferRow(currentRow) + "\n"
           continue
 
         lineCharacter = helper.getTokenizedAlignCharacter tokenizedLine.tokens, scope
@@ -76,7 +78,11 @@ class Aligner
       editor.setTextInBufferRange([[indentRange.start, 0], [indentRange.end + 1, 0]], textBlock)
 
       # Update the cursor to the end of the original line
-      editor.setCursorBufferPosition [origRow, editor.lineTextForBufferRow(origRow).length]
+      editor.setCursorBufferPosition [row, editor.lineTextForBufferRow(row).length]
+
+      return indentRange.end
+
+    return row
 
   activate: ->
     atom.config.observe 'aligner', (value) ->

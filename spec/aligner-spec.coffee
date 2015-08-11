@@ -155,6 +155,23 @@ describe "Aligner", ->
       expect(editor.lineTextForBufferRow(32)).toBe "  # block 2"
       expect(editor.lineTextForBufferRow(38)).toBe "  yellow: '#F6FF00'"
 
+  it "should align multiple selections", ->
+    atom.config.set('aligner.alignAcrossComments', true)
+
+    editor.setSelectedBufferRanges([[[28, 0], [32, 0]], [[6, 0], [8, 0]]])
+    atom.commands.dispatch editorView, 'aligner:align'
+
+    waitsForPromise -> activationPromise
+
+    runs ->
+      expect(editor.lineTextForBufferRow(6)).toBe "  foo:        bar"
+      expect(editor.lineTextForBufferRow(7)).toBe "  helloworld: test"
+      expect(editor.lineTextForBufferRow(8)).toBe "  star:       war"
+      expect(editor.lineTextForBufferRow(30)).toBe "  white:  '#FFFFFF'"
+      expect(editor.lineTextForBufferRow(31)).toBe "  black:  '#000000'"
+      expect(editor.lineTextForBufferRow(32)).toBe "  # block 2"
+
+
 describe "Aligning javascript", ->
   [editor, workspaceElement, editorView, activationPromise] = []
 
