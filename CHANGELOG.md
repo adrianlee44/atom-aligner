@@ -1,3 +1,11 @@
+## v0.16.0 (2015-09-13)
+- Add support for multiple selections alignment
+  - Selection blocks will be aligned with the same offset
+  - Cursors will be aligned with all adjacent lines with same indentation
+- Fix aligner addon packages not working on first call
+- Lines with same indentation separated by comments are now considered as the same block
+- Add `enabled` option to aligner addon packages
+
 ## v0.15.0 (2015-08-11)
 - Align when using selection or have multiple selections
 - Fix undefined appended to comment block when `align across comment` option is on
