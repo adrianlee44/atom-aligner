@@ -118,6 +118,24 @@ describe "Helper", ->
 
       expect(character).toBe "="
 
+    it "should get the : character", ->
+      ranges = [new Range([7,0], [9, 0])]
+      character = helper.getAlignCharacterInRanges editor, ranges
+
+      expect(character).toBe ":"
+
+    it "should get the , character", ->
+      ranges = [new Range([13,0], [15, 0])]
+      character = helper.getAlignCharacterInRanges editor, ranges
+
+      expect(character).toBe ","
+
+    it "should not find anything", ->
+      ranges = [new Range([34,0], [35, 0])]
+      character = helper.getAlignCharacterInRanges editor, ranges
+
+      expect(character).not.toBeDefined()
+
   describe "parseTokenizedLine", ->
     grammar = null
     beforeEach ->

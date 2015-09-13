@@ -30,12 +30,28 @@ getAlignCharacter: (editor, row) ->
     for tokenScope in token.scopes when tokenScope.match(config.scope)?
       return tokenValue
 
+###
+@name getAlignCharacterInRanges
+@description
+Get the character to align within certain ranges
+@param {Editor} editor
+@param {Array.<Range>} ranges
+@returns {String} Alignment character
+###
 getAlignCharacterInRanges: (editor, ranges) ->
   _traverseRanges ranges, (line) ->
     character = @getAlignCharacter editor, line
     return character if character
   , this
 
+###
+@name getOffsets
+@description
+Get alignment offset based on character and selections
+@param {Editor} editor
+@param {String} character
+@param {Array.<Range>} ranges
+###
 getOffsets: (editor, character, ranges) ->
   scope   = editor.getRootScopeDescriptor().getScopeChain()
   offsets = []
@@ -52,7 +68,6 @@ getOffsets: (editor, character, ranges) ->
   return offsets
 
 ###
-@function
 @name parseTokenizedLine
 @description
 Parsing line with operator
@@ -118,6 +133,13 @@ parseTokenizedLine: (tokenizedLine, character, config) ->
 
   return parsed
 
+###
+@name setOffsets
+@description
+Set alignment offset for each section
+@param {Array.<Integer>} offsets
+@param {Array.<Object>} parsedObjects
+###
 setOffsets: (offsets, parsedObjects) ->
   for parsedObject, i in parsedObjects
     offsets[i] ?= parsedObject.offset
@@ -126,7 +148,6 @@ setOffsets: (offsets, parsedObjects) ->
       offsets[i] = parsedObject.offset
 
 ###
-@function
 @name getSameIndentationRange
 @description To get the start and end line number of the same indentation
 @param {Editor} editor Active editor
@@ -199,22 +220,40 @@ getSameIndentationRange: (editor, row, character) ->
     offset: offsets
   }
 
+###
+@name getTokenizedLineForBufferRow
+@description
+Get tokenized line
+@param {Editor} editor
+@param {Integer} row
+@returns {Array}
+###
 getTokenizedLineForBufferRow: (editor, row) ->
   editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(row)
 
+###
+@name _formatTokenValue
+@description
+Convert invisibles in token to spaces or tabs
+@param {String} value
+@param {Token} token
+@param {Object} invisibles
+@returns {String}
+@private
+###
 _formatTokenValue: (value, token, invisibles) ->
   return value unless token.hasInvisibleCharacters
 
   if token.firstNonWhitespaceIndex?
     leading = value.substring(0, token.firstNonWhitespaceIndex)
     leading = @_formatInvisibleSpaces leading, invisibles
-    value = leading + value.substring(token.firstNonWhitespaceIndex)
+    value   = leading + value.substring(token.firstNonWhitespaceIndex)
 
   # To convert trailing whitespace invisible to whitespace
   if token.firstTrailingWhitespaceIndex?
     trailing = value.substring(token.firstTrailingWhitespaceIndex)
     trailing = @_formatInvisibleSpaces trailing, invisibles
-    value = value.substring(0, token.firstTrailingWhitespaceIndex) + trailing
+    value    = value.substring(0, token.firstTrailingWhitespaceIndex) + trailing
 
   return value
 

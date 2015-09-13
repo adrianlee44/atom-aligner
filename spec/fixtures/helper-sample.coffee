@@ -31,3 +31,5 @@ colorMapping =
   gray: '#A8A8A8'
   yellow: '#F6FF00'
   orange: '#FFAE00'
+
+nothing(toAlign)
