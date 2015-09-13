@@ -94,6 +94,9 @@ class OperationConfig
       currentObject[property] =
         if value.default? then value.default else value
 
+    # Enable character alignment by default
+    currentObject.enabled ?= true
+
     return convertedConfig
 
   ###
@@ -126,8 +129,9 @@ class OperationConfig
   getConfig: (character, languageScope = 'base') ->
     for id, config of @settings
       if config.selector? and config.selector.indexOf(languageScope) isnt -1
-        return config[character]
+        return config[character] if config[character]?.enabled
 
+    # default settings for `character`
     return @settings.aligner[character]
 
   ###
