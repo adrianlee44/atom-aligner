@@ -1,88 +1,43 @@
 operatorConfig  = require './operator-config'
 helper          = require './helper'
 providerManager = require './provider-manager'
+formatter       = require './formatter'
 
 class Aligner
   config: operatorConfig.getAtomConfig()
 
+  ###
+  @param {Editor} editor
+  ###
   align: (editor) ->
+    rangesWithContent = []
     for range in editor.getSelectedBufferRanges()
-      nextLineNumber = range.start.row
-      for rowNumber in [range.start.row...range.end.row + 1] when rowNumber >= nextLineNumber
-        nextLineNumber = @alignAtRow(editor, rowNumber) + 1
+      # if the range is just a cursor
+      if range.isEmpty()
+        @alignAtRow(editor, range.start.row)
+
+      else
+        rangesWithContent.push range
+
+    if rangesWithContent.length > 0
+      @alignRanges(editor, rangesWithContent)
+
     return
 
   alignAtRow: (editor, row) ->
-    tokenized = helper.getTokenizedLineForBufferRow(editor, row)
-    scope     = editor.getRootScopeDescriptor().getScopeChain()
+    character = helper.getAlignCharacter editor, row
+    return unless character
 
-    # Get alignment character
-    character = helper.getTokenizedAlignCharacter tokenized.tokens, scope
+    {range, offset} = helper.getSameIndentationRange editor, row, character
+    formatter.formatRange editor, range, character, offset
 
-    if character
-      indentLevel = editor.indentationForBufferRow row
-      indentRange = helper.getSameIndentationRange editor, row, character
-      config      = operatorConfig.getConfig character, scope
-      textBlock   = ""
+  alignRanges: (editor, ranges) ->
+    character = helper.getAlignCharacterInRanges editor, ranges
+    return unless character
 
-      for currentRow in [indentRange.start..indentRange.end]
-        tokenizedLine = helper.getTokenizedLineForBufferRow(editor, currentRow)
-
-        if atom.config.get('aligner.alignAcrossComments') and tokenizedLine.isComment()
-          textBlock += editor.lineTextForBufferRow(currentRow) + "\n"
-          continue
-
-        lineCharacter = helper.getTokenizedAlignCharacter tokenizedLine.tokens, scope
-        parsed        = helper.parseTokenizedLine tokenizedLine, lineCharacter, config
-
-        # Construct new line with proper indentation
-        currentLine = editor.buildIndentString indentLevel
-
-        for parsedItem, i in parsed
-          offset = parsedItem.offset + (if parsed.prefix then 1 else 0)
-
-          # New whitespaces to add before/after alignment character
-          newSpace = ""
-          for j in [1..indentRange.offset[i] - offset] by 1
-            newSpace += " "
-
-          if config.multiple
-            type      = if isNaN(+parsedItem.before) then "string" else "number"
-            alignment = config.multiple[type]?.alignment or "left"
-
-          else
-            alignment = config.alignment
-
-          leftSpace  = if alignment is "left" then newSpace else ""
-          leftSpace += " " if config.leftSpace
-
-          rightSpace = if alignment is "right" then newSpace else ""
-          # ignore right space config when aligning multiple on the same line
-          if config.rightSpace and not (config.multiple and i is 0)
-            rightSpace += " "
-
-          if config.multiple
-            # NOTE: rightSpace here instead of after lineCharacter to get the proper
-            # offset for the token
-            currentLine += rightSpace + parsedItem.before.trim()
-            currentLine += leftSpace + lineCharacter unless i is parsed.length - 1
-
-          else
-            currentLine += parsedItem.before
-            currentLine += leftSpace + lineCharacter + rightSpace
-            currentLine += parsedItem.after
-
-        textBlock += "#{currentLine}\n"
-
-      # Replace the whole block
-      editor.setTextInBufferRange([[indentRange.start, 0], [indentRange.end + 1, 0]], textBlock)
-
-      # Update the cursor to the end of the original line
-      editor.setCursorBufferPosition [row, editor.lineTextForBufferRow(row).length]
-
-      return indentRange.end
-
-    return row
+    offsets = helper.getOffsets editor, character, ranges
+    for range in ranges
+      formatter.formatRange editor, range, character, offsets
 
   activate: ->
     atom.config.observe 'aligner', (value) ->

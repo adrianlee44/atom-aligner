@@ -1,6 +1,7 @@
 helper         = require '../lib/helper'
 operatorConfig = require '../lib/operator-config'
 path           = require 'path'
+{Range} = require 'atom'
 
 describe "Helper", ->
   editor = null
@@ -24,91 +25,98 @@ describe "Helper", ->
 
   describe "getSameIndentationRange", ->
     describe "should include comments", ->
-      output = null
+      [range, offset] = []
 
       beforeEach ->
         atom.config.set('aligner.alignAcrossComments', true)
-        output = helper.getSameIndentationRange editor, 23, ':'
+        {range, offset} = helper.getSameIndentationRange editor, 23, ':'
 
       it "should get the valid start row", ->
-        expect(output.start).toBe 22
+        expect(range.start.row).toBe 22
 
       it "should get the valid end row", ->
-        expect(output.end).toBe 32
+        expect(range.end.row).toBe 32
 
       it "should get the valid offset", ->
-        expect(output.offset).toEqual [6]
+        expect(offset).toEqual [6]
 
     describe "should return valid range object when cursor is in the middle", ->
-      output = null
+      [range, offset] = []
       beforeEach ->
-        output = helper.getSameIndentationRange editor, 2, "="
+        {range, offset} = helper.getSameIndentationRange editor, 2, "="
 
       it "should get the valid start row", ->
-        expect(output.start).toBe 1
+        expect(range.start.row).toBe 1
 
       it "should get the valid end row", ->
-        expect(output.end).toBe 3
+        expect(range.end.row).toBe 3
 
       it "should get the valid offset", ->
-        expect(output.offset).toEqual [5]
+        expect(offset).toEqual [5]
 
     describe "should return valid range object when cursor is on the last line", ->
-      output = null
+      [range, offset] = []
       beforeEach ->
-        output = helper.getSameIndentationRange editor, 3, "="
+        {range, offset} = helper.getSameIndentationRange editor, 3, "="
 
       it "should get the valid start row", ->
-        expect(output.start).toBe 1
+        expect(range.start.row).toBe 1
 
       it "should get the valid end row", ->
-        expect(output.end).toBe 3
+        expect(range.end.row).toBe 3
 
       it "should get the valid offset", ->
-        expect(output.offset).toEqual [5]
+        expect(offset).toEqual [5]
 
     describe "should return valid range object when cursor is on the first line", ->
-      output = null
+      [range, offset] = []
       beforeEach ->
-        output = helper.getSameIndentationRange editor, 1, "="
+        {range, offset} = helper.getSameIndentationRange editor, 1, "="
 
       it "should get the valid start row", ->
-        expect(output.start).toBe 1
+        expect(range.start.row).toBe 1
 
       it "should get the valid end row", ->
-        expect(output.end).toBe 3
+        expect(range.end.row).toBe 3
 
       it "should get the valid offset", ->
-        expect(output.offset).toEqual [5]
+        expect(offset).toEqual [5]
 
-  describe "getTokenizedAlignCharacter", ->
+  describe "getAlignCharacter", ->
     grammar = null
     beforeEach ->
       grammar = editor.getGrammar()
 
     it "should get the = character", ->
-      line      = grammar.tokenizeLine editor.lineTextForBufferRow 1
-      character = helper.getTokenizedAlignCharacter line.tokens
+      character = helper.getAlignCharacter editor, 1
 
       expect(character).toBe "="
 
     it "should get the : character", ->
-      line      = grammar.tokenizeLine editor.lineTextForBufferRow 7
-      character = helper.getTokenizedAlignCharacter line.tokens
+      character = helper.getAlignCharacter editor, 7
 
       expect(character).toBe ":"
 
     it "should get the , character", ->
-      line      = grammar.tokenizeLine editor.lineTextForBufferRow 13
-      character = helper.getTokenizedAlignCharacter line.tokens
+      character = helper.getAlignCharacter editor, 13
 
       expect(character).toBe ","
 
     it "should not find anything", ->
-      line      = grammar.tokenizeLine editor.lineTextForBufferRow 4
-      character = helper.getTokenizedAlignCharacter line.tokens
+      character = helper.getAlignCharacter editor, 4
 
       expect(character).not.toBeDefined()
+
+  describe "getAlignCharacterInRanges", ->
+    grammar = null
+    beforeEach ->
+      grammar = editor.getGrammar()
+
+    it "should get the = character", ->
+      ranges = [new Range([1,0], [3, 0])]
+      character = helper.getAlignCharacterInRanges editor, ranges
+
+      expect(character).toBe "="
 
   describe "parseTokenizedLine", ->
     grammar = null
