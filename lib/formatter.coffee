@@ -13,8 +13,7 @@ module.exports =
       lineCharacter = helper.getAlignCharacter editor, currentRow
       canAlignWith  = operatorConfig.canAlignWith character, lineCharacter, config
 
-      if !lineCharacter or !canAlignWith or
-          (atom.config.get('aligner.alignAcrossComments') and tokenizedLine.isComment())
+      if !lineCharacter or !canAlignWith or tokenizedLine.isComment()
         textBlock += editor.lineTextForBufferRow(currentRow)
         textBlock += "\n" unless currentRow is range.end.row
         continue

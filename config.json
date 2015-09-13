@@ -1,11 +1,5 @@
 {
   "config": {
-    "alignAcrossComments": {
-      "title": "Align across comments",
-      "description": "Treat code blocks with same indentation separated by comments as one",
-      "type": "boolean",
-      "default": false
-    },
     "=-alignment": {
       "title": "Padding for =",
       "description": "Pad left or right of the character",

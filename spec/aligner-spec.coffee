@@ -128,7 +128,6 @@ describe "Aligner", ->
       expect(editor.lineTextForBufferRow(10)).toBe 'longPrefix  = "test"'
 
   it "should align multiple blocks across comments", ->
-    atom.config.set('aligner.alignAcrossComments', true)
     editor.setCursorBufferPosition([31, 0])
 
     atom.commands.dispatch editorView, 'aligner:align'
@@ -141,7 +140,6 @@ describe "Aligner", ->
       expect(editor.lineTextForBufferRow(38)).toBe "  yellow: '#F6FF00'"
 
   it "should align multiple blocks across comments when invisibes are on", ->
-    atom.config.set('aligner.alignAcrossComments', true)
     atom.config.set 'editor.showInvisibles', true
     atom.config.set 'editor.softTabs', false
     editor.setCursorBufferPosition([31, 0])
@@ -156,8 +154,6 @@ describe "Aligner", ->
       expect(editor.lineTextForBufferRow(38)).toBe "  yellow: '#F6FF00'"
 
   it "should align multiple selections", ->
-    atom.config.set('aligner.alignAcrossComments', true)
-
     editor.setSelectedBufferRanges([[[30, 0], [32, 0]], [[6, 0], [8, 0]]])
     atom.commands.dispatch editorView, 'aligner:align'
 

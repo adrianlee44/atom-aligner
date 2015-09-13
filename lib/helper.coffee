@@ -165,7 +165,7 @@ getSameIndentationRange: (editor, row, character) ->
       startLine = @getTokenizedLineForBufferRow editor, start
 
       if startLine? and editor.indentationForBufferRow(start) is indent
-        if atom.config.get('aligner.alignAcrossComments') and startLine.isComment()
+        if startLine.isComment()
           start -= 1
 
         else if (parsed = @parseTokenizedLine startLine, character, config) and parsed.valid
@@ -184,7 +184,7 @@ getSameIndentationRange: (editor, row, character) ->
       endLine = @getTokenizedLineForBufferRow editor, end
 
       if endLine? and editor.indentationForBufferRow(end) is indent
-        if atom.config.get('aligner.alignAcrossComments') and endLine.isComment()
+        if endLine.isComment()
           end += 1
 
         else if (parsed = @parseTokenizedLine endLine, character, config) and parsed.valid

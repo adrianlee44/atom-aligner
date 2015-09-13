@@ -28,7 +28,6 @@ describe "Helper", ->
       [range, offset] = []
 
       beforeEach ->
-        atom.config.set('aligner.alignAcrossComments', true)
         {range, offset} = helper.getSameIndentationRange editor, 23, ':'
 
       it "should get the valid start row", ->
