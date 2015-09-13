@@ -164,3 +164,16 @@ describe 'Operator Config', ->
         ':-multiple-string-assignment': 'right'
 
       expect(output[':'].multiple.string.assignment).toBe 'right'
+
+    it 'should include enabled option and default to true', ->
+      output = operatorConfig.convertAtomConfig
+        ':-assignment': 'right'
+
+      expect(output[':'].enabled).toBe true
+
+    it 'should include enabled option', ->
+      output = operatorConfig.convertAtomConfig
+        ':-assignment': 'right'
+        ':-enabled': false
+
+      expect(output[':'].enabled).toBe false

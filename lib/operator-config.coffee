@@ -95,7 +95,8 @@ class OperationConfig
         if value.default? then value.default else value
 
     # Enable character alignment by default
-    currentObject.enabled ?= true
+    for character, config of convertedConfig
+      config.enabled ?= true
 
     return convertedConfig
 
