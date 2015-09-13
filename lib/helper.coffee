@@ -82,7 +82,6 @@ parseTokenizedLine: (tokenizedLine, character, config) ->
   afterCharacter = false
   parsed         = []
   parsed.prefix  = null
-  whitespaces    = tokenizedLine.firstNonWhitespaceIndex
 
   section =
     before: ""
@@ -101,19 +100,7 @@ parseTokenizedLine: (tokenizedLine, character, config) ->
       after:  ""
 
   for token in tokenizedLine.tokens
-    tokenValue = token.value
-
-    # To account for leading whitespaces
-    if whitespaces > 0
-      # if for some reason there is more whitespaces than the length of first token
-      if whitespaces > tokenValue.length
-        whitespaces -= tokenValue.length
-        continue
-
-      tokenValue = tokenValue.substring token.firstNonWhitespaceIndex
-      whitespaces -= token.firstNonWhitespaceIndex
-
-    tokenValue = @_formatTokenValue tokenValue, token, tokenizedLine.invisibles
+    tokenValue = @_formatTokenValue token.value, token, tokenizedLine.invisibles
 
     if operatorConfig.canAlignWith(character, tokenValue.trim(), config) and (not afterCharacter or config.multiple)
       parsed.prefix = operatorConfig.isPrefixed tokenValue.trim(), config
@@ -243,6 +230,8 @@ Convert invisibles in token to spaces or tabs
 ###
 _formatTokenValue: (value, token, invisibles) ->
   return value unless token.hasInvisibleCharacters
+
+  return "\t" if token.isHardTab
 
   if token.firstNonWhitespaceIndex?
     leading = value.substring(0, token.firstNonWhitespaceIndex)

@@ -21,15 +21,12 @@ module.exports =
 
       parsed = helper.parseTokenizedLine tokenizedLine, lineCharacter, config
 
-      # Construct new line with proper indentation
-      currentLine = editor.buildIndentString indentLevel
-      # currentLine = ""
+      currentLine = ""
 
       for parsedItem, i in parsed
         offset = parsedItem.offset + (if parsed.prefix then 1 else 0)
 
         # New whitespaces to add before/after alignment character
-        # TODO (Adrian): Consider leading whitespaces
         newSpace = ""
         for j in [1..offsets[i] - offset] by 1
           newSpace += " "
@@ -52,7 +49,9 @@ module.exports =
         if config.multiple
           # NOTE: rightSpace here instead of after lineCharacter to get the proper
           # offset for the token
-          currentLine += rightSpace + parsedItem.before.trim()
+          before       = parsedItem.before
+          before       = before.trim() if i > 0
+          currentLine += rightSpace + before
           currentLine += leftSpace + lineCharacter unless i is parsed.length - 1
 
         else

@@ -38,7 +38,7 @@ describe "Helper", ->
         expect(range.end.row).toBe 32
 
       it "should get the valid offset", ->
-        expect(offset).toEqual [6]
+        expect(offset).toEqual [8]
 
     describe "should return valid range object when cursor is in the middle", ->
       [range, offset] = []
@@ -52,7 +52,7 @@ describe "Helper", ->
         expect(range.end.row).toBe 3
 
       it "should get the valid offset", ->
-        expect(offset).toEqual [5]
+        expect(offset).toEqual [7]
 
     describe "should return valid range object when cursor is on the last line", ->
       [range, offset] = []
@@ -66,7 +66,7 @@ describe "Helper", ->
         expect(range.end.row).toBe 3
 
       it "should get the valid offset", ->
-        expect(offset).toEqual [5]
+        expect(offset).toEqual [7]
 
     describe "should return valid range object when cursor is on the first line", ->
       [range, offset] = []
@@ -80,7 +80,7 @@ describe "Helper", ->
         expect(range.end.row).toBe 3
 
       it "should get the valid offset", ->
-        expect(offset).toEqual [5]
+        expect(offset).toEqual [7]
 
   describe "getAlignCharacter", ->
     grammar = null
@@ -203,40 +203,26 @@ describe "Helper", ->
         atom.config.set 'editor.showInvisibles', false
         atom.config.set 'editor.softTabs', true
 
-      it "should not include leading whitespaces", ->
+      it "should include leading whitespaces", ->
         line   = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(17)
         output = helper.parseTokenizedLine line, "=", config
 
-        expect(output[0].before).toBe "testing"
+        expect(output[0].before).toBe "        testing"
         expect(output[0].after).toBe "123"
 
       it "should include trailing whitespaces", ->
         line   = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(18)
         output = helper.parseTokenizedLine line, "=", config
 
-        expect(output[0].before).toBe "test"
+        expect(output[0].before).toBe "        test"
         expect(output[0].after).toBe "'abc'      "
 
       it "should handle tabs correctly", ->
-        atom.config.set 'editor.softTabs', false
-        line   = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(18)
+        line   = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(36)
         output = helper.parseTokenizedLine line, "=", config
 
-        expect(output[0].before).toBe "test"
-        expect(output[0].after).toBe "'abc'      "
-
-    describe "parse a line with different tab length", ->
-      beforeEach ->
-        atom.config.set 'editor.tabLength', 4
-
-      afterEach ->
-        atom.config.set 'editor.tabLength', 2
-
-      it 'should parse leading whitespace correctly', ->
-        line = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(6)
-        output = helper.parseTokenizedLine line, ':', config
-        expect(output[0].before).toBe "test"
-        expect(output[0].after).toBe "\"123\""
+        expect(output[0].before).toBe "				testing"
+        expect(output[0].after).toBe "123"
 
     describe "parsing a line with multiple characters", ->
       output = null
