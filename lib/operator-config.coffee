@@ -41,7 +41,7 @@ class OperationConfig
 
   remove: (id) ->
     if @settings[id]?
-      @settings[id] = null
+      delete @settings[id]
 
   removeAll: ->
     @settings = {}

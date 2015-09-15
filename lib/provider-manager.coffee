@@ -9,29 +9,29 @@ class ProviderManager
   register: (provider) ->
     return false unless provider?.id?
 
-    if @providers[provider.id]?
-      throw Error "Aligner: Package has already been activated"
+    providerId = provider.id
 
-    @providers[provider.id] = provider
+    if @providers[providerId]?
+      throw Error "Aligner: #{providerId} has already been activated"
 
-    operatorConfig.add provider.id, provider
+    @providers[providerId] = provider
 
-    @listeners[provider.id] = atom.config.observe provider.id, (value) ->
-      operatorConfig.updateConfigWithAtom provider.id, value
+    operatorConfig.add providerId, provider
+
+    @listeners[providerId] = atom.config.observe providerId, (value) ->
+      operatorConfig.updateConfigWithAtom providerId, value
 
     # Unregister provider from providerManager
-    return new Disposable => @unregister provider
+    return new Disposable => @unregister providerId
 
-  unregister: (provider) ->
-    id = provider?.id
+  unregister: (providerId) ->
+    if providerId and @providers[providerId]
+      delete @providers[providerId]
 
-    if id and @providers[id]
-      @providers[id] = null
+      operatorConfig.remove providerId
 
-      operatorConfig.remove id
-
-      if @listeners[id]?
-        @listeners[id].dispose()
-        @listeners[id] = null
+      if @listeners[providerId]?
+        @listeners[providerId].dispose()
+        delete @listeners[providerId]
 
 module.exports = new ProviderManager()
