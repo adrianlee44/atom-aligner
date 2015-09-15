@@ -1,3 +1,6 @@
+## v0.16.1 (2015-09-14)
+- Fix aligner breaking when updating package
+
 ## v0.16.0 (2015-09-13)
 - Add support for multiple selections alignment
   - Selection blocks will be aligned with the same offset
