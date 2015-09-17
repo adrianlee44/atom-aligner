@@ -82,7 +82,7 @@ describe 'Operator Config', ->
       operatorConfig.add 'aligner-css', cssProvider
       expect(operatorConfig.settings['aligner-css']).toBeDefined()
       operatorConfig.remove 'aligner-css'
-      expect(operatorConfig.settings['aligner-css']).toBe null
+      expect(operatorConfig.settings['aligner-css']).toBeUndefined()
 
   describe 'canAlignWith', ->
     characterConfig = null

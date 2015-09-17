@@ -15,7 +15,7 @@ describe 'ProviderManager', ->
       providerManager.register provider
 
     afterEach ->
-      providerManager.unregister provider
+      providerManager.unregister 'aligner-coffee'
 
     it 'should register a provider', ->
       expect(providerManager.providers['aligner-coffee']).toBeDefined()
@@ -30,13 +30,10 @@ describe 'ProviderManager', ->
       config:
         ':-alignment': 'left'
 
-    afterEach ->
-      providerManager.unregister provider
-
     providerManager.register provider
 
     expect(providerManager.providers['aligner-coffee']).toBeDefined()
 
-    providerManager.unregister provider
+    providerManager.unregister 'aligner-coffee'
 
-    expect(providerManager.providers['aligner-coffee']).toBe null
+    expect(providerManager.providers['aligner-coffee']).toBeUndefined()
