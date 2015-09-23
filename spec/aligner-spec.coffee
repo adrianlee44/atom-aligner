@@ -167,6 +167,15 @@ describe "Aligner", ->
       expect(editor.lineTextForBufferRow(31)).toBe "  black:      '#000000'"
       expect(editor.lineTextForBufferRow(32)).toBe "  # block 2"
 
+  it "should maintain the same indentations after aligning", ->
+    editor.setSelectedBufferRanges([[[6, 2], [7, 0]]])
+    atom.commands.dispatch editorView, 'aligner:align'
+
+    waitsForPromise -> activationPromise
+
+    runs ->
+      expect(editor.lineTextForBufferRow(6)).toBe "  foo:        bar"
+      expect(editor.lineTextForBufferRow(7)).toBe "  helloworld: test"
 
 describe "Aligning javascript", ->
   [editor, workspaceElement, editorView, activationPromise] = []

@@ -61,6 +61,8 @@ module.exports =
       textBlock += currentLine
       textBlock += "\n" unless currentRow is range.end.row
 
+    # Set the first line to the start of the line
+    range.start.column = 0
     # Set the last line column to the end
     range.end.column = Infinity
 
