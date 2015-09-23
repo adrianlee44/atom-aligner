@@ -64,15 +64,7 @@ random =
 ```
 
 ## Changelog
-### v0.16.1 (2015-09-14)
-- Fix aligner breaking when updating package
-
-### v0.16.0 (2015-09-13)
-- Add support for multiple selections alignment
-  - Selection blocks will be aligned with the same offset
-  - Cursors will be aligned with all adjacent lines with same indentation
-- Fix aligner addon packages not working on first call
-- Lines with same indentation separated by comments are now considered as the same block
-- Add `enabled` option to aligner addon packages
+### v0.16.2 (2015-09-22)
+- Fix not accounting for first line indentations
 
 Check [changelog](https://github.com/adrianlee44/atom-aligner/blob/master/CHANGELOG.md) for more information

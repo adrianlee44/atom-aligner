@@ -1,3 +1,6 @@
+## v0.16.2 (2015-09-22)
+- Fix not accounting for first line indentations
+
 ## v0.16.1 (2015-09-14)
 - Fix aligner breaking when updating package
 
