@@ -1,6 +1,7 @@
 operatorConfig = require '../lib/operator-config'
 config         = require '../config'
 extend         = require 'extend'
+{Disposable} = require 'atom'
 
 cssProvider =
   selector: ['.source.css', '.source.html', '.source.css.less']
@@ -33,7 +34,7 @@ cssProvider =
     '|-alignment': 'right'
 
 describe 'Operator Config', ->
-  afterEach ->
+  beforeEach ->
     operatorConfig.removeAll()
     operatorConfig.add 'aligner', config
 
@@ -57,7 +58,7 @@ describe 'Operator Config', ->
 
   describe 'add', ->
     it 'should add provider to settings', ->
-      operatorConfig.add 'aligner-css', cssProvider
+      output = operatorConfig.add 'aligner-css', cssProvider
 
       settings = operatorConfig.settings['aligner-css']
 
@@ -66,6 +67,8 @@ describe 'Operator Config', ->
       expect(settings.selector).toEqual ['.source.css', '.source.html', '.source.css.less']
       expect(settings['::']).toBeDefined()
       expect(settings['::']).toEqual settings[':']
+
+      expect(output instanceof Disposable).toBe(true)
 
       operatorConfig.remove 'aligner-css'
 

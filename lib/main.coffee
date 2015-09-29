@@ -2,6 +2,8 @@ operatorConfig  = require './operator-config'
 helper          = require './helper'
 providerManager = require './provider-manager'
 formatter       = require './formatter'
+configs         = require '../config'
+{CompositeDisposable} = require 'atom'
 
 class Aligner
   config: operatorConfig.getAtomConfig()
@@ -40,14 +42,21 @@ class Aligner
       formatter.formatRange editor, range, character, offsets
 
   activate: ->
-    atom.config.observe 'aligner', (value) ->
+    @disposables = new CompositeDisposable
+    @disposables.add atom.config.observe 'aligner', (value) ->
       operatorConfig.updateConfigWithAtom 'aligner', value
 
-    atom.commands.add 'atom-text-editor', 'aligner:align', =>
+    @disposables.add atom.commands.add 'atom-text-editor', 'aligner:align', =>
       @align atom.workspace.getActiveTextEditor()
+
+    @disposables.add operatorConfig.add 'aligner', configs
+
+  deactivate: ->
+    @disposables.dispose()
+    @disposables = null
 
   registerProviders: (provider) ->
     # Register with providerManager
-    providerManager.register provider
+    @disposables.add providerManager.register provider
 
 module.exports = new Aligner()

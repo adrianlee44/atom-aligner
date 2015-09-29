@@ -1,11 +1,13 @@
 helper         = require '../lib/helper'
 operatorConfig = require '../lib/operator-config'
 path           = require 'path'
+configs        = require '../config'
 {Range} = require 'atom'
 
 describe "Helper", ->
   editor = null
   config = null
+  operatorConfig.add 'aligner', configs
 
   beforeEach ->
     atom.project.setPaths([path.join(__dirname, 'fixtures')])

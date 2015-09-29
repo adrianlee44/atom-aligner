@@ -1,5 +1,6 @@
 configs = require '../config'
 extend  = require 'extend'
+{Disposable} = require 'atom'
 
 ###
 Example for '='
@@ -18,7 +19,6 @@ prefixed {array} Array of operators that have prefixes
 class OperationConfig
   constructor: ->
     @settings = {}
-    @add 'aligner', configs
 
   ###
   @function
@@ -30,7 +30,7 @@ class OperationConfig
   ###
   add: (id, provider) ->
     if @settings[id]?
-      throw Error "Package has already been activated"
+      throw Error "#{id} has already been activated"
 
     allConfigs    = extend {}, provider.config, provider.privateConfig
     @settings[id] = @convertAtomConfig allConfigs
@@ -38,6 +38,8 @@ class OperationConfig
     @settings[id].selector = provider.selector?.slice 0
 
     @initializePrefix @settings[id]
+
+    new Disposable(@remove.bind(this, id))
 
   remove: (id) ->
     if @settings[id]?
@@ -58,8 +60,8 @@ class OperationConfig
     if @settings[packageId]
       extend true, @settings[packageId], newConfig
 
-  initializePrefix: (configs) ->
-    for key, config of configs
+  initializePrefix: (originalConfigs) ->
+    for key, config of originalConfigs
       if key isnt 'selector' and config.prefixes?
         config.alignWith = [key]
         config.prefixed  = []
@@ -69,7 +71,7 @@ class OperationConfig
 
           config.alignWith.push keyWithPrefix
           config.prefixed.push keyWithPrefix
-          configs[keyWithPrefix] = config
+          originalConfigs[keyWithPrefix] = config
 
   ###
   @function
