@@ -1,3 +1,8 @@
+## v0.17.0 (2015-09-29)
+- Fix not handling activating and deactivating aligner properly
+  - Switch to using Disposal for listeners and registering addons
+  - Simplified provider manager
+
 ## v0.16.2 (2015-09-22)
 - Fix not accounting for first line indentations
 
