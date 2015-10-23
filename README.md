@@ -64,9 +64,7 @@ random =
 ```
 
 ## Changelog
-### v0.17.0 (2015-09-29)
-- Fix not handling activating and deactivating aligner properly
-  - Switch to using Disposal for listeners and registering addons
-  - Simplified provider manager
+### v0.17.1 (2015-10-22)
+- Fix not using aligner user config
 
 Check [changelog](https://github.com/adrianlee44/atom-aligner/blob/master/CHANGELOG.md) for more information
