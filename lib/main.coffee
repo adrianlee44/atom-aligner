@@ -3,6 +3,7 @@ helper          = require './helper'
 providerManager = require './provider-manager'
 formatter       = require './formatter'
 configs         = require '../config'
+extend          = require 'extend'
 {CompositeDisposable} = require 'atom'
 
 class Aligner
@@ -49,7 +50,12 @@ class Aligner
     @disposables.add atom.commands.add 'atom-text-editor', 'aligner:align', =>
       @align atom.workspace.getActiveTextEditor()
 
-    @disposables.add operatorConfig.add 'aligner', configs
+    alignerConfig = extend true, {}, configs
+    extend true, alignerConfig.config, atom.config.get('aligner')
+    @disposables.add operatorConfig.add 'aligner', alignerConfig
+
+    @disposables.add atom.config.observe 'aligner', (value) ->
+      operatorConfig.updateConfigWithAtom 'aligner', value
 
   deactivate: ->
     @disposables.dispose()

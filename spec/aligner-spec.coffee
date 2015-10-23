@@ -32,7 +32,7 @@ describe "Aligner", ->
     runs ->
       expect(editor.lineTextForBufferRow(1)).toBe 'test    = "321"'
 
-  it "should right correctly", ->
+  it "should align correctly", ->
     editor.setCursorBufferPosition([6, 1])
     atom.commands.dispatch editorView, 'aligner:align'
 
@@ -40,6 +40,16 @@ describe "Aligner", ->
 
     runs ->
       expect(editor.lineTextForBufferRow(6)).toBe "  foo:        bar"
+
+  it "should ailgn correctly with config update", ->
+    editor.setCursorBufferPosition([6, 1])
+    atom.config.set('aligner.:-alignment', 'left')
+    atom.commands.dispatch editorView, 'aligner:align'
+
+    waitsForPromise -> activationPromise
+
+    runs ->
+      expect(editor.lineTextForBufferRow(6)).toBe "  foo       : bar"
 
   it "should not align anything when cursor is not within string", ->
     editor.setCursorBufferPosition([3, 1])
