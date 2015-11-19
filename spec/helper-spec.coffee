@@ -16,7 +16,7 @@ describe "Helper", ->
       atom.packages.activatePackage('language-coffee-script')
 
     waitsForPromise ->
-      atom.project.open('helper-sample.coffee').then (o) ->
+      atom.workspace.open('helper-sample.coffee').then (o) ->
         editor = o
 
     runs ->
