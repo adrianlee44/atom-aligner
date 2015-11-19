@@ -64,7 +64,4 @@ random =
 ```
 
 ## Changelog
-### v0.17.1 (2015-10-22)
-- Fix not using aligner user config
-
 Check [changelog](https://github.com/adrianlee44/atom-aligner/blob/master/CHANGELOG.md) for more information

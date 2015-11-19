@@ -1,3 +1,6 @@
+## v0.17.2 (2015-11-19)
+- Add `separator` as acceptable scope for `:`
+
 ## v0.17.1 (2015-10-22)
 - Fix not using aligner user config
 
