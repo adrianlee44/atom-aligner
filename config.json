@@ -54,7 +54,7 @@
   "privateConfig": {
     "=-prefixes": ["+", "-", "&", "|", "<", ">", "!", "~", "%", "/", "*", "."],
     "=-scope": "operator|assignment",
-    ":-scope": "operator|assignment",
+    ":-scope": "operator|assignment|separator",
     ",-scope": "delimiter",
     ",-multiple-number-alignment": "right",
     ",-multiple-string-alignment": "left"
