@@ -30,7 +30,9 @@ class OperationConfig
   ###
   add: (id, provider) ->
     if @settings[id]?
-      throw Error "#{id} has already been activated"
+      # TODO: Investigate why settings is not getting removed properly
+      console.error("#{id} has already been activated")
+      return new Disposable()
 
     allConfigs    = extend {}, provider.config, provider.privateConfig
     @settings[id] = @convertAtomConfig allConfigs

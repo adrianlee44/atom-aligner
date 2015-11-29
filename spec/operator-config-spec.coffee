@@ -73,12 +73,12 @@ describe 'Operator Config', ->
       operatorConfig.remove 'aligner-css'
 
     it 'should throw an error when initialized twice', ->
+      spyOn console, 'error'
       operatorConfig.add 'aligner-css', cssProvider
 
-      fn = ->
-        operatorConfig.add 'aligner-css', cssProvider
+      operatorConfig.add 'aligner-css', cssProvider
 
-      expect(fn).toThrow()
+      expect(console.error).toHaveBeenCalled()
 
   describe 'remove', ->
     it 'should remove provider', ->

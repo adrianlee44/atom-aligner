@@ -2,13 +2,14 @@ providerManager = require '../lib/provider-manager'
 operatorConfig = require '../lib/operator-config'
 
 describe 'ProviderManager', ->
+  provider =
+    selector: ['.source.coffee']
+    id:       'aligner-coffee'
+    config:
+      ':-alignment': 'left'
+
   describe 'registering a provider', ->
     disposable = null
-    provider =
-      selector: ['.source.coffee']
-      id:       'aligner-coffee'
-      config:
-        ':-alignment': 'left'
 
     beforeEach ->
       spyOn(operatorConfig, 'add').andCallThrough()
@@ -23,3 +24,30 @@ describe 'ProviderManager', ->
 
     it 'should add atom config listener', ->
       expect(atom.config.observe).toHaveBeenCalled()
+
+  describe 'registering and deactivating', ->
+    it 'should work fine', ->
+      spyOn console, 'error'
+
+      disposable = providerManager.register provider
+
+      disposable.dispose()
+
+      providerManager.register provider
+
+      expect(console.error).not.toHaveBeenCalled()
+
+    xit 'should work fine with the package', ->
+      spyOn console, 'error'
+
+      waitsForPromise ->
+        atom.packages.activatePackage('aligner')
+
+      runs ->
+        atom.packages.deactivatePackage('aligner')
+
+      waitsForPromise ->
+        atom.packages.activatePackage('aligner')
+
+      runs ->
+        expect(console.error).not.toHaveBeenCalled()
