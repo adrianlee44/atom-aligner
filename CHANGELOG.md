@@ -1,3 +1,6 @@
+## v0.17.3 (2015-11-29)
+- Change throw to console error when re-registering an aligner add-on
+
 ## v0.17.2 (2015-11-19)
 - Add `separator` as acceptable scope for `:`
 
