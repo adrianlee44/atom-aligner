@@ -16,14 +16,14 @@ describe "Helper", ->
       atom.packages.activatePackage('language-coffee-script')
 
     waitsForPromise ->
+      atom.packages.activatePackage('aligner')
+
+    waitsForPromise ->
       atom.workspace.open('helper-sample.coffee').then (o) ->
         editor = o
 
     runs ->
       config = operatorConfig.getConfig '='
-
-  afterEach ->
-    atom.config.unset('aligner')
 
   describe "getSameIndentationRange", ->
     describe "should include comments", ->
