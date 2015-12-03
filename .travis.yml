@@ -1,3 +1,6 @@
 language: objective-c
+env:
+  - ATOM_CHANNEL=stable
+  - ATOM_CHANNEL=beta
 
 script: 'curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh'
