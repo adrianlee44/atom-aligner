@@ -7,7 +7,6 @@ configs        = require '../config'
 describe "Helper", ->
   editor = null
   config = null
-  operatorConfig.add 'aligner', configs
 
   beforeEach ->
     atom.project.setPaths([path.join(__dirname, 'fixtures')])

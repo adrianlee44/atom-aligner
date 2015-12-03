@@ -1,13 +1,15 @@
 path = require 'path'
 
-# atom.packages.disablePackage('aligner')
-
 describe "Aligner", ->
   [editor, workspaceElement, editorView] = []
 
   beforeEach ->
     workspaceElement = atom.views.getView(atom.workspace)
+    jasmine.attachToDOM(workspaceElement)
     atom.project.setPaths([path.join(__dirname, 'fixtures')])
+
+    waitsForPromise ->
+      atom.packages.activatePackage('aligner')
 
     waitsForPromise ->
       atom.packages.activatePackage('language-coffee-script')
@@ -15,11 +17,7 @@ describe "Aligner", ->
     waitsForPromise ->
       atom.workspace.open('aligner-sample.coffee')
 
-    waitsForPromise ->
-      atom.packages.activatePackage("aligner")
-
     runs ->
-      jasmine.attachToDOM(workspaceElement)
       editor = atom.workspace.getActiveTextEditor()
       editorView = atom.views.getView(editor)
 
@@ -144,7 +142,11 @@ describe "Aligning javascript", ->
 
   beforeEach ->
     workspaceElement = atom.views.getView(atom.workspace)
+    jasmine.attachToDOM(workspaceElement)
     atom.project.setPaths([path.join(__dirname, 'fixtures')])
+
+    waitsForPromise ->
+      atom.packages.activatePackage('aligner')
 
     waitsForPromise ->
       atom.packages.activatePackage('language-javascript')
@@ -152,11 +154,7 @@ describe "Aligning javascript", ->
     waitsForPromise ->
       atom.workspace.open('aligner-sample.js')
 
-    waitsForPromise ->
-      atom.packages.activatePackage("aligner")
-
     runs ->
-      jasmine.attachToDOM(workspaceElement)
       editor = atom.workspace.getActiveTextEditor()
       editorView = atom.views.getView(editor)
 
