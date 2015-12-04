@@ -1,7 +1,7 @@
 {
   "name": "aligner",
   "main": "./lib/main",
-  "version": "0.17.3",
+  "version": "0.17.4",
   "private": true,
   "description": "Easily align multiple lines and blocks with support for different operators and custom configurations",
   "keywords": [
