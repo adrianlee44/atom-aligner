@@ -30,16 +30,15 @@ class OperationConfig
   ###
   add: (id, provider) ->
     if @settings[id]?
-      # TODO: Investigate why settings is not getting removed properly
       console.error("#{id} has already been activated")
-      return new Disposable(@remove.bind(this, id))
 
-    allConfigs    = extend {}, provider.config, provider.privateConfig
-    @settings[id] = @convertAtomConfig allConfigs
+    else
+      allConfigs    = extend {}, provider.config, provider.privateConfig
+      @settings[id] = @convertAtomConfig allConfigs
 
-    @settings[id].selector = provider.selector?.slice 0
+      @settings[id].selector = provider.selector?.slice 0
 
-    @initializePrefix @settings[id]
+      @initializePrefix @settings[id]
 
     new Disposable(@remove.bind(this, id))
 
