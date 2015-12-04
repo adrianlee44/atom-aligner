@@ -1,3 +1,6 @@
+## v0.17.4 (2015-12-04)
+- Clean up operator config and make sure config is cleaned up properly on deactivation
+
 ## v0.17.3 (2015-11-29)
 - Change throw to console error when re-registering an aligner add-on
 
