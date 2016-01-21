@@ -51,6 +51,7 @@ Get alignment offset based on character and selections
 @param {Editor} editor
 @param {String} character
 @param {Array.<Range>} ranges
+@returns {Array.<Integer>}
 ###
 getOffsets: (editor, character, ranges) ->
   scope   = editor.getRootScopeDescriptor().getScopeChain()
@@ -246,6 +247,15 @@ _formatTokenValue: (value, token, invisibles) ->
 
   return value
 
+###
+@name _formatInvisibleSpaces
+@description
+Convert invisibles in string to text
+@param {string} string
+@param {Object} invisibles
+@returns {String}
+@private
+###
 _formatInvisibleSpaces: (string, invisibles) ->
   if invisibles.space?
     string = string.replace(new RegExp(invisibles.space, 'g'), " ")

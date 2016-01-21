@@ -8,12 +8,11 @@ module.exports =
     textBlock = ""
 
     for currentRow in range.getRows()
-      indentLevel   = editor.indentationForBufferRow currentRow
       tokenizedLine = helper.getTokenizedLineForBufferRow(editor, currentRow)
       lineCharacter = helper.getAlignCharacter editor, currentRow
       canAlignWith  = operatorConfig.canAlignWith character, lineCharacter, config
 
-      if !lineCharacter or !canAlignWith or tokenizedLine.isComment()
+      if not lineCharacter or not canAlignWith or tokenizedLine.isComment()
         textBlock += editor.lineTextForBufferRow(currentRow)
         textBlock += "\n" unless currentRow is range.end.row
         continue
