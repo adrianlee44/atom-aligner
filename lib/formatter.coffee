@@ -2,7 +2,17 @@ helper         = require './helper'
 operatorConfig = require './operator-config'
 
 module.exports =
-  formatRange: (editor, range, character, offsets) ->
+  ###
+  @name formatRange
+  @description
+  Align character within a certain range of text in the editor
+  @param {Editor} editor
+  @param {Range} range
+  @param {string} character
+  @param {Array} offsets
+  @param {Object} parsedLines
+  ###
+  formatRange: (editor, range, character, offsets, parsedLines) ->
     scope     = editor.getRootScopeDescriptor().getScopeChain()
     config    = operatorConfig.getConfig character, scope
     textBlock = ""
@@ -17,8 +27,7 @@ module.exports =
         textBlock += "\n" unless currentRow is range.end.row
         continue
 
-      parsed = helper.parseTokenizedLine tokenizedLine, lineCharacter, config
-
+      parsed      = parsedLines[currentRow]
       currentLine = ""
 
       for parsedItem, i in parsed

@@ -2,9 +2,9 @@ operatorConfig = require './operator-config'
 {Point, Range} = require 'atom'
 
 _traverseRanges = (ranges, callback, context = this) ->
-  for range in ranges
+  for range, rangeIndex in ranges
     for line in range.getRows()
-      return output if (output = callback.call(context, line))
+      return output if (output = callback.call(context, line, rangeIndex))
 
 module.exports =
 ###
@@ -45,28 +45,35 @@ getAlignCharacterInRanges: (editor, ranges) ->
   , this
 
 ###
-@name getOffsets
+@name getOffsetsAndParsedLines
 @description
-Get alignment offset based on character and selections
+Get alignment offset and parsedLines based on character and selections
 @param {Editor} editor
 @param {String} character
 @param {Array.<Range>} ranges
-@returns {Array.<Integer>}
+@returns {{offsets:<Array>, parsedLines:<Array>}}
 ###
-getOffsets: (editor, character, ranges) ->
-  scope   = editor.getRootScopeDescriptor().getScopeChain()
-  offsets = []
+getOffsetsAndParsedLines: (editor, character, ranges) ->
+  scope       = editor.getRootScopeDescriptor().getScopeChain()
+  offsets     = []
+  parsedLines = []
 
-  _traverseRanges ranges, (line) ->
+  _traverseRanges ranges, (line, rangeIndex) ->
     tokenized = @getTokenizedLineForBufferRow editor, line
     config    = operatorConfig.getConfig character, scope
     parsed    = @parseTokenizedLine tokenized, character, config
+
+    parsedLines[rangeIndex]       ?= {}
+    parsedLines[rangeIndex][line]  = parsed
 
     @setOffsets(offsets, parsed) if parsed.valid
     return
   , this
 
-  return offsets
+  return {
+    offsets: offsets,
+    parsedLines: parsedLines
+  }
 
 ###
 @name parseTokenizedLine
@@ -140,17 +147,21 @@ setOffsets: (offsets, parsedObjects) ->
 @description To get the start and end line number of the same indentation
 @param {Editor} editor Active editor
 @param {Integer} row Row to match
-@returns {Object} An object with the start and end line
+@returns {{range: Range, offset: Array}} An object with the start and end line
 ###
 getSameIndentationRange: (editor, row, character) ->
   start = row - 1
   end   = row + 1
 
-  tokenized = @getTokenizedLineForBufferRow editor, row
-  scope     = editor.getRootScopeDescriptor().getScopeChain()
-  config    = operatorConfig.getConfig character, scope
+  parsedLines = {}
+  tokenized   = @getTokenizedLineForBufferRow editor, row
+  scope       = editor.getRootScopeDescriptor().getScopeChain()
+  config      = operatorConfig.getConfig character, scope
 
-  parsed    = @parseTokenizedLine tokenized, character, config
+  parsed = @parseTokenizedLine tokenized, character, config
+
+  parsedLines[row] = parsed
+
   indent    = editor.indentationForBufferRow row
   total     = editor.getLineCount()
   hasPrefix = parsed.prefix
@@ -170,6 +181,7 @@ getSameIndentationRange: (editor, row, character) ->
           start -= 1
 
         else if (parsed = @parseTokenizedLine startLine, character, config) and parsed.valid
+          parsedLines[start] = parsed
           @setOffsets offsets, parsed
           startPoint.row  = start
           hasPrefix       = true if not hasPrefix and parsed.prefix
@@ -189,6 +201,7 @@ getSameIndentationRange: (editor, row, character) ->
           end += 1
 
         else if (parsed = @parseTokenizedLine endLine, character, config) and parsed.valid
+          parsedLines[end] = parsed
           @setOffsets offsets, parsed
           endPoint.row  = end
           hasPrefix     = true if not hasPrefix and parsed.prefix
@@ -204,8 +217,9 @@ getSameIndentationRange: (editor, row, character) ->
     offsets = offsets.map (item) -> item + 1
 
   return {
-    range:  new Range(startPoint, endPoint),
-    offset: offsets
+    range:       new Range(startPoint, endPoint),
+    offset:      offsets
+    parsedLines: parsedLines
   }
 
 ###
