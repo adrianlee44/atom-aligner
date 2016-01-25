@@ -31,16 +31,16 @@ class Aligner
     character = helper.getAlignCharacter editor, row
     return unless character
 
-    {range, offset, parsedLines} = helper.getSameIndentationRange editor, row, character
-    formatter.formatRange editor, range, character, offset, parsedLines
+    {range, offsets, sectionizedLines} = helper.getSameIndentationRange editor, row, character
+    formatter.formatRange editor, range, character, offsets, sectionizedLines
 
   alignRanges: (editor, ranges) ->
     character = helper.getAlignCharacterInRanges editor, ranges
     return unless character
 
-    {offsets, parsedLines} = helper.getOffsetsAndParsedLines editor, character, ranges
+    {offsets, sectionizedLines} = helper.getOffsetsAndSectionizedLines editor, character, ranges
     for range, rangeIndex in ranges
-      formatter.formatRange editor, range, character, offsets, parsedLines[rangeIndex]
+      formatter.formatRange editor, range, character, offsets, sectionizedLines[rangeIndex]
 
   activate: ->
     @disposables = new CompositeDisposable

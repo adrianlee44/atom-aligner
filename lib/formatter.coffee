@@ -10,9 +10,9 @@ module.exports =
   @param {Range} range
   @param {string} character
   @param {Array} offsets
-  @param {Object} parsedLines
+  @param {Object} sectionizedLines
   ###
-  formatRange: (editor, range, character, offsets, parsedLines) ->
+  formatRange: (editor, range, character, offsets, sectionizedLines) ->
     scope     = editor.getRootScopeDescriptor().getScopeChain()
     config    = operatorConfig.getConfig character, scope
     textBlock = ""
@@ -27,11 +27,11 @@ module.exports =
         textBlock += "\n" unless currentRow is range.end.row
         continue
 
-      parsed      = parsedLines[currentRow]
-      currentLine = ""
+      sectionizedLine = sectionizedLines[currentRow]
+      currentLine     = ""
 
-      for parsedItem, i in parsed
-        offset = parsedItem.offset + (if parsed.prefix then 1 else 0)
+      for section, i in sectionizedLine.sections
+        offset = section.offset + (if sectionizedLine.hasPrefix() then 1 else 0)
 
         # New whitespaces to add before/after alignment character
         newSpace = ""
@@ -39,7 +39,7 @@ module.exports =
           newSpace += " "
 
         if config.multiple
-          type      = if isNaN(+parsedItem.before) then "string" else "number"
+          type      = if isNaN(+section.before) then "string" else "number"
           alignment = config.multiple[type]?.alignment or "left"
 
         else
@@ -56,15 +56,15 @@ module.exports =
         if config.multiple
           # NOTE: rightSpace here instead of after lineCharacter to get the proper
           # offset for the token
-          before       = parsedItem.before
-          before       = before.trim() if i > 0
+          before       = section.before
+          before       = before.trim() if i > 0 # not the first one
           currentLine += rightSpace + before
-          currentLine += leftSpace + lineCharacter unless i is parsed.length - 1
+          currentLine += leftSpace + lineCharacter unless i is sectionizedLine.length - 1
 
         else
-          currentLine += parsedItem.before
+          currentLine += section.before
           currentLine += leftSpace + lineCharacter + rightSpace
-          currentLine += parsedItem.after
+          currentLine += section.after
 
       textBlock += currentLine
       textBlock += "\n" unless currentRow is range.end.row

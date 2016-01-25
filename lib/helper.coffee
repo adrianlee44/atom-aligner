@@ -1,5 +1,6 @@
 operatorConfig = require './operator-config'
 {Point, Range} = require 'atom'
+SectionizedLine = require './sectionized-line'
 
 _traverseRanges = (ranges, callback, context = this) ->
   for range, rangeIndex in ranges
@@ -45,34 +46,34 @@ getAlignCharacterInRanges: (editor, ranges) ->
   , this
 
 ###
-@name getOffsetsAndParsedLines
+@name getOffsetsAndSectionizedLines
 @description
-Get alignment offset and parsedLines based on character and selections
+Get alignment offset and sectionizedLines based on character and selections
 @param {Editor} editor
 @param {String} character
 @param {Array.<Range>} ranges
-@returns {{offsets:<Array>, parsedLines:<Array>}}
+@returns {{offsets:<Array>, sectionizedLines:<Array>}}
 ###
-getOffsetsAndParsedLines: (editor, character, ranges) ->
-  scope       = editor.getRootScopeDescriptor().getScopeChain()
-  offsets     = []
-  parsedLines = []
+getOffsetsAndSectionizedLines: (editor, character, ranges) ->
+  scope            = editor.getRootScopeDescriptor().getScopeChain()
+  offsets          = []
+  sectionizedLines = []
 
   _traverseRanges ranges, (line, rangeIndex) ->
-    tokenized = @getTokenizedLineForBufferRow editor, line
-    config    = operatorConfig.getConfig character, scope
-    parsed    = @parseTokenizedLine tokenized, character, config
+    tokenized       = @getTokenizedLineForBufferRow editor, line
+    config          = operatorConfig.getConfig character, scope
+    sectionizedLine = @parseTokenizedLine tokenized, character, config
 
-    parsedLines[rangeIndex]       ?= {}
-    parsedLines[rangeIndex][line]  = parsed
+    sectionizedLines[rangeIndex]       ?= {}
+    sectionizedLines[rangeIndex][line]  = sectionizedLine
 
-    @setOffsets(offsets, parsed) if parsed.valid
+    @setOffsets(offsets, sectionizedLine) if sectionizedLine.isValid()
     return
   , this
 
   return {
-    offsets: offsets,
-    parsedLines: parsedLines
+    offsets:          offsets,
+    sectionizedLines: sectionizedLines
   }
 
 ###
@@ -82,65 +83,47 @@ Parsing line with operator
 @param {Object} tokenizedLine Tokenized line object from editor display buffer
 @param {String} character Character to align
 @param {Object} config Character config
-@returns {Object} Information about the tokenized line including text before character,
+@returns {SectionizedLine} Information about the tokenized line including text before character,
                   text after character, character prefix, offset and if the line is
                   valid
 ###
 parseTokenizedLine: (tokenizedLine, character, config) ->
-  afterCharacter = false
-  parsed         = []
-  parsed.prefix  = null
-
-  section =
-    before: ""
-    after:  ""
-
-  addToParsed = ->
-    section.before = section.before.trimRight()
-    section.after  = section.after.trimLeft()
-    section.offset = section.before.length
-
-    parsed.push section
-
-    # clear the original section
-    section =
-      before: ""
-      after:  ""
+  afterCharacter  = false
+  sectionizedLine = new SectionizedLine()
 
   for token in tokenizedLine.tokens
     tokenValue = @_formatTokenValue token.value, token, tokenizedLine.invisibles
 
     if operatorConfig.canAlignWith(character, tokenValue.trim(), config) and (not afterCharacter or config.multiple)
-      parsed.prefix = operatorConfig.isPrefixed tokenValue.trim(), config
+      sectionizedLine.prefix = operatorConfig.isPrefixed tokenValue.trim(), config
 
       if config.multiple
-        addToParsed()
+        sectionizedLine.add()
 
       afterCharacter = true
-      continue
 
-    variable           = if afterCharacter and not config.multiple then "after" else "before"
-    section[variable] += tokenValue
+    else
+      if afterCharacter and not config.multiple
+        sectionizedLine.after += tokenValue
+      else
+        sectionizedLine.before += tokenValue
 
-  # Add the last section to parsed
-  addToParsed()
-  parsed.valid = afterCharacter
+  sectionizedLine.add()
+  sectionizedLine.valid = afterCharacter
 
-  return parsed
+  return sectionizedLine
 
 ###
 @name setOffsets
 @description
 Set alignment offset for each section
 @param {Array.<Integer>} offsets
-@param {Array.<Object>} parsedObjects
+@param {SectionizedLine} sectionizedLine
 ###
-setOffsets: (offsets, parsedObjects) ->
-  for parsedObject, i in parsedObjects
-    offsets[i] ?= parsedObject.offset
-
-    if parsedObject.offset > offsets[i]
-      offsets[i] = parsedObject.offset
+setOffsets: (offsets, sectionizedLine) ->
+  for section, i in sectionizedLine.sections
+    if not offsets[i]? or section.offset > offsets[i]
+      offsets[i] = section.offset
 
 ###
 @name getSameIndentationRange
@@ -153,24 +136,24 @@ getSameIndentationRange: (editor, row, character) ->
   start = row - 1
   end   = row + 1
 
-  parsedLines = {}
+  sectionizedLines = {}
   tokenized   = @getTokenizedLineForBufferRow editor, row
   scope       = editor.getRootScopeDescriptor().getScopeChain()
   config      = operatorConfig.getConfig character, scope
 
-  parsed = @parseTokenizedLine tokenized, character, config
+  sectionizedLine = @parseTokenizedLine tokenized, character, config
 
-  parsedLines[row] = parsed
+  sectionizedLines[row] = sectionizedLine
 
   indent    = editor.indentationForBufferRow row
   total     = editor.getLineCount()
-  hasPrefix = parsed.prefix
+  hasPrefix = sectionizedLine.hasPrefix()
 
   offsets    = []
   startPoint = new Point(row, 0)
   endPoint   = new Point(row, Infinity)
 
-  @setOffsets offsets, parsed
+  @setOffsets offsets, sectionizedLine
 
   while start > -1 or end < total
     if start > -1
@@ -180,11 +163,11 @@ getSameIndentationRange: (editor, row, character) ->
         if startLine.isComment()
           start -= 1
 
-        else if (parsed = @parseTokenizedLine startLine, character, config) and parsed.valid
-          parsedLines[start] = parsed
-          @setOffsets offsets, parsed
+        else if (sectionizedLine = @parseTokenizedLine startLine, character, config) and sectionizedLine.isValid()
+          sectionizedLines[start] = sectionizedLine
+          @setOffsets offsets, sectionizedLine
           startPoint.row  = start
-          hasPrefix       = true if not hasPrefix and parsed.prefix
+          hasPrefix       = true if not hasPrefix and sectionizedLine.hasPrefix()
           start          -= 1
 
         else
@@ -200,11 +183,11 @@ getSameIndentationRange: (editor, row, character) ->
         if endLine.isComment()
           end += 1
 
-        else if (parsed = @parseTokenizedLine endLine, character, config) and parsed.valid
-          parsedLines[end] = parsed
-          @setOffsets offsets, parsed
+        else if (sectionizedLine = @parseTokenizedLine endLine, character, config) and sectionizedLine.isValid()
+          sectionizedLines[end] = sectionizedLine
+          @setOffsets offsets, sectionizedLine
           endPoint.row  = end
-          hasPrefix     = true if not hasPrefix and parsed.prefix
+          hasPrefix     = true if not hasPrefix and sectionizedLine.hasPrefix()
           end          += 1
 
         else
@@ -217,9 +200,9 @@ getSameIndentationRange: (editor, row, character) ->
     offsets = offsets.map (item) -> item + 1
 
   return {
-    range:       new Range(startPoint, endPoint),
-    offset:      offsets
-    parsedLines: parsedLines
+    range:            new Range(startPoint, endPoint),
+    offsets:          offsets
+    sectionizedLines: sectionizedLines
   }
 
 ###

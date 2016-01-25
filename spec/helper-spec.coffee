@@ -26,10 +26,10 @@ describe "Helper", ->
 
   describe "getSameIndentationRange", ->
     describe "should include comments", ->
-      [range, offset] = []
+      [range, offsets] = []
 
       beforeEach ->
-        {range, offset} = helper.getSameIndentationRange editor, 23, ':'
+        {range, offsets} = helper.getSameIndentationRange editor, 23, ':'
 
       it "should get the valid start row", ->
         expect(range.start.row).toBe 22
@@ -38,12 +38,12 @@ describe "Helper", ->
         expect(range.end.row).toBe 32
 
       it "should get the valid offset", ->
-        expect(offset).toEqual [8]
+        expect(offsets).toEqual [8]
 
     describe "should return valid range object when cursor is in the middle", ->
-      [range, offset] = []
+      [range, offsets] = []
       beforeEach ->
-        {range, offset} = helper.getSameIndentationRange editor, 2, "="
+        {range, offsets} = helper.getSameIndentationRange editor, 2, "="
 
       it "should get the valid start row", ->
         expect(range.start.row).toBe 1
@@ -52,12 +52,12 @@ describe "Helper", ->
         expect(range.end.row).toBe 3
 
       it "should get the valid offset", ->
-        expect(offset).toEqual [7]
+        expect(offsets).toEqual [7]
 
     describe "should return valid range object when cursor is on the last line", ->
-      [range, offset] = []
+      [range, offsets] = []
       beforeEach ->
-        {range, offset} = helper.getSameIndentationRange editor, 3, "="
+        {range, offsets} = helper.getSameIndentationRange editor, 3, "="
 
       it "should get the valid start row", ->
         expect(range.start.row).toBe 1
@@ -66,12 +66,12 @@ describe "Helper", ->
         expect(range.end.row).toBe 3
 
       it "should get the valid offset", ->
-        expect(offset).toEqual [7]
+        expect(offsets).toEqual [7]
 
     describe "should return valid range object when cursor is on the first line", ->
-      [range, offset] = []
+      [range, offsets] = []
       beforeEach ->
-        {range, offset} = helper.getSameIndentationRange editor, 1, "="
+        {range, offsets} = helper.getSameIndentationRange editor, 1, "="
 
       it "should get the valid start row", ->
         expect(range.start.row).toBe 1
@@ -80,7 +80,7 @@ describe "Helper", ->
         expect(range.end.row).toBe 3
 
       it "should get the valid offset", ->
-        expect(offset).toEqual [7]
+        expect(offsets).toEqual [7]
 
   describe "getAlignCharacter", ->
     grammar = null
@@ -148,19 +148,19 @@ describe "Helper", ->
         output = helper.parseTokenizedLine line, "=", config
 
       it "should get the text before = with right trimmed", ->
-        expect(output[0].before).toBe "  hello"
+        expect(output.sections[0].before).toBe "  hello"
 
       it "should get the text after = with left trimmed", ->
-        expect(output[0].after).toBe '"world"'
+        expect(output.sections[0].after).toBe '"world"'
 
       it "should get the offset", ->
-        expect(output[0].offset).toBe 7
+        expect(output.sections[0].offset).toBe 7
 
       it "should return no prefix", ->
-        expect(output.prefix).toBe false
+        expect(output.hasPrefix()).toBe false
 
       it "should show the line is valid", ->
-        expect(output.valid).toBeTruthy()
+        expect(output.isValid()).toBe true
 
     describe "parsing an invalid line", ->
       output = null
@@ -170,7 +170,7 @@ describe "Helper", ->
         output  = helper.parseTokenizedLine line, "=", config
 
       it "should show the line is invalid", ->
-        expect(output.valid).toBeFalsy()
+        expect(output.isValid()).toBe false
 
     describe "parsing a line with prefix", ->
       output = null
@@ -180,19 +180,19 @@ describe "Helper", ->
         output  = helper.parseTokenizedLine line, "-=", config
 
       it "should show the line is valid", ->
-        expect(output.valid).toBeTruthy()
+        expect(output.isValid()).toBe true
 
       it "should return the correct prefix", ->
-        expect(output.prefix).toBe true
+        expect(output.hasPrefix()).toBe true
 
       it "should get the text before = with right trimmed", ->
-        expect(output[0].before).toBe "prefix"
+        expect(output.sections[0].before).toBe "prefix"
 
       it "should get the text after = with left trimmed", ->
-        expect(output[0].after).toBe '1'
+        expect(output.sections[0].after).toBe '1'
 
       it "should get the offset", ->
-        expect(output[0].offset).toBe 6
+        expect(output.sections[0].offset).toBe 6
 
     describe "parsing a line with leading and/or trailing whitespaces", ->
       output = null
@@ -207,22 +207,22 @@ describe "Helper", ->
         line   = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(17)
         output = helper.parseTokenizedLine line, "=", config
 
-        expect(output[0].before).toBe "        testing"
-        expect(output[0].after).toBe "123"
+        expect(output.sections[0].before).toBe "        testing"
+        expect(output.sections[0].after).toBe "123"
 
       it "should include trailing whitespaces", ->
         line   = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(18)
         output = helper.parseTokenizedLine line, "=", config
 
-        expect(output[0].before).toBe "        test"
-        expect(output[0].after).toBe "'abc'      "
+        expect(output.sections[0].before).toBe "        test"
+        expect(output.sections[0].after).toBe "'abc'      "
 
       it "should handle tabs correctly", ->
         line   = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(36)
         output = helper.parseTokenizedLine line, "=", config
 
-        expect(output[0].before).toBe "				testing"
-        expect(output[0].after).toBe "123"
+        expect(output.sections[0].before).toBe "				testing"
+        expect(output.sections[0].after).toBe "123"
 
     describe "parsing a line with multiple characters", ->
       output = null
@@ -241,17 +241,17 @@ describe "Helper", ->
         output  = helper.parseTokenizedLine line, ",", commaConfig
 
       it "should show the line is valid", ->
-        expect(output.valid).toBeTruthy()
+        expect(output.isValid()).toBe(true)
 
       it "should parsed out 3 items", ->
-        expect(output.length).toBe 3
+        expect(output.sections.length).toBe 3
 
       it "should not have any prefix", ->
-        expect(output.prefix).toBe false
+        expect(output.hasPrefix()).toBe false
 
       it "should have content in before for all items", ->
         content = true
-        output.forEach (item) ->
+        output.sections.forEach (item) ->
           content = false if item.before.length is 0
 
         expect(content).toBeTruthy()
