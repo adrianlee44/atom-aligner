@@ -1,3 +1,7 @@
+## v0.18.0 (2016-01-29)
+- Minor performance optimization
+- Begin switching to ES2015 Javascript
+
 ## v0.17.4 (2015-12-04)
 - Clean up operator config and make sure config is cleaned up properly on deactivation
 
