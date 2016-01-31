@@ -1,3 +1,6 @@
+## v0.18.1 (2016-01-31)
+- Fix tab getting converted to spaces when hiding invisibles
+
 ## v0.18.0 (2016-01-29)
 - Minor performance optimization
 - Begin switching to ES2015 Javascript
