@@ -224,6 +224,33 @@ describe "Helper", ->
         expect(output.sections[0].before).toBe "				testing"
         expect(output.sections[0].after).toBe "123"
 
+    describe "parsing a line with leading whitespaces and hiding invisibles", ->
+      output = null
+
+      beforeEach ->
+        atom.config.set 'editor.showInvisibles', false
+        atom.config.set 'editor.softTabs', false
+        atom.config.set 'editor.tabType', 'hard'
+
+      afterEach ->
+        atom.config.unset 'editor'
+
+      it "should handle tabs correctly", ->
+        line   = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(36)
+        output = helper.parseTokenizedLine line, "=", config
+
+        expect(output.sections[0].before).toBe "				testing"
+        expect(output.sections[0].after).toBe "123"
+
+      it "should not be affected by tab length", ->
+        atom.config.set 'editor.tabLength', 4
+
+        line   = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(36)
+        output = helper.parseTokenizedLine line, "=", config
+
+        expect(output.sections[0].before).toBe "				testing"
+        expect(output.sections[0].after).toBe "123"
+
     describe "parsing a line with multiple characters", ->
       output = null
       beforeEach ->

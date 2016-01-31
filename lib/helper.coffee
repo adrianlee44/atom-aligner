@@ -227,9 +227,9 @@ Convert invisibles in token to spaces or tabs
 @private
 ###
 _formatTokenValue: (value, token, invisibles) ->
-  return value unless token.hasInvisibleCharacters
-
   return "\t" if token.isHardTab
+
+  return value unless token.hasInvisibleCharacters
 
   if token.firstNonWhitespaceIndex?
     leading = value.substring(0, token.firstNonWhitespaceIndex)
