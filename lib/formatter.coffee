@@ -34,9 +34,7 @@ module.exports =
         offset = section.offset + (if sectionizedLine.hasPrefix() then 1 else 0)
 
         # New whitespaces to add before/after alignment character
-        newSpace = ""
-        for j in [1..offsets[i] - offset] by 1
-          newSpace += " "
+        newSpace = @buildWhitespaces(offsets[i] - offset)
 
         if config.multiple
           type      = if isNaN(+section.before) then "string" else "number"
@@ -81,3 +79,19 @@ module.exports =
     editor.setCursorBufferPosition range.end
 
     return
+
+  ###
+  @name buildWhitespaces
+  @description
+  Build a string with n whitespaces
+  @param {number} length
+  @returns {string}
+  ###
+  buildWhitespaces: (length) ->
+    return '' unless length > 0
+
+    newSpace = ""
+    for j in [0...length] by 1
+      newSpace += " "
+
+    return newSpace
