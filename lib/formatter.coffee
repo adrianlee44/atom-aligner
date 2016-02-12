@@ -13,22 +13,21 @@ module.exports =
   @param {Object} sectionizedLines
   ###
   formatRange: (editor, range, character, offsets, sectionizedLines) ->
-    scope     = editor.getRootScopeDescriptor().getScopeChain()
-    config    = operatorConfig.getConfig character, scope
-    textBlock = ""
+    scope  = editor.getRootScopeDescriptor().getScopeChain()
+    config = operatorConfig.getConfig character, scope
+    lines  = []
 
     for currentRow in range.getRows()
+      currentLine   = ""
       tokenizedLine = helper.getTokenizedLineForBufferRow(editor, currentRow)
       lineCharacter = helper.getAlignCharacter editor, currentRow
       canAlignWith  = operatorConfig.canAlignWith character, lineCharacter, config
 
       if not lineCharacter or not canAlignWith or tokenizedLine.isComment()
-        textBlock += editor.lineTextForBufferRow(currentRow)
-        textBlock += "\n" unless currentRow is range.end.row
+        lines.push(editor.lineTextForBufferRow(currentRow))
         continue
 
       sectionizedLine = sectionizedLines[currentRow]
-      currentLine     = ""
 
       for section, i in sectionizedLine.sections
         offset = section.offset + (if sectionizedLine.hasPrefix() then 1 else 0)
@@ -64,8 +63,7 @@ module.exports =
           currentLine += leftSpace + lineCharacter + rightSpace
           currentLine += section.after
 
-      textBlock += currentLine
-      textBlock += "\n" unless currentRow is range.end.row
+      lines.push currentLine
 
     # Set the first line to the start of the line
     range.start.column = 0
@@ -73,7 +71,7 @@ module.exports =
     range.end.column = Infinity
 
     # Replace the whole block
-    editor.setTextInBufferRange(range, textBlock)
+    editor.setTextInBufferRange(range, lines.join('\n'))
 
     # Update the cursor to the end of the original line
     editor.setCursorBufferPosition range.end
