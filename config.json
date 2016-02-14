@@ -52,7 +52,7 @@
     },
     "alignComments": {
       "title": "Align comments",
-      "description": "Align comments after aligning characters",
+      "description": "Align trailing comments when aligning characters",
       "type": "boolean",
       "default": false
     }
