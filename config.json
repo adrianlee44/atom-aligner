@@ -49,6 +49,12 @@
       "description": "Add 1 whitespace to the right of the character",
       "type": "boolean",
       "default": true
+    },
+    "alignComments": {
+      "title": "Align comments",
+      "description": "Align comments after aligning characters",
+      "type": "boolean",
+      "default": false
     }
   },
   "privateConfig": {

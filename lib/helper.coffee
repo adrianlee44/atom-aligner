@@ -88,11 +88,24 @@ Parsing line with operator
                   valid
 ###
 parseTokenizedLine: (tokenizedLine, character, config) ->
-  afterCharacter  = false
-  sectionizedLine = new SectionizedLine()
+  afterCharacter       = false
+  sectionizedLine      = new SectionizedLine()
+  trailingCommentIndex = -1
 
-  for token in tokenizedLine.tokens
-    tokenValue = @_formatTokenValue token.value, token, tokenizedLine.invisibles
+  if atom.config.get('aligner.alignComments')
+    # traverse backward for trailing comments
+    for token, index in tokenizedLine.tokens by -1
+      if token.matchesScopeSelector('comment')
+        sectionizedLine.trailingComment = @_formatTokenValue(token, tokenizedLine.invisibles) + sectionizedLine.trailingComment
+      else
+        trailingCommentIndex = index + 1
+        break
+
+  for token, index in tokenizedLine.tokens
+    # exit out of the loop when processing trailing comments
+    break if index is trailingCommentIndex
+
+    tokenValue = @_formatTokenValue token, tokenizedLine.invisibles
 
     if operatorConfig.canAlignWith(character, tokenValue.trim(), config) and (not afterCharacter or config.multiple)
       sectionizedLine.prefix = operatorConfig.isPrefixed tokenValue.trim(), config
@@ -220,16 +233,17 @@ getTokenizedLineForBufferRow: (editor, row) ->
 @name _formatTokenValue
 @description
 Convert invisibles in token to spaces or tabs
-@param {String} value
 @param {Token} token
 @param {Object} invisibles
 @returns {String}
 @private
 ###
-_formatTokenValue: (value, token, invisibles) ->
+_formatTokenValue: (token, invisibles) ->
   return "\t" if token.isHardTab
 
-  return value unless token.hasInvisibleCharacters
+  return token.value unless token.hasInvisibleCharacters
+
+  value = token.value
 
   if token.firstNonWhitespaceIndex?
     leading = value.substring(0, token.firstNonWhitespaceIndex)

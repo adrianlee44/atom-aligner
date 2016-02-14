@@ -13,9 +13,10 @@ module.exports =
   @param {Object} sectionizedLines
   ###
   formatRange: (editor, range, character, offsets, sectionizedLines) ->
-    scope  = editor.getRootScopeDescriptor().getScopeChain()
-    config = operatorConfig.getConfig character, scope
-    lines  = []
+    scope     = editor.getRootScopeDescriptor().getScopeChain()
+    config    = operatorConfig.getConfig character, scope
+    lines     = []
+    maxLength = 0
 
     for currentRow in range.getRows()
       currentLine   = ""
@@ -63,7 +64,17 @@ module.exports =
           currentLine += leftSpace + lineCharacter + rightSpace
           currentLine += section.after
 
+      if currentLine.length > maxLength
+        maxLength = currentLine.length
+
       lines.push currentLine
+
+    if atom.config.get('aligner.alignComments')
+      for line, index in lines
+        sectionizedLine = sectionizedLines[range.start.row + index]
+
+        if sectionizedLine.trailingComment
+          lines[index] += @buildWhitespaces(maxLength - line.length) + sectionizedLine.trailingComment
 
     # Set the first line to the start of the line
     range.start.column = 0

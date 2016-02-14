@@ -21,6 +21,9 @@ describe "Aligner", ->
       editor = atom.workspace.getActiveTextEditor()
       editorView = atom.views.getView(editor)
 
+  afterEach ->
+    atom.config.unset('aligner')
+
   it "should align two lines correctly", ->
     editor.setCursorBufferPosition([0, 1])
     atom.commands.dispatch editorView, 'aligner:align'
@@ -137,6 +140,26 @@ describe "Aligner", ->
     expect(editor.lineTextForBufferRow(6)).toBe "  foo:        bar"
     expect(editor.lineTextForBufferRow(7)).toBe "  helloworld: test"
 
+  it "should not align comments", ->
+    atom.config.set('aligner.alignComments', false)
+
+    editor.setCursorBufferPosition([43, 1])
+    atom.commands.dispatch editorView, 'aligner:align'
+
+    expect(editor.lineTextForBufferRow(42)).toBe "  comment1: 'something' # first comment"
+    expect(editor.lineTextForBufferRow(43)).toBe "  comment2: 'hi' # second comment"
+    expect(editor.lineTextForBufferRow(44)).toBe "  comment3: 'world' # third comment"
+
+  it "should align comments", ->
+    atom.config.set('aligner.alignComments', true)
+
+    editor.setCursorBufferPosition([43, 1])
+    atom.commands.dispatch editorView, 'aligner:align'
+
+    expect(editor.lineTextForBufferRow(42)).toBe "  comment1: 'something' # first comment"
+    expect(editor.lineTextForBufferRow(43)).toBe "  comment2: 'hi'        # second comment"
+    expect(editor.lineTextForBufferRow(44)).toBe "  comment3: 'world'     # third comment"
+
 describe "Aligning javascript", ->
   [editor, workspaceElement, editorView] = []
 
@@ -158,6 +181,9 @@ describe "Aligning javascript", ->
       editor = atom.workspace.getActiveTextEditor()
       editorView = atom.views.getView(editor)
 
+  afterEach ->
+    atom.config.unset('aligner')
+
   it "should align two lines correctly", ->
     editor.setCursorBufferPosition([0, 1])
     atom.commands.dispatch editorView, 'aligner:align'
@@ -175,3 +201,21 @@ describe "Aligning javascript", ->
     atom.commands.dispatch editorView, 'aligner:align'
 
     expect(editor.lineTextForBufferRow(10)).toBe '  ["3"    , 2, 4]'
+
+  it "should not align comments", ->
+    atom.config.set('aligner.alignComments', false)
+
+    editor.setCursorBufferPosition [13, 1]
+    atom.commands.dispatch editorView, 'aligner:align'
+
+    expect(editor.lineTextForBufferRow(13)).toBe "var comment1 = 'hello'; // first comment"
+    expect(editor.lineTextForBufferRow(14)).toBe "var comment2 = /* inline comment */ 'world'; // second comment"
+
+  it "should align comments", ->
+    atom.config.set('aligner.alignComments', true)
+
+    editor.setCursorBufferPosition [13, 1]
+    atom.commands.dispatch editorView, 'aligner:align'
+
+    expect(editor.lineTextForBufferRow(13)).toBe "var comment1 = 'hello';                      // first comment"
+    expect(editor.lineTextForBufferRow(14)).toBe "var comment2 = /* inline comment */ 'world'; // second comment"
