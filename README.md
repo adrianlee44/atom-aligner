@@ -10,6 +10,7 @@ Mac: `ctrl-cmd-/` Linux/Windows: `ctrl-alt-/`
 Package allows user to change the way characters are aligned.
 - Pad either left or right of character
 - If an extra whitespace should be added to the left and/or right of the character
+- Aligning trailing comments when aligning characters
 
 ##### Supported Languages
 - Javascript

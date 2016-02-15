@@ -1,3 +1,6 @@
+## v0.19.0 (2016-02-14)
+- Add align trailing comments feature
+
 ## v0.18.1 (2016-01-31)
 - Fix tab getting converted to spaces when hiding invisibles
 
