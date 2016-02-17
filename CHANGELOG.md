@@ -1,3 +1,6 @@
+## v0.19.1 (2016-02-16)
+- Switch back to function instead of es2015 =>
+
 ## v0.19.0 (2016-02-14)
 - Add align trailing comments feature
 
