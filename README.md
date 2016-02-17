@@ -39,29 +39,34 @@ random =
 For more information, visit [wiki](https://github.com/adrianlee44/atom-aligner/wiki/User-configurations)
 
 ### Supported character/operator
-- `=`: assignment
+`=`: assignment
 ```coffeescript
 foo   = "bar"
 test  = "notest"
 hello = "world"
 ```
-- `+=`, `-=` and other with `=`
+`+=`, `-=` and other with `=`
 ```coffeescript
 foo    = "bar"
 test  += "notest"
 hello -= "world"
 ```
-- `:`: Object
+`:`: Object
 ```coffeescript
 random =
   troll: "internet"
   foo:   "bar"
   bar:   "beer"
 ```
-- `,`: Items in arrays
+`,`: Items in arrays
 ```coffeescript
 ["helloText", 123456, "world"]
 ["foo"      ,  32124, "bar"]
+```
+Comments (if `Align Comments` options on)
+```javascript
+var hello = 'world'; // line 1
+var foo   = 'bar';   // line 2
 ```
 
 ## Changelog
