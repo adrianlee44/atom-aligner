@@ -14,7 +14,7 @@
   "repository": "https://github.com/adrianlee44/atom-aligner",
   "license": "MIT",
   "engines": {
-    "atom": ">=0.195.0"
+    "atom": ">=1.6.0"
   },
   "dependencies": {
     "extend": "^2.0.0"
