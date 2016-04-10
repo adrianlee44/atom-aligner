@@ -1,3 +1,7 @@
+## v0.20.0 (2016-04-10)
+- Bump minimum Atom requirement to 1.6.0
+- Fully convert Aligner to JS
+
 ## v0.19.1 (2016-02-16)
 - Switch back to function instead of es2015 =>
 
