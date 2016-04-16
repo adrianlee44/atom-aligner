@@ -32,6 +32,17 @@ describe("Helper", () => {
     });
   });
 
+  describe('_sanitizeTokenValue', () => {
+    it('should trim correctly', () => {
+      expect(helper._sanitizeTokenValue('  ')).toBe('  ');
+      expect(helper._sanitizeTokenValue(' ')).toBe(' ');
+      expect(helper._sanitizeTokenValue('')).toBe('');
+      expect(helper._sanitizeTokenValue(', ')).toBe(',');
+      expect(helper._sanitizeTokenValue('+=')).toBe('+=');
+      expect(helper._sanitizeTokenValue('=>')).toBe('=>');
+    });
+  });
+
   describe("getSameIndentationRange", () => {
     describe("should include comments", () => {
       let offsets, range;
