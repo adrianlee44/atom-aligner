@@ -1,3 +1,6 @@
+## v0.21.0 (2016-04-16)
+- Add support for whitespace as separator
+
 ## v0.20.0 (2016-04-10)
 - Bump minimum Atom requirement to 1.6.0
 - Fully convert Aligner to JS
