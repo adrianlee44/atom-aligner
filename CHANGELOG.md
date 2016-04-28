@@ -1,3 +1,7 @@
+## v0.22.0 (2016-04-29)
+- Fix aligning comment only line throws TypeError
+- Add punctuation as : scope
+
 ## v0.21.0 (2016-04-16)
 - Add support for whitespace as separator
 
