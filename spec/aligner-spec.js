@@ -152,16 +152,18 @@ describe("Aligner", () =>  {
     atom.commands.dispatch(editorView, 'aligner:align');
     expect(editor.lineTextForBufferRow(42)).toBe("  comment1: 'something' # first comment");
     expect(editor.lineTextForBufferRow(43)).toBe("  comment2: 'hi' # second comment");
-    expect(editor.lineTextForBufferRow(44)).toBe("  comment3: 'world' # third comment");
+    expect(editor.lineTextForBufferRow(44)).toBe("  # this is a comment only line");
+    expect(editor.lineTextForBufferRow(45)).toBe("  comment3: 'world' # third comment");
   });
 
   it("should align comments", () => {
     atom.config.set('aligner.alignComments', true);
-    editor.setCursorBufferPosition([43, 1]);
+    editor.setCursorBufferPosition([42, 1]);
     atom.commands.dispatch(editorView, 'aligner:align');
     expect(editor.lineTextForBufferRow(42)).toBe("  comment1: 'something' # first comment");
     expect(editor.lineTextForBufferRow(43)).toBe("  comment2: 'hi'        # second comment");
-    expect(editor.lineTextForBufferRow(44)).toBe("  comment3: 'world'     # third comment");
+    expect(editor.lineTextForBufferRow(44)).toBe("  # this is a comment only line");
+    expect(editor.lineTextForBufferRow(45)).toBe("  comment3: 'world'     # third comment");
   });
 });
 

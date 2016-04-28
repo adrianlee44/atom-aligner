@@ -42,4 +42,5 @@ colorMapping =
 trailingComments =
   comment1: 'something' # first comment
   comment2: 'hi' # second comment
+  # this is a comment only line
   comment3: 'world' # third comment
