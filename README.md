@@ -13,7 +13,7 @@ Package allows user to change the way characters are aligned.
 - Aligning trailing comments when aligning characters
 
 ##### Supported Languages
-- Javascript
+- Javascript ([aligner-javascript](https://github.com/adrianlee44/atom-aligner-javascript))
 - Coffeescript
 - Ruby ([aligner-ruby](https://github.com/adrianlee44/atom-aligner-ruby))
 - CSS & LESS ([aligner-css](https://github.com/adrianlee44/atom-aligner-css))
@@ -21,6 +21,7 @@ Package allows user to change the way characters are aligned.
 - PHP ([aligner-php](https://github.com/adrianlee44/atom-aligner-php))
 - Python ([aligner-python](https://github.com/adrianlee44/atom-aligner-python))
 - Stylus ([aligner-stylus](https://github.com/adrianlee44/atom-aligner-stylus))
+- Lua ([aligner-lua](https://github.com/adrianlee44/atom-aligner-lua))
 - For documentation to create aligner add-ons, check this  [page](https://github.com/adrianlee44/atom-aligner/wiki/Creating-aligner-add-ons)
 
 User can either align like this,
