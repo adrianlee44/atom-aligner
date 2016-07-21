@@ -264,9 +264,11 @@ describe("Helper", () => {
     });
 
     describe("parsing a line with leading and/or trailing whitespaces", () => {
-      let output;
+      let output, tokenizedBuffer;
       beforeEach(() => {
         atom.config.set('editor.showInvisibles', true);
+
+        tokenizedBuffer = editor.tokenizedBuffer || editor.displayBuffer.tokenizedBuffer;
       });
 
       afterEach(() => {
@@ -276,21 +278,21 @@ describe("Helper", () => {
 
 
       it("should include leading whitespaces", () => {
-        const line = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(17);
+        const line = tokenizedBuffer.tokenizedLineForRow(17);
         output = helper.parseTokenizedLine(line, "=", config);
         expect(output.sections[0].before).toBe("        testing");
         expect(output.sections[0].after).toBe("123");
       });
 
       it("should include trailing whitespaces", () => {
-        const line = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(18);
+        const line = tokenizedBuffer.tokenizedLineForRow(18);
         output = helper.parseTokenizedLine(line, "=", config);
         expect(output.sections[0].before).toBe("        test");
         expect(output.sections[0].after).toBe("'abc'      ");
       });
 
       it("should handle tabs correctly", () => {
-        const line = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(36);
+        const line = tokenizedBuffer.tokenizedLineForRow(36);
         output = helper.parseTokenizedLine(line, "=", config);
         expect(output.sections[0].before).toBe("				testing");
         expect(output.sections[0].after).toBe("123");
@@ -298,11 +300,13 @@ describe("Helper", () => {
     });
 
     describe("parsing a line with leading whitespaces and hiding invisibles", () => {
-      let output;
+      let output, tokenizedBuffer;
       beforeEach(() => {
         atom.config.set('editor.showInvisibles', false);
         atom.config.set('editor.softTabs', false);
         atom.config.set('editor.tabType', 'hard');
+
+        tokenizedBuffer = editor.tokenizedBuffer || editor.displayBuffer.tokenizedBuffer;
       });
 
       afterEach(() => {
@@ -310,7 +314,7 @@ describe("Helper", () => {
       });
 
       it("should handle tabs correctly", () => {
-        const line = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(36);
+        const line = tokenizedBuffer.tokenizedLineForRow(36);
         output = helper.parseTokenizedLine(line, "=", config);
         expect(output.sections[0].before).toBe("				testing");
         expect(output.sections[0].after).toBe("123");
@@ -318,7 +322,7 @@ describe("Helper", () => {
 
       it("should not be affected by tab length", () => {
         atom.config.set('editor.tabLength', 4);
-        const line = editor.displayBuffer.tokenizedBuffer.tokenizedLineForRow(36);
+        const line = tokenizedBuffer.tokenizedLineForRow(36);
         output = helper.parseTokenizedLine(line, "=", config);
         expect(output.sections[0].before).toBe("				testing");
         expect(output.sections[0].after).toBe("123");
