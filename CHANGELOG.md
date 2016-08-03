@@ -1,3 +1,6 @@
+## v0.22.1 (2016-08-03)
+- Fix deprecated displayBuffer
+
 ## v0.22.0 (2016-04-29)
 - Fix aligning comment only line throws TypeError
 - Add punctuation as : scope
