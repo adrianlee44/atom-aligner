@@ -13,3 +13,6 @@ var hello = [
 
 var comment1 = 'hello'; // first comment
 var comment2 = /* inline comment */ 'world'; // second comment
+
+var comment3 = 'with trailing comment'; // some comment
+var comment4; // some other comment

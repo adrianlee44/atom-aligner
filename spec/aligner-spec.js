@@ -229,4 +229,12 @@ describe("Aligning javascript", () => {
     expect(editor.lineTextForBufferRow(13)).toBe("var comment1 = 'hello';                      // first comment");
     expect(editor.lineTextForBufferRow(14)).toBe("var comment2 = /* inline comment */ 'world'; // second comment");
   });
+
+  it("should align trailing comment with or without operator in range", function() {
+    atom.config.set('aligner.alignComments', true);
+    editor.setSelectedBufferRange([[16, 1], [17, Infinity]]);
+    atom.commands.dispatch(editorView, 'aligner:align');
+    expect(editor.lineTextForBufferRow(16)).toBe("var comment3 = 'with trailing comment'; // some comment");
+    expect(editor.lineTextForBufferRow(17)).toBe("var comment4;                           // some other comment");
+  });
 });

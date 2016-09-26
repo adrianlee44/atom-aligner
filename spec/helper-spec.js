@@ -45,11 +45,12 @@ describe("Helper", () => {
 
   describe("getSameIndentationRange", () => {
     describe("should include comments", () => {
-      let offsets, range;
+      let offsets, range, sectionizedLines;
       beforeEach(() => {
         const output = helper.getSameIndentationRange(editor, 23, ':');
         range = output.range;
         offsets = output.offsets;
+        sectionizedLines = output.sectionizedLines;
       });
 
       it("should get the valid start row", () => {
@@ -62,6 +63,12 @@ describe("Helper", () => {
 
       it("should get the valid offset", () => {
         expect(offsets).toEqual([8]);
+      });
+
+      it("should have sectionizedLine for all lines", () => {
+        for (let i = 22; i <= 32; i++) {
+          expect(sectionizedLines[i]).toBeDefined()
+        }
       });
     });
 
@@ -188,15 +195,10 @@ describe("Helper", () => {
   });
 
   describe("parseTokenizedLine", () => {
-    let grammar;
-    beforeEach(() => {
-      grammar = editor.getGrammar();
-    });
-
     describe("parsing a valid line", () => {
       let output;
       beforeEach(() => {
-        const line = grammar.tokenizeLine(editor.lineTextForBufferRow(2));
+        const line = editor.tokenizedBuffer.tokenizedLineForRow(2);
         output = helper.parseTokenizedLine(line, "=", config);
       });
 
@@ -221,11 +223,30 @@ describe("Helper", () => {
       });
     });
 
+    describe("parsing a full line comment", () => {
+      let output;
+      beforeEach(() => {
+        const line = editor.tokenizedBuffer.tokenizedLineForRow(38);
+        output = helper.parseTokenizedLine(line, "=", config);
+      });
+
+      it("should get all the text in before", () => {
+        expect(output.sections[0].before).toBe("# full line comment");
+      });
+
+      it("should get nothing in after", () => {
+        expect(output.sections[0].after).toBe('');
+      });
+
+      it("should show the line is invalid", () => {
+        expect(output.isValid()).toBe(false);
+      });
+    });
+
     describe("parsing an invalid line", () => {
       let output;
       beforeEach(() => {
-        grammar = editor.getGrammar();
-        const line = grammar.tokenizeLine(editor.lineTextForBufferRow(4));
+        const line = editor.tokenizedBuffer.tokenizedLineForRow(4);
         output = helper.parseTokenizedLine(line, "=", config);
       });
 
@@ -237,8 +258,7 @@ describe("Helper", () => {
     describe("parsing a line with prefix", () => {
       let output;
       beforeEach(() => {
-        grammar = editor.getGrammar();
-        const line = grammar.tokenizeLine(editor.lineTextForBufferRow(9));
+        const line = editor.tokenizedBuffer.tokenizedLineForRow(9);
         output = helper.parseTokenizedLine(line, "-=", config);
       });
 
@@ -345,8 +365,7 @@ describe("Helper", () => {
             }
           }
         };
-        grammar = editor.getGrammar();
-        const line = grammar.tokenizeLine(editor.lineTextForBufferRow(13));
+        const line = editor.tokenizedBuffer.tokenizedLineForRow(13);
         output = helper.parseTokenizedLine(line, ",", commaConfig);
       });
 

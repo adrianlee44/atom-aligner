@@ -35,3 +35,5 @@ colorMapping =
 nothing(toAlign)
 
 				testing = 123
+
+# full line comment
