@@ -1,3 +1,6 @@
+## v0.22.2 (2016-09-25)
+- Fix aligning trailing comment duplicates comments
+
 ## v0.22.1 (2016-08-03)
 - Fix deprecated displayBuffer
 
