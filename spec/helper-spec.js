@@ -161,6 +161,22 @@ describe("Helper", () => {
       const character = helper.getAlignCharacter(editor, 4);
       expect(character).not.toBeDefined();
     });
+
+    it("should get the = character", () => {
+      let languageScope = editor.getRootScopeDescriptor().getScopeChain() || 'base';
+      let config = operatorConfig.getConfig("+=", languageScope);
+
+      const character = helper.getAlignCharacter(editor, 1, "+=", config);
+      expect(character).toBe("=");
+    });
+
+    it("should not get the = character", () => {
+      let languageScope = editor.getRootScopeDescriptor().getScopeChain() || 'base';
+      let config = operatorConfig.getConfig(":", languageScope);
+
+      const character = helper.getAlignCharacter(editor, 1, ":", config);
+      expect(character).not.toBeDefined();
+    });
   });
 
   describe("getAlignCharacterInRanges", () => {
