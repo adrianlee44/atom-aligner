@@ -1,3 +1,6 @@
+## v0.22.3 (2016-12-05)
+- Fix formatter not aligning the correct character (#65)
+
 ## v0.22.2 (2016-09-25)
 - Fix aligning trailing comment duplicates comments
 
