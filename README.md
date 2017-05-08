@@ -14,7 +14,7 @@ Package allows user to change the way characters are aligned.
 
 ##### Supported Languages
 - Javascript ([aligner-javascript](https://github.com/adrianlee44/atom-aligner-javascript))
-- Coffeescript
+- Coffeescript ([aligner-coffeescript](https://github.com/adrianlee44/atom-aligner-coffeescript))
 - Ruby ([aligner-ruby](https://github.com/adrianlee44/atom-aligner-ruby))
 - CSS & LESS ([aligner-css](https://github.com/adrianlee44/atom-aligner-css))
 - SASS & SCSS ([aligner-scss](https://github.com/adrianlee44/atom-aligner-scss))
