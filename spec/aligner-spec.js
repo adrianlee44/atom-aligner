@@ -19,6 +19,10 @@ describe("Aligner", () =>  {
     });
 
     waitsForPromise(() => {
+      return atom.packages.activatePackage('aligner-coffeescript');
+    });
+
+    waitsForPromise(() => {
       return atom.workspace.open('aligner-sample.coffee');
     });
 
@@ -46,7 +50,7 @@ describe("Aligner", () =>  {
 
   it("should ailgn correctly with config update", () => {
     editor.setCursorBufferPosition([6, 1]);
-    atom.config.set('aligner.:-alignment', 'left');
+    atom.config.set('aligner-coffeescript.:-alignment', 'left');
     atom.commands.dispatch(editorView, 'aligner:align');
     expect(editor.lineTextForBufferRow(6)).toBe("  foo       : bar");
   });
@@ -180,6 +184,10 @@ describe("Aligning javascript", () => {
 
     waitsForPromise(() => {
       return atom.packages.activatePackage('language-javascript');
+    });
+
+    waitsForPromise(() => {
+      return atom.packages.activatePackage('aligner-javascript');
     });
 
     waitsForPromise(() => {

@@ -26,5 +26,13 @@
         "1.0.0": "registerProviders"
       }
     }
+  },
+  "configSchema": {
+    "alignComments": {
+      "title": "Align comments",
+      "description": "Align trailing comments when aligning characters",
+      "type": "boolean",
+      "default": false
+    }
   }
 }

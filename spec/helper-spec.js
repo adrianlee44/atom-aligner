@@ -3,7 +3,6 @@
 const helper = require('../lib/helper');
 const operatorConfig = require('../lib/operator-config');
 const path = require('path');
-const configs = require('../config');
 const Range = require('atom').Range;
 
 describe("Helper", () => {
@@ -21,6 +20,10 @@ describe("Helper", () => {
     });
 
     waitsForPromise(() => {
+      return atom.packages.activatePackage('aligner-coffeescript');
+    });
+
+    waitsForPromise(() => {
       return atom.workspace.open('helper-sample.coffee')
       .then((o) => {
         editor = o;
@@ -28,7 +31,7 @@ describe("Helper", () => {
     });
 
     runs(() => {
-      config = operatorConfig.getConfig('=');
+      config = operatorConfig.getConfig('=', '.source.coffee');
     });
   });
 
