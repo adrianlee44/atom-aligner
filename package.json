@@ -27,6 +27,9 @@
       }
     }
   },
+  "package-deps": [
+    "aligner-javascript"
+  ],
   "configSchema": {
     "alignComments": {
       "title": "Align comments",
