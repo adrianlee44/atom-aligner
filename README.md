@@ -1,6 +1,6 @@
 # aligner package [![Build Status](https://img.shields.io/travis/adrianlee44/atom-aligner/master.svg?style=flat-square)](https://travis-ci.org/adrianlee44/atom-aligner)
 
-Easily align multi-line with support for different operators and custom configurations
+Easily align multiple lines and blocks with support for different operators and custom configurations
 
 Mac: `ctrl-cmd-/` Linux/Windows: `ctrl-alt-/`
 
@@ -13,6 +13,7 @@ Package allows user to change the way characters are aligned.
 - Aligning trailing comments when aligning characters
 
 ##### Supported Languages
+Install add-on packages to get support for the following languages:
 - Javascript ([aligner-javascript](https://github.com/adrianlee44/atom-aligner-javascript))
 - Coffeescript ([aligner-coffeescript](https://github.com/adrianlee44/atom-aligner-coffeescript))
 - Ruby ([aligner-ruby](https://github.com/adrianlee44/atom-aligner-ruby))
@@ -25,51 +26,25 @@ Package allows user to change the way characters are aligned.
 - For documentation to create aligner add-ons, check this  [page](https://github.com/adrianlee44/atom-aligner/wiki/Creating-aligner-add-ons)
 
 User can either align like this,
-```coffeescript
-random =
-  troll: "internet"
-  foo:   "bar"
+```javascript
+let random = {
+  troll: "internet",
+  foo:   "bar",
   bar:   "beer"
+}
 ```
 or this,
-```coffeescript
-random =
-  troll : "internet"
-  foo   : "bar"
+```javascript
+let random = {
+  troll : "internet",
+  foo   : "bar",
   bar   : "beer"
+}
 ```
 For more information, visit [wiki](https://github.com/adrianlee44/atom-aligner/wiki/User-configurations)
 
 ### Supported character/operator
-`=`: assignment
-```coffeescript
-foo   = "bar"
-test  = "notest"
-hello = "world"
-```
-`+=`, `-=` and other with `=`
-```coffeescript
-foo    = "bar"
-test  += "notest"
-hello -= "world"
-```
-`:`: Object
-```coffeescript
-random =
-  troll: "internet"
-  foo:   "bar"
-  bar:   "beer"
-```
-`,`: Items in arrays
-```coffeescript
-["helloText", 123456, "world"]
-["foo"      ,  32124, "bar"]
-```
-Comments (if `Align Comments` options on)
-```javascript
-var hello = 'world'; // line 1
-var foo   = 'bar';   // line 2
-```
+For supported characters/operators, see individual add-on packages.
 
 ## Changelog
 Check [changelog](https://github.com/adrianlee44/atom-aligner/blob/master/CHANGELOG.md) for more information
