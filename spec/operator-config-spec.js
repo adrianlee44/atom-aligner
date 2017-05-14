@@ -1,7 +1,6 @@
 'use strict';
 
 const operatorConfig = require('../lib/operator-config');
-const extend = require('extend');
 const Disposable = require('atom').Disposable;
 
 const cssProvider = {
