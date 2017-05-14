@@ -1,3 +1,9 @@
+## v1.0.0 (2017-05-13)
+- Bump `extend` to v3.0.1
+- Update to use configSchema
+- Add aligner-javascript as dependency
+- Remove basic config.json
+
 ## v0.22.3 (2016-12-05)
 - Fix formatter not aligning the correct character (#65)
 
