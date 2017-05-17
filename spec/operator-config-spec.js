@@ -1,6 +1,7 @@
 'use strict';
 
 const operatorConfig = require('../lib/operator-config');
+const path = require('path');
 const Disposable = require('atom').Disposable;
 
 const cssProvider = {
@@ -42,7 +43,11 @@ const cssProvider = {
 };
 
 describe('Operator Config', () => {
+  let editor
+
   beforeEach(() => {
+    atom.project.setPaths([path.join(__dirname, 'fixtures')]);
+
     operatorConfig.removeAll();
 
     waitsForPromise(() => {
@@ -56,28 +61,61 @@ describe('Operator Config', () => {
     waitsForPromise(() => {
       return atom.packages.activatePackage('aligner-javascript');
     });
+
+    waitsForPromise(() => {
+      return atom.workspace.open('helper-sample.js')
+      .then((o) => {
+        editor = o;
+      });
+    });
   });
 
   describe('getConfig', () => {
     it('should get the config from config.json', () => {
-      expect(operatorConfig.getConfig('=', '.source.js')).toBeDefined();
+      expect(operatorConfig.getConfig('=', editor)).toBeDefined();
     });
 
     it('should return null when character is not supported', () => {
-      expect(operatorConfig.getConfig('-', '.source.js')).toBeUndefined();
+      expect(operatorConfig.getConfig('-', editor)).toBeUndefined();
     });
 
     it('should be able to get prefixed operator config', () => {
-      expect(operatorConfig.getConfig('+=', '.source.js')).toBeDefined();
+      expect(operatorConfig.getConfig('+=', editor)).toBeDefined();
     });
 
     it('should get the right provider', () => {
-      operatorConfig.add('aligner-css', cssProvider);
-      expect(operatorConfig.getConfig(':', '.source.css')).toBeDefined();
+      let cssEditor
+
+      waitsForPromise(() => {
+        return atom.packages.activatePackage('language-css');
+      });
+
+      waitsForPromise(() => {
+        return atom.workspace.open('test.css')
+        .then((o) => {
+          cssEditor = o;
+        });
+      });
+
+      runs(() => {
+        operatorConfig.add('aligner-css', cssProvider);
+        expect(operatorConfig.getConfig(':', cssEditor)).toBeDefined();
+      });
     });
 
     it('should not be able to get any config', () => {
-      expect(operatorConfig.getConfig('=>', '.source.ruby')).toBeUndefined();
+      let rubyEditor
+
+      waitsForPromise(() => {
+        return atom.workspace.open('test.rb')
+        .then((o) => {
+          rubyEditor = o;
+        });
+      });
+
+      runs(() => {
+        expect(operatorConfig.getConfig('=>', rubyEditor)).toBeUndefined();
+      });
     });
   });
 
@@ -117,8 +155,9 @@ describe('Operator Config', () => {
 
   describe('canAlignWith', () => {
     let characterConfig = null;
+
     beforeEach(() => {
-      characterConfig = operatorConfig.getConfig('=', '.source.js');
+      characterConfig = operatorConfig.getConfig('=', editor);
     });
 
     it('should return true if they are the same', () => {
@@ -136,12 +175,12 @@ describe('Operator Config', () => {
 
   describe('isPrefixed', () => {
     it('should return true when operator has prefix', () => {
-      let characterConfig = operatorConfig.getConfig('+=', '.source.js');
+      let characterConfig = operatorConfig.getConfig('+=', editor);
       expect(operatorConfig.isPrefixed('+=', characterConfig)).toBe(true);
     });
 
     it('should return false when operator does not have prefix', () => {
-      let characterConfig = operatorConfig.getConfig('=', '.source.js');
+      let characterConfig = operatorConfig.getConfig('=', editor);
       expect(operatorConfig.isPrefixed('=', characterConfig)).toBe(false);
     });
   });
@@ -155,7 +194,7 @@ describe('Operator Config', () => {
       };
       operatorConfig.updateSetting('aligner-javascript', setting);
 
-      expect(operatorConfig.getConfig('+=', '.source.js').alignment).toBe('right');
+      expect(operatorConfig.getConfig('+=', editor).alignment).toBe('right');
     });
   });
 
@@ -183,7 +222,7 @@ describe('Operator Config', () => {
       };
       operatorConfig.updateConfigWithAtom('aligner-javascript', setting);
 
-      expect(operatorConfig.getConfig('+=', '.source.js').alignment).toBe('right');
+      expect(operatorConfig.getConfig('+=', editor).alignment).toBe('right');
     });
   });
 

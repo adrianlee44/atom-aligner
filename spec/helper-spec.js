@@ -31,7 +31,7 @@ describe("Helper", () => {
     });
 
     runs(() => {
-      config = operatorConfig.getConfig('=', '.source.coffee');
+      config = operatorConfig.getConfig('=', editor);
     });
   });
 
@@ -166,16 +166,14 @@ describe("Helper", () => {
     });
 
     it("should get the = character", () => {
-      let languageScope = editor.getRootScopeDescriptor().getScopeChain() || 'base';
-      let config = operatorConfig.getConfig("+=", languageScope);
+      let config = operatorConfig.getConfig("+=", editor);
 
       const character = helper.getAlignCharacter(editor, 1, "+=", config);
       expect(character).toBe("=");
     });
 
     it("should not get the = character", () => {
-      let languageScope = editor.getRootScopeDescriptor().getScopeChain() || 'base';
-      let config = operatorConfig.getConfig(":", languageScope);
+      let config = operatorConfig.getConfig(":", editor);
 
       const character = helper.getAlignCharacter(editor, 1, ":", config);
       expect(character).not.toBeDefined();

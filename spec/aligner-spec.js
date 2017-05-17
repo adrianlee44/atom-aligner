@@ -32,10 +32,6 @@ describe("Aligner", () =>  {
     });
   });
 
-  afterEach(() => {
-    atom.config.unset('aligner');
-  });
-
   it("should align two lines correctly", () => {
     editor.setCursorBufferPosition([0, 1]);
     atom.commands.dispatch(editorView, 'aligner:align');
