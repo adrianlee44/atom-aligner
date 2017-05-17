@@ -1,3 +1,6 @@
+## v1.1.0 (2017-05-17)
+- Use cursor scope instead of root scope for matching selector
+
 ## v1.0.0 (2017-05-13)
 - Bump `extend` to v3.0.1
 - Update to use configSchema
