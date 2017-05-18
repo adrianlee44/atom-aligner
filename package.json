@@ -17,6 +17,7 @@
     "atom": ">=1.9.0"
   },
   "dependencies": {
+    "atom-package-deps": "^4.6.0",
     "extend": "^3.0.0"
   },
   "consumedServices": {
