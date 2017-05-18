@@ -1,3 +1,6 @@
+## v1.2.0 (2017-05-18)
+- Fix not prompting to install depended packages
+
 ## v1.1.0 (2017-05-17)
 - Use cursor scope instead of root scope for matching selector
 
