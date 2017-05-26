@@ -240,6 +240,39 @@ describe("Helper", () => {
       });
     });
 
+    describe("not parse a line with the same character but not match scope", () => {
+      let output;
+
+      beforeEach(() => {
+        let scssEditor;
+
+        waitsForPromise(() => {
+          return atom.packages.activatePackage('aligner-scss');
+        });
+
+        waitsForPromise(() => {
+          return atom.workspace.open('test.scss')
+          .then((o) => {
+            scssEditor = o;
+          });
+        });
+
+        runs(() => {
+          const line = scssEditor.tokenizedBuffer.tokenizedLineForRow(3);
+          output = helper.parseTokenizedLine(line, ':', {
+            alignment: 'right',
+            leftSpace: false,
+            rightSpace: true,
+            scope: 'key-value|property-name|operator'
+          });
+        });
+      });
+
+      it('should show the line is invalid', () => {
+        expect(output.isValid()).toBe(false);
+      });
+    })
+
     describe("parsing a full line comment", () => {
       let output;
       beforeEach(() => {
