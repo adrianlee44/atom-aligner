@@ -1,3 +1,6 @@
+## v1.2.1 (2017-05-26)
+- Fix aligning same character even when scope doesn't match
+
 ## v1.2.0 (2017-05-18)
 - Fix not prompting to install depended packages
 
