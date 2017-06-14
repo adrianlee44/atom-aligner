@@ -1,3 +1,6 @@
+## v1.2.2 (2017-06-14)
+- Prevent aligning when no editor is passing in (#69)
+
 ## v1.2.1 (2017-05-26)
 - Fix aligning same character even when scope doesn't match
 
