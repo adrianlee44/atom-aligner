@@ -37,3 +37,5 @@ nothing(toAlign)
 				testing = 123
 
 # full line comment
+
+comment = "hi" # trailing comment

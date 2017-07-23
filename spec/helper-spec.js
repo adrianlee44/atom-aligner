@@ -442,4 +442,26 @@ describe("Helper", () => {
       });
     });
   });
+
+  describe("isTokenizedLineCommentOnly", () => {
+    it("should return false when there is no comment", () => {
+      const line = editor.tokenizedBuffer.tokenizedLineForRow(2);
+      expect(helper.isTokenizedLineCommentOnly(line)).toBe(false);
+    });
+
+    it("should return false when there is trailing comment", () => {
+      const line = editor.tokenizedBuffer.tokenizedLineForRow(40);
+      expect(helper.isTokenizedLineCommentOnly(line)).toBe(false);
+    });
+
+    it("should return true when the full line is comment", () => {
+      const line = editor.tokenizedBuffer.tokenizedLineForRow(38);
+      expect(helper.isTokenizedLineCommentOnly(line)).toBe(true);
+    });
+
+    it("should return false when the line is empty", () => {
+      const line = editor.tokenizedBuffer.tokenizedLineForRow(39);
+      expect(helper.isTokenizedLineCommentOnly(line)).toBe(false);
+    });
+  })
 });
