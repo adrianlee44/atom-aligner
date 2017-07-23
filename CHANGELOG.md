@@ -1,3 +1,6 @@
+## v1.2.4 (2017-07-23)
+- Fix not able to align trailing comment
+
 ## v1.2.3 (2017-06-22)
 - Fix config selector not matching language properly
 
