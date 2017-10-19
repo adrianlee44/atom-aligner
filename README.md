@@ -23,6 +23,7 @@ Install add-on packages to get support for the following languages:
 - Python ([aligner-python](https://github.com/adrianlee44/atom-aligner-python))
 - Stylus ([aligner-stylus](https://github.com/adrianlee44/atom-aligner-stylus))
 - Lua ([aligner-lua](https://github.com/adrianlee44/atom-aligner-lua))
+- Go ([aligner-golang](https://github.com/timfallmk/atom-aligner-golang)
 - For documentation to create aligner add-ons, check this  [page](https://github.com/adrianlee44/atom-aligner/wiki/Creating-aligner-add-ons)
 
 User can either align like this,
