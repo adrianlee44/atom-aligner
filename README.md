@@ -1,5 +1,6 @@
 # aligner package
 
+[![Build Status](https://img.shields.io/travis/adrianlee44/atom-aligner/master.svg?style=flat-square)](https://travis-ci.org/adrianlee44/atom-aligner)
 [![Greenkeeper badge](https://badges.greenkeeper.io/adrianlee44/atom-aligner.svg)](https://greenkeeper.io/)
 
 Easily align multiple lines and blocks with support for different operators and custom configurations
