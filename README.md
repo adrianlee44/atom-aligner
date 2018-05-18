@@ -1,4 +1,4 @@
-# aligner package [![Build Status](https://img.shields.io/travis/adrianlee44/atom-aligner/master.svg?style=flat-square)](https://travis-ci.org/adrianlee44/atom-aligner)
+# aligner package
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/adrianlee44/atom-aligner.svg)](https://greenkeeper.io/)
 
