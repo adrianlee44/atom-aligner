@@ -26,5 +26,7 @@ jobs:
       run: apm -v
     - name: Install dependencies
       run: apm ci
+    - name: Install test packages
+      run: apm install aligner-javascript aligner-coffeescript aligner-scss
     - name: Run tests 🧪
       run: atom --test spec
