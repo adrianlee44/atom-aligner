@@ -1,6 +1,0 @@
-language: objective-c
-env:
-  - ATOM_CHANNEL=stable APM_TEST_PACKAGES="aligner-javascript aligner-coffeescript aligner-scss"
-  - ATOM_CHANNEL=beta APM_TEST_PACKAGES="aligner-javascript aligner-coffeescript aligner-scss"
-
-script: 'curl -s https://raw.githubusercontent.com/atom/ci/master/build-package.sh | sh'

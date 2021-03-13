@@ -1,6 +1,6 @@
 # aligner package
 
-[![Build Status](https://img.shields.io/travis/adrianlee44/atom-aligner/master.svg?style=flat-square)](https://travis-ci.org/adrianlee44/atom-aligner)
+[![Test](https://github.com/adrianlee44/atom-aligner/actions/workflows/test.yml/badge.svg)](https://github.com/adrianlee44/atom-aligner/actions/workflows/test.yml)
 
 Easily align multiple lines and blocks with support for different operators and custom configurations
 
