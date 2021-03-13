@@ -1,0 +1,9 @@
+[submodule "spec/fixtures/packages/aligner-javascript"]
+	path = spec/fixtures/packages/aligner-javascript
+	url = https://github.com/adrianlee44/atom-aligner-javascript.git
+[submodule "spec/fixtures/packages/aligner-coffeescript"]
+	path = spec/fixtures/packages/aligner-coffeescript
+	url = https://github.com/adrianlee44/atom-aligner-coffeescript.git
+[submodule "spec/fixtures/packages/aligner-scss"]
+	path = spec/fixtures/packages/aligner-scss
+	url = https://github.com/adrianlee44/atom-aligner-scss.git
