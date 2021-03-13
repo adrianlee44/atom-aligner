@@ -20,7 +20,7 @@ describe("Helper", () => {
     });
 
     waitsForPromise(() => {
-      return atom.packages.activatePackage('aligner-coffeescript');
+      return atom.packages.activatePackage(path.join(__dirname, 'fixtures/packages/aligner-coffeescript'));
     });
 
     waitsForPromise(() => {
@@ -247,7 +247,7 @@ describe("Helper", () => {
         let scssEditor;
 
         waitsForPromise(() => {
-          return atom.packages.activatePackage('aligner-scss');
+          return atom.packages.activatePackage(path.join(__dirname, 'fixtures/packages/aligner-scss'));
         });
 
         waitsForPromise(() => {

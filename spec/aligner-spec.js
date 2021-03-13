@@ -19,7 +19,7 @@ describe("Aligner", () =>  {
     });
 
     waitsForPromise(() => {
-      return atom.packages.activatePackage('aligner-coffeescript');
+      return atom.packages.activatePackage(path.join(__dirname, 'fixtures/packages/aligner-coffeescript'));
     });
 
     waitsForPromise(() => {
@@ -185,7 +185,7 @@ describe("Aligning javascript", () => {
     });
 
     waitsForPromise(() => {
-      return atom.packages.activatePackage('aligner-javascript');
+      return atom.packages.activatePackage(path.join(__dirname, 'fixtures/packages/aligner-javascript'));
     });
 
     waitsForPromise(() => {

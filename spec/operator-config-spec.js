@@ -59,7 +59,7 @@ describe('Operator Config', () => {
     });
 
     waitsForPromise(() => {
-      return atom.packages.activatePackage('aligner-javascript');
+      return atom.packages.activatePackage(path.join(__dirname, 'fixtures/packages/aligner-javascript'));
     });
 
     waitsForPromise(() => {

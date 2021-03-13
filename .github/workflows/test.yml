@@ -12,11 +12,13 @@ jobs:
   Test:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
         channel: [stable, beta]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
     - uses: UziTech/action-setup-atom@v1
       with:
         channel: ${{ matrix.channel }}
@@ -26,7 +28,5 @@ jobs:
       run: apm -v
     - name: Install dependencies
       run: apm ci
-    - name: Install test packages
-      run: apm install aligner-javascript aligner-coffeescript aligner-scss
     - name: Run tests 🧪
       run: atom --test spec
