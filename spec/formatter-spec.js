@@ -2,7 +2,7 @@
 
 const formatter = require('../lib/formatter');
 
-describe("Formatter", () => {
+describe('Formatter', () => {
   describe('buildWhitespaces', () => {
     it('should build the correct number of whitespaces', () => {
       let output = formatter.buildWhitespaces(4);

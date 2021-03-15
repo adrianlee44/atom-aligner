@@ -2,5 +2,6 @@
   "tabWidth": 2,
   "tabs": false,
   "semicolons": true,
-  "singleQuote": true
+  "singleQuote": true,
+  "trailingComma": "es5"
 }

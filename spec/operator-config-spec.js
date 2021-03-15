@@ -10,40 +10,40 @@ const cssProvider = {
   config: {
     ':-prefixes': {
       type: 'array',
-      default: [':']
+      default: [':'],
     },
     ':-alignment': {
       title: 'Padding for :',
       description: 'Pad left or right of the character',
       type: 'string',
-      default: 'right'
+      default: 'right',
     },
     ':-leftSpace': {
       title: 'Left space for :',
       description: 'Add 1 whitespace to the left',
       type: 'boolean',
-      default: false
+      default: false,
     },
     ':-rightSpace': {
       title: 'Right space for :',
       description: 'Add 1 whitespace to the right',
       type: 'boolean',
-      default: true
+      default: true,
     },
     ':-scope': {
       title: 'Character scope',
       description: 'Scope string to match',
       type: 'string',
-      default: 'key-value'
-    }
+      default: 'key-value',
+    },
   },
   privateConfig: {
-    '|-alignment': 'right'
-  }
+    '|-alignment': 'right',
+  },
 };
 
 describe('Operator Config', () => {
-  let editor
+  let editor;
 
   beforeEach(() => {
     atom.project.setPaths([path.join(__dirname, 'fixtures')]);
@@ -59,12 +59,13 @@ describe('Operator Config', () => {
     });
 
     waitsForPromise(() => {
-      return atom.packages.activatePackage(path.join(__dirname, 'fixtures/packages/aligner-javascript'));
+      return atom.packages.activatePackage(
+        path.join(__dirname, 'fixtures/packages/aligner-javascript')
+      );
     });
 
     waitsForPromise(() => {
-      return atom.workspace.open('helper-sample.js')
-      .then((o) => {
+      return atom.workspace.open('helper-sample.js').then((o) => {
         editor = o;
       });
     });
@@ -84,15 +85,14 @@ describe('Operator Config', () => {
     });
 
     it('should get the right provider', () => {
-      let cssEditor
+      let cssEditor;
 
       waitsForPromise(() => {
         return atom.packages.activatePackage('language-css');
       });
 
       waitsForPromise(() => {
-        return atom.workspace.open('test.css')
-        .then((o) => {
+        return atom.workspace.open('test.css').then((o) => {
           cssEditor = o;
         });
       });
@@ -104,11 +104,10 @@ describe('Operator Config', () => {
     });
 
     it('should not be able to get any config', () => {
-      let rubyEditor
+      let rubyEditor;
 
       waitsForPromise(() => {
-        return atom.workspace.open('test.rb')
-        .then((o) => {
+        return atom.workspace.open('test.rb').then((o) => {
           rubyEditor = o;
         });
       });
@@ -127,7 +126,11 @@ describe('Operator Config', () => {
       expect(settings).toBeDefined();
       expect(settings['|'].alignment).toBe('right');
 
-      expect(settings.selector).toEqual(['.source.css', '.source.html', '.source.css.less']);
+      expect(settings.selector).toEqual([
+        '.source.css',
+        '.source.html',
+        '.source.css.less',
+      ]);
       expect(settings['::']).toBeDefined();
       expect(settings['::']).toEqual(settings[':']);
       expect(output instanceof Disposable).toBe(true);
@@ -165,11 +168,15 @@ describe('Operator Config', () => {
     });
 
     it('should return true for supported prefixed operator', () => {
-      expect(operatorConfig.canAlignWith('=', '+=', characterConfig)).toBe(true);
+      expect(operatorConfig.canAlignWith('=', '+=', characterConfig)).toBe(
+        true
+      );
     });
 
     it('should return false for unsupported prefixed operator', () => {
-      expect(operatorConfig.canAlignWith('=', '1=', characterConfig)).toBe(false);
+      expect(operatorConfig.canAlignWith('=', '1=', characterConfig)).toBe(
+        false
+      );
     });
   });
 
@@ -189,8 +196,8 @@ describe('Operator Config', () => {
     it('should update prefixed settings properly', () => {
       let setting = {
         '=': {
-          alignment: 'right'
-        }
+          alignment: 'right',
+        },
       };
       operatorConfig.updateSetting('aligner-javascript', setting);
 
@@ -203,8 +210,8 @@ describe('Operator Config', () => {
       let configs = {
         '=': {
           prefixes: ['+'],
-          alignment: 'right'
-        }
+          alignment: 'right',
+        },
       };
       operatorConfig.initializePrefix(configs);
 
@@ -218,7 +225,7 @@ describe('Operator Config', () => {
   describe('updateConfigWithAtom', () => {
     it('should update with Atom setting changes', () => {
       let setting = {
-        '=-alignment': 'right'
+        '=-alignment': 'right',
       };
       operatorConfig.updateConfigWithAtom('aligner-javascript', setting);
 
@@ -229,7 +236,7 @@ describe('Operator Config', () => {
   describe('convertAtomConfig', () => {
     it('should convert 1 level object path correctly', () => {
       let output = operatorConfig.convertAtomConfig({
-        ':-assignment': 'right'
+        ':-assignment': 'right',
       });
 
       expect(output[':'].assignment).toBe('right');
@@ -237,7 +244,7 @@ describe('Operator Config', () => {
 
     it('should convert nested object path correctly', () => {
       let output = operatorConfig.convertAtomConfig({
-        ':-multiple-string-assignment': 'right'
+        ':-multiple-string-assignment': 'right',
       });
 
       expect(output[':'].multiple.string.assignment).toBe('right');
@@ -245,7 +252,7 @@ describe('Operator Config', () => {
 
     it('should include enabled option and default to true', () => {
       let output = operatorConfig.convertAtomConfig({
-        ':-assignment': 'right'
+        ':-assignment': 'right',
       });
 
       expect(output[':'].enabled).toBe(true);
@@ -254,7 +261,7 @@ describe('Operator Config', () => {
     it('should include enabled option', () => {
       let output = operatorConfig.convertAtomConfig({
         ':-assignment': 'right',
-        ':-enabled': false
+        ':-enabled': false,
       });
 
       expect(output[':'].enabled).toBe(false);

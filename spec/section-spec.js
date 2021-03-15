@@ -2,14 +2,14 @@
 
 const Section = require('../lib/section');
 
-describe('Section', function() {
+describe('Section', function () {
   let testSection;
 
-  beforeEach(function() {
+  beforeEach(function () {
     testSection = new Section();
   });
 
-  it('should initialize empty strings and values', function() {
+  it('should initialize empty strings and values', function () {
     expect(testSection._before).toBe('');
     expect(testSection._after).toBe('');
     expect(testSection._offset).toBe(0);
@@ -21,7 +21,7 @@ describe('Section', function() {
 
     testSection.before += ', testing';
     expect(testSection.before).toBe('hi, testing');
-    expect(testSection.offset).toBe(11)
+    expect(testSection.offset).toBe(11);
   });
 
   it('should get and set after', function () {

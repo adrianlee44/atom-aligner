@@ -1,16 +1,16 @@
 'use strict';
 
 const SectionizedLine = require('../lib/sectionized-line');
-const Section = require('../lib/section')
+const Section = require('../lib/section');
 
-describe('SectionizedLine', function() {
+describe('SectionizedLine', function () {
   let testSectionizedLine;
 
-  beforeEach(function() {
+  beforeEach(function () {
     testSectionizedLine = new SectionizedLine();
   });
 
-  it('should initialize correctly', function() {
+  it('should initialize correctly', function () {
     expect(testSectionizedLine._prefix).toBe(false);
     expect(testSectionizedLine._valid).toBe(false);
 
@@ -20,7 +20,7 @@ describe('SectionizedLine', function() {
     expect(testSectionizedLine._sections.length).toBe(0);
   });
 
-  it('should get and set before of the current section', function() {
+  it('should get and set before of the current section', function () {
     testSectionizedLine.before = 'before text';
 
     expect(testSectionizedLine.before).toBe('before text');
@@ -29,7 +29,7 @@ describe('SectionizedLine', function() {
     expect(section.before).toBe('before text');
   });
 
-  it('should get and set after of the current section', function() {
+  it('should get and set after of the current section', function () {
     testSectionizedLine.after = 'after text';
 
     expect(testSectionizedLine.after).toBe('after text');
@@ -38,21 +38,21 @@ describe('SectionizedLine', function() {
     expect(section.after).toBe('after text');
   });
 
-  it('should get and set prefix', function() {
+  it('should get and set prefix', function () {
     testSectionizedLine.prefix = true;
 
     expect(testSectionizedLine._prefix).toBe(true);
     expect(testSectionizedLine.hasPrefix()).toBe(true);
   });
 
-  it('should get and set valid', function() {
+  it('should get and set valid', function () {
     testSectionizedLine.valid = true;
 
     expect(testSectionizedLine._valid).toBe(true);
     expect(testSectionizedLine.isValid()).toBe(true);
   });
 
-  it('should get sections', function() {
+  it('should get sections', function () {
     const sections = [{}, {}, {}];
 
     testSectionizedLine._sections = sections;
@@ -60,7 +60,7 @@ describe('SectionizedLine', function() {
     expect(testSectionizedLine.sections).toBe(sections);
   });
 
-  it('should add to sections and trim strings', function() {
+  it('should add to sections and trim strings', function () {
     const currentSection = testSectionizedLine._currentSection;
     testSectionizedLine.before = '  before text  ';
     testSectionizedLine.after = '  after text  ';
@@ -76,7 +76,7 @@ describe('SectionizedLine', function() {
     expect(testSectionizedLine._currentSection instanceof Section).toBe(true);
   });
 
-  it('should add to sections and get the correct length', function() {
+  it('should add to sections and get the correct length', function () {
     testSectionizedLine.add();
     testSectionizedLine.add();
 

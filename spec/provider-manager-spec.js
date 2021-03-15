@@ -8,8 +8,8 @@ describe('ProviderManager', () => {
     selector: ['.source.coffee'],
     id: 'aligner-coffee',
     config: {
-      ':-alignment': 'left'
-    }
+      ':-alignment': 'left',
+    },
   };
 
   describe('registering a provider', () => {
