@@ -208,8 +208,6 @@ describe('Aligning javascript', () => {
     jasmine.attachToDOM(workspaceElement);
     atom.project.setPaths([path.join(__dirname, 'fixtures')]);
 
-    atom.config.set('core.useTreeSitterParsers', false);
-
     waitsForPromise(() => {
       return atom.packages.activatePackage('aligner');
     });
