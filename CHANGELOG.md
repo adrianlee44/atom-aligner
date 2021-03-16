@@ -1,3 +1,8 @@
+## v1.3.0 (2021-03-15)
+- Update extend to 3.0.2
+- Bump Atom requirement to >= 1.40.0
+- Update atom-package-deps to 7.2.2
+
 ## v1.2.4 (2017-07-23)
 - Fix not able to align trailing comment
 
