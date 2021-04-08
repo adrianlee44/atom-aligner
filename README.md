@@ -37,8 +37,8 @@ User can either align like this,
 ```javascript
 let random = {
   troll: 'internet',
-  foo: 'bar',
-  bar: 'beer',
+  foo:   'bar',
+  bar:   'beer',
 };
 ```
 
@@ -47,8 +47,8 @@ or this,
 ```javascript
 let random = {
   troll: 'internet',
-  foo: 'bar',
-  bar: 'beer',
+  foo  : 'bar',
+  bar  : 'beer',
 };
 ```
 
